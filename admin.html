@@ -1,92 +1,71 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Admin Pagina</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-    }
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-    button {
-      margin-left: 10px;
-      padding: 6px 12px;
-      border-radius: 6px;
-      border: none;
-      cursor: pointer;
-      background-color: #007bff;
-      color: white;
-    }
-    button:hover {
-      background-color: #0056b3;
-    }
+    :root { --btn: #0d6efd; --btn-hover:#0b5ed7; }
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    header { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+    .btn { appearance:none; border:none; border-radius:8px; padding:8px 14px; cursor:pointer; background:var(--btn); color:#fff; font-weight:600; }
+    .btn:hover { background:var(--btn-hover); }
+
+    /* RECORD LAYOUT — no overlap */
     .player-row {
-      display: flex;
+      display: grid;
+      grid-template-columns: 1fr auto auto auto;
       align-items: center;
-      margin-bottom: 10px;
+      gap: 8px;
+      padding: 6px 0;
+      border-bottom: 1px solid #eee;
     }
-    .player-row span {
-      flex: 1;
-    }
-    .player-row button {
-      margin-right: 5px;
-    }
-    /* Login overlay */
+    .player-name { min-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    /* LOGIN OVERLAY */
     #login-overlay {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.6);
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+      display: flex; justify-content: center; align-items: center;
     }
     #login-box {
-      background: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-      width: 300px;
-      text-align: center;
+      background:#fff; padding:20px; border-radius:12px; box-shadow:0 6px 24px rgba(0,0,0,.25);
+      width: min(92vw, 360px);
     }
-    #login-box input {
-      width: 90%;
-      padding: 6px;
-      margin: 8px 0;
-    }
-    #error {
-      color: red;
-      font-size: 0.9em;
-      display: none;
+    #login-box h3 { margin:0 0 10px; }
+    .field { display:flex; flex-direction:column; gap:6px; margin:10px 0; }
+    .field input { padding:8px 10px; border:1px solid #ddd; border-radius:8px; }
+    #error { color:#c1121f; font-size:0.95em; display:none; margin-top:6px; }
+    @media (max-width: 520px) {
+      .player-row { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 
 <!-- Login pop-up -->
-<div id="login-overlay">
-  <div id="login-box">
+<div id="login-overlay" aria-modal="true" role="dialog">
+  <form id="login-box" onsubmit="handleLogin(event)">
     <h3>Inloggen</h3>
-    <input type="text" id="username" placeholder="Gebruikersnaam"><br>
-    <input type="password" id="password" placeholder="Wachtwoord"><br>
-    <button onclick="checkLogin()">Inloggen</button>
-    <p id="error">Ongeldige gebruikersnaam of wachtwoord</p>
-  </div>
+    <div class="field">
+      <label for="username">Gebruikersnaam</label>
+      <input id="username" name="username" placeholder="admin" autocomplete="username" required />
+    </div>
+    <div class="field">
+      <label for="password">Wachtwoord</label>
+      <input id="password" name="password" type="password" placeholder="wachtwoord" autocomplete="current-password" required />
+    </div>
+    <button class="btn" type="submit">Inloggen</button>
+    <div id="error">Ongeldige gebruikersnaam of wachtwoord</div>
+  </form>
 </div>
 
 <!-- Admin panel (hidden until login) -->
 <div id="admin-panel" style="display:none;">
   <header>
     <h2>Beheerpagina</h2>
-    <div>
-      <button onclick="window.location.href='index.html'">Bekijk Statistieken</button>
-      <button onclick="logout()">Uitloggen</button>
+    <div style="display:flex; gap:10px;">
+      <button class="btn" type="button" onclick="location.href='index.html'">Bekijk Statistieken</button>
+      <button class="btn" type="button" onclick="logout()">Uitloggen</button>
     </div>
   </header>
 
@@ -97,51 +76,67 @@
 </div>
 
 <script>
-  // Geldige login (SHA256 hash van 'wuste')
-  const validUser = "admin";
-  const validPassHash = "a96f67a2812dcd84f69aa31c3e315b92c9cba54d0b7fb9e8ff34480d598cc4b7"; 
+  // Credentials
+  const VALID_USER = "admin";
+  // Correct SHA-256 hash for "wuste"
+  const VALID_PASS_HASH = "9dd4898618d28024a8605179252f4f4e801e48c95c550861f621384bece314b6";
 
-  async function sha256(str) {
-    const buf = new TextEncoder().encode(str);
-    const hashBuffer = await crypto.subtle.digest("SHA-256", buf);
+  // Hash helper
+  async function sha256(text) {
+    const data = new TextEncoder().encode(text);
+    const hashBuffer = await crypto.subtle.digest("SHA-256", data);
     const hashArray = Array.from(new Uint8Array(hashBuffer));
     return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
   }
 
-  async function checkLogin() {
-    const user = document.getElementById("username").value;
+  // Handle login (form submit)
+  async function handleLogin(e) {
+    e.preventDefault();
+    const user = document.getElementById("username").value.trim();
     const pass = document.getElementById("password").value;
     const passHash = await sha256(pass);
 
-    if (user === validUser && passHash === validPassHash) {
+    if (user === VALID_USER && passHash === VALID_PASS_HASH) {
       document.getElementById("login-overlay").style.display = "none";
       document.getElementById("admin-panel").style.display = "block";
+      document.getElementById("error").style.display = "none";
     } else {
       document.getElementById("error").style.display = "block";
     }
   }
 
+  // Logout: show overlay again, clear fields
   function logout() {
     document.getElementById("admin-panel").style.display = "none";
     document.getElementById("login-overlay").style.display = "flex";
     document.getElementById("username").value = "";
     document.getElementById("password").value = "";
+    document.getElementById("username").focus();
   }
 
-  // Dummy spelerslijst
+  // Focus username on load
+  window.addEventListener("load", () => {
+    document.getElementById("username").focus();
+    // (Optional) remember login across refresh:
+    // if (sessionStorage.getItem("isAdmin") === "1") { document.getElementById("login-overlay").style.display = "none"; document.getElementById("admin-panel").style.display = "block"; }
+  });
+
+  // Demo players (replace with your real data binding if needed)
   const players = ["Speler 1", "Speler 2", "Speler 3", "Speler 4"];
   const playerDiv = document.getElementById("players");
-
-  players.forEach(p => {
+  players.forEach(name => {
     const row = document.createElement("div");
     row.className = "player-row";
 
-    const name = document.createElement("span");
-    name.textContent = p;
-    row.appendChild(name);
+    const span = document.createElement("span");
+    span.className = "player-name";
+    span.textContent = name;
+    row.appendChild(span);
 
-    ["Afwezig", "Aanwezig", "Uitstappen"].forEach(label => {
+    [["Afwezig"], ["Aanwezig"], ["Uitzitten"]].forEach(([label]) => {
       const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "btn";
       btn.textContent = label;
       row.appendChild(btn);
     });
