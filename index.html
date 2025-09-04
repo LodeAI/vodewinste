@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vo De Winste</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #00ff88;
+            --secondary: #7c3aed;
+            --dark: #0a0a0f;
+            --darker: #050507;
+            --light: #ffffff;
+            --warning: #fbbf24;
+            --danger: #ef4444;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--darker);
+            color: var(--light);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated background */
+        .bg-animation {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a0a2f 100%);
+            overflow: hidden;
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background: radial-gradient(circle at 20% 50%, rgba(0, 255, 136, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(124, 58, 237, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 40% 20%, rgba(0, 255, 136, 0.05) 0%, transparent 50%);
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.1); }
+        }
+
+        /* Header */
+        .header {
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 20px rgba(0, 255, 136, 0.5)); }
+            to { filter: drop-shadow(0 0 30px rgba(124, 58, 237, 0.5)); }
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.2rem;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, transparent, rgba(0, 255, 136, 0.1));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            border-color: var(--primary);
+        }
+
+        .stat-card:hover::before {
+            opacity: 1;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Players Table */
+        .players-section {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            overflow: hidden;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .section-title::before {
+            content: '⚽';
+            font-size: 2rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        th {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), rgba(124, 58, 237, 0.1));
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            border-bottom: 2px solid var(--glass-border);
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        tr {
+            transition: all 0.3s ease;
+        }
+
+        tbody tr:hover {
+            background: rgba(0, 255, 136, 0.05);
+        }
+
+        tbody tr:hover td {
+            transform: translateX(5px);
+        }
+
+        tbody tr:hover td:first-child {
+            transform: translateX(0);
+        }
+
+        .player-name {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .badge-yellow {
+            background: rgba(251, 191, 36, 0.2);
+            color: var(--warning);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+        }
+
+        .badge-red {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .attendance-bar {
+            width: 100px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 999px;
+            overflow: hidden;
+            display: inline-block;
+            margin-right: 0.5rem;
+        }
+
+        .attendance-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 999px;
+            transition: width 0.3s ease;
+        }
+
+        /* No data message */
+        .no-data {
+            text-align: center;
+            padding: 3rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .no-data h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .table-wrapper {
+                overflow-x: auto;
+            }
+        }
+
+        /* Last updated info */
+        .last-updated {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 1rem;
+            background: var(--glass);
+            border-radius: 10px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+    
+    <header class="header">
+        <h1>Vo De Winste</h1>
+        <p class="subtitle">Minivoetbal Koude Keuken Brugge • Seizoen 2025</p>
+    </header>
+
+    <div class="container">
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-card">
+                <div class="stat-value" id="totalPlayers">0</div>
+                <div class="stat-label">Spelers</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="totalGoals">0</div>
+                <div class="stat-label">Doelpunten</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="totalYellow">0</div>
+                <div class="stat-label">Gele kaarten</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="totalRed">0</div>
+                <div class="stat-label">Rode kaarten</div>
+            </div>
+        </div>
+
+        <div class="players-section">
+            <h2 class="section-title">Spelers</h2>
+            <div class="table-wrapper">
+                <div id="noDataMessage" class="no-data" style="display: none;">
+                    <h3>Nog geen spelersdata</h3>
+                    <p>Statistieken verschijnen hier zodra wedstrijden zijn ingevoerd door de beheerder.</p>
+                </div>
+                <table id="playersTableContainer" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th>Speler</th>
+                            <th>Wedstrijden</th>
+                            <th>Aanwezigheid</th>
+                            <th>Doelpunten</th>
+                            <th>Assists</th>
+                            <th>Wisselbeurt</th>
+                            <th>Geel</th>
+                            <th>Rood</th>
+                        </tr>
+                    </thead>
+                    <tbody id="playersTable">
+                        <!-- Players will be added here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="last-updated" id="lastUpdated">
+            Laatst bijgewerkt: Nooit
+        </div>
+    </div>
+
+    <script>
+        // Initialize with empty data
+        let teamData = {
+            players: [],
+            matches: []
+        };
+
+        // Load data from localStorage (read-only)
+        function loadData() {
+            const saved = localStorage.getItem('minivoetbalData');
+            if (saved) {
+                teamData = JSON.parse(saved);
+            }
+            renderAll();
+            updateLastUpdated();
+        }
+
+        // Render everything (view-only)
+        function renderAll() {
+            renderStats();
+            renderPlayersTable();
+        }
+
+        // Calculate and render overall stats
+        function renderStats() {
+            const totalPlayers = teamData.players.length;
+            const totalGoals = teamData.players.reduce((sum, p) => sum + p.goals, 0);
+            const totalYellow = teamData.players.reduce((sum, p) => sum + p.yellow, 0);
+            const totalRed = teamData.players.reduce((sum, p) => sum + p.red, 0);
+
+            document.getElementById('totalPlayers').textContent = totalPlayers;
+            document.getElementById('totalGoals').textContent = totalGoals;
+            document.getElementById('totalYellow').textContent = totalYellow;
+            document.getElementById('totalRed').textContent = totalRed;
+        }
+
+        // Render players table (view-only, no actions column)
+        function renderPlayersTable() {
+            const tbody = document.getElementById('playersTable');
+            const tableContainer = document.getElementById('playersTableContainer');
+            const noDataMessage = document.getElementById('noDataMessage');
+            
+            tbody.innerHTML = '';
+
+            if (teamData.players.length === 0) {
+                tableContainer.style.display = 'none';
+                noDataMessage.style.display = 'block';
+                return;
+            }
+
+            tableContainer.style.display = 'table';
+            noDataMessage.style.display = 'none';
+
+            // Sort players by goals (descending) for better viewing experience
+            const sortedPlayers = [...teamData.players].sort((a, b) => b.goals - a.goals);
+
+            sortedPlayers.forEach((player) => {
+                const attendanceRate = player.games > 0 ? Math.round((player.attended / player.games) * 100) : 0;
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="player-name">${player.name}</td>
+                    <td>${player.games}</td>
+                    <td>
+                        <div class="attendance-bar">
+                            <div class="attendance-fill" style="width: ${attendanceRate}%"></div>
+                        </div>
+                        ${attendanceRate}%
+                    </td>
+                    <td>${player.goals}</td>
+                    <td>${player.assists}</td>
+                    <td>${player.sitOuts}</td>
+                    <td>${player.yellow > 0 ? `<span class="badge badge-yellow">${player.yellow}</span>` : '0'}</td>
+                    <td>${player.red > 0 ? `<span class="badge badge-red">${player.red}</span>` : '0'}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Update last updated timestamp
+        function updateLastUpdated() {
+            const lastUpdate = localStorage.getItem('minivoetbalLastUpdate');
+            const lastUpdatedElement = document.getElementById('lastUpdated');
+            
+            if (lastUpdate) {
+                const date = new Date(parseInt(lastUpdate));
+                lastUpdatedElement.textContent = `Laatst bijgewerkt: ${date.toLocaleString('nl-NL')}`;
+            } else {
+                lastUpdatedElement.textContent = 'Laatst bijgewerkt: Nooit';
+            }
+        }
+
+        // Auto-refresh data every 30 seconds to sync with admin changes
+        setInterval(() => {
+            const currentData = JSON.stringify(teamData);
+            loadData();
+            const newData = JSON.stringify(teamData);
+            
+            // Only re-render if data changed
+            if (currentData !== newData) {
+                console.log('Data bijgewerkt vanuit beheerderspaneel');
+            }
+        }, 30000);
+
+        // Initialize on page load
+        loadData();
+    </script>
+</body>
+</html>
