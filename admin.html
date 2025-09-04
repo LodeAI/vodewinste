@@ -1,1125 +1,154 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel - Minivoetbal</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --primary: #00ff88;
-            --secondary: #7c3aed;
-            --dark: #0a0a0f;
-            --darker: #050507;
-            --light: #ffffff;
-            --warning: #fbbf24;
-            --danger: #ef4444;
-            --glass: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --success: #10b981;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: var(--darker);
-            color: var(--light);
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        /* Animated background */
-        .bg-animation {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            z-index: -1;
-            background: linear-gradient(135deg, #0a0a0f 0%, #1a0a2f 100%);
-            overflow: hidden;
-        }
-
-        .bg-animation::before {
-            content: '';
-            position: absolute;
-            width: 200%;
-            height: 200%;
-            top: -50%;
-            left: -50%;
-            background: radial-gradient(circle at 20% 50%, rgba(0, 255, 136, 0.15) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 80%, rgba(124, 58, 237, 0.1) 0%, transparent 50%),
-                        radial-gradient(circle at 40% 20%, rgba(0, 255, 136, 0.05) 0%, transparent 50%);
-            animation: float 20s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: rotate(0deg) scale(1); }
-            50% { transform: rotate(180deg) scale(1.1); }
-        }
-
-        /* Login Screen */
-        .login-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--darker);
-            z-index: 2000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-        }
-
-        .login-card {
-            background: var(--dark);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 3rem;
-            max-width: 400px;
-            width: 100%;
-            text-align: center;
-            backdrop-filter: blur(10px);
-        }
-
-        .login-title {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 2rem;
-        }
-
-        .login-form {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .login-input {
-            padding: 1rem;
-            background: var(--glass);
-            border: 1px solid var(--glass-border);
-            border-radius: 10px;
-            color: var(--light);
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .login-input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(0, 255, 136, 0.1);
-        }
-
-        .login-error {
-            color: var(--danger);
-            font-size: 0.9rem;
-            margin-top: 0.5rem;
-            display: none;
-        }
-
-        .login-btn {
-            padding: 1rem 2rem;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border: none;
-            border-radius: 10px;
-            color: var(--dark);
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .login-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.3);
-        }
-
-        /* Header */
-        .header {
-            padding: 2rem;
-            text-align: center;
-            position: relative;
-            background: var(--glass);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--glass-border);
-        }
-
-        .header h1 {
-            font-size: 3rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, var(--danger) 0%, var(--primary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 0.5rem;
-            animation: glow 2s ease-in-out infinite alternate;
-        }
-
-        @keyframes glow {
-            from { filter: drop-shadow(0 0 20px rgba(239, 68, 68, 0.5)); }
-            to { filter: drop-shadow(0 0 30px rgba(0, 255, 136, 0.5)); }
-        }
-
-        .subtitle {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 1.2rem;
-        }
-
-        .header-actions {
-            position: absolute;
-            top: 2rem;
-            right: 2rem;
-            display: flex;
-            gap: 1rem;
-        }
-
-        .header-btn {
-            padding: 0.5rem 1rem;
-            background: var(--glass);
-            border: 1px solid var(--glass-border);
-            border-radius: 8px;
-            color: var(--light);
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-        }
-
-        .header-btn:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-        }
-
-        /* Container */
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        /* Admin controls */
-        .admin-controls {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 3rem;
-        }
-
-        .control-card {
-            background: var(--glass);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 2rem;
-            text-align: center;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .control-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--primary);
-        }
-
-        .control-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: var(--primary);
-        }
-
-        .btn {
-            padding: 1rem 2rem;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border: none;
-            border-radius: 15px;
-            color: var(--dark);
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1.1rem;
-            width: 100%;
-            margin: 0.5rem 0;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.3);
-        }
-
-        .btn-danger {
-            background: linear-gradient(135deg, var(--danger), #dc2626);
-        }
-
-        .btn-secondary {
-            background: var(--glass);
-            color: var(--light);
-            border: 1px solid var(--glass-border);
-        }
-
-        .btn-secondary:hover {
-            border-color: var(--primary);
-        }
-
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: var(--dark);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 2rem;
-            max-width: 600px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
-
-        .modal-title {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--primary);
-        }
-
-        .close-btn {
-            background: none;
-            border: none;
-            color: var(--light);
-            font-size: 2rem;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-            padding: 0.5rem;
-        }
-
-        .close-btn:hover {
-            transform: rotate(90deg);
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: rgba(255, 255, 255, 0.9);
-            font-weight: 500;
-        }
-
-        input, select, textarea {
-            width: 100%;
-            padding: 1rem;
-            background: var(--glass);
-            border: 1px solid var(--glass-border);
-            border-radius: 10px;
-            color: var(--light);
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(0, 255, 136, 0.1);
-        }
-
-        /* Match recording specific styles */
-        .player-attendance {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .player-card {
-            background: var(--glass);
-            border: 1px solid var(--glass-border);
-            border-radius: 15px;
-            padding: 1.5rem;
-            transition: all 0.3s ease;
-        }
-
-        .player-card.attended {
-            border-color: var(--success);
-            background: rgba(16, 185, 129, 0.1);
-        }
-
-        .player-card.sit-out {
-            border-color: var(--warning);
-            background: rgba(251, 191, 36, 0.1);
-        }
-
-        .player-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-
-        .player-name {
-            font-weight: 600;
-            color: var(--primary);
-        }
-
-        .attendance-toggle {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .toggle-btn {
-            padding: 0.5rem 1rem;
-            border: 1px solid var(--glass-border);
-            background: var(--glass);
-            color: var(--light);
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            transition: all 0.3s ease;
-        }
-
-        .toggle-btn.active {
-            background: var(--primary);
-            color: var(--dark);
-            border-color: var(--primary);
-        }
-
-        .stats-inputs {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 0.5rem;
-        }
-
-        .stat-input {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .stat-input label {
-            font-size: 0.8rem;
-            margin-bottom: 0.25rem;
-        }
-
-        .stat-input input {
-            width: 60px;
-            padding: 0.5rem;
-            text-align: center;
-        }
-
-        /* Squad management */
-        .squad-list {
-            max-height: 400px;
-            overflow-y: auto;
-            border: 1px solid var(--glass-border);
-            border-radius: 15px;
-            padding: 1rem;
-            background: var(--glass);
-        }
-
-        .squad-player {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
-        }
-
-        .squad-player:hover {
-            background: rgba(0, 255, 136, 0.05);
-        }
-
-        .squad-player:last-child {
-            border-bottom: none;
-        }
-
-        .player-info {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .player-stats {
-            font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.6);
-            margin-top: 0.25rem;
-        }
-
-        .btn-small {
-            padding: 0.5rem 1rem;
-            font-size: 0.85rem;
-            margin: 0 0.25rem;
-        }
-
-        /* Match history */
-        .match-history {
-            background: var(--glass);
-            border: 1px solid var(--glass-border);
-            border-radius: 15px;
-            padding: 2rem;
-            margin-top: 2rem;
-        }
-
-        .match-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
-        }
-
-        .match-item:hover {
-            background: rgba(0, 255, 136, 0.05);
-        }
-
-        .match-item:last-child {
-            border-bottom: none;
-        }
-
-        .match-info {
-            flex: 1;
-        }
-
-        .match-date {
-            font-weight: 600;
-            color: var(--primary);
-        }
-
-        .match-stats {
-            font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.7);
-            margin-top: 0.25rem;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2rem;
-            }
-            
-            .header-actions {
-                position: static;
-                justify-content: center;
-                margin-top: 1rem;
-            }
-            
-            .admin-controls {
-                grid-template-columns: 1fr;
-            }
-            
-            .player-attendance {
-                grid-template-columns: 1fr;
-            }
-            
-            .stats-inputs {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .attendance-toggle {
-                flex-direction: column;
-            }
-        }
-
-        /* Success message */
-        .success-message {
-            background: rgba(16, 185, 129, 0.2);
-            border: 1px solid var(--success);
-            color: var(--success);
-            padding: 1rem;
-            border-radius: 10px;
-            margin-bottom: 1rem;
-            text-align: center;
-            display: none;
-        }
-
-        .success-message.show {
-            display: block;
-            animation: slideDown 0.3s ease;
-        }
-
-        @keyframes slideDown {
-            from { transform: translateY(-20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        /* No data message */
-        .no-data {
-            text-align: center;
-            padding: 2rem;
-            color: rgba(255, 255, 255, 0.6);
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Admin Pagina</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    button {
+      margin-left: 10px;
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      background-color: #007bff;
+      color: white;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .player-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .player-row span {
+      flex: 1;
+    }
+    .player-row button {
+      margin-right: 5px;
+    }
+    /* Login overlay */
+    #login-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    #login-box {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      width: 300px;
+      text-align: center;
+    }
+    #login-box input {
+      width: 90%;
+      padding: 6px;
+      margin: 8px 0;
+    }
+    #error {
+      color: red;
+      font-size: 0.9em;
+      display: none;
+    }
+  </style>
 </head>
 <body>
-    <div class="bg-animation"></div>
-    
-    <!-- Login Screen -->
-    <div class="login-screen" id="loginScreen">
-        <div class="login-card">
-            <h2 class="login-title">Admin Login</h2>
-            <form class="login-form" onsubmit="handleLogin(event)">
-                <input 
-                    type="text" 
-                    id="username" 
-                    placeholder="Username" 
-                    class="login-input" 
-                    required
-                >
-                <input 
-                    type="password" 
-                    id="password" 
-                    placeholder="Password" 
-                    class="login-input" 
-                    required
-                >
-                <button type="submit" class="login-btn">Login</button>
-                <div class="login-error" id="loginError">Invalid credentials</div>
-            </form>
-        </div>
+
+<!-- Login pop-up -->
+<div id="login-overlay">
+  <div id="login-box">
+    <h3>Inloggen</h3>
+    <input type="text" id="username" placeholder="Gebruikersnaam"><br>
+    <input type="password" id="password" placeholder="Wachtwoord"><br>
+    <button onclick="checkLogin()">Inloggen</button>
+    <p id="error">Ongeldige gebruikersnaam of wachtwoord</p>
+  </div>
+</div>
+
+<!-- Admin panel (hidden until login) -->
+<div id="admin-panel" style="display:none;">
+  <header>
+    <h2>Beheerpagina</h2>
+    <div>
+      <button onclick="window.location.href='index.html'">Bekijk Statistieken</button>
+      <button onclick="logout()">Uitloggen</button>
     </div>
-    
-    <!-- Main Content -->
-    <div id="mainContent" style="display: none;">
-        <header class="header">
-            <div class="header-actions">
-                <a href="index.html" class="header-btn">📊 View Stats</a>
-                <button onclick="logout()" class="header-btn">🚪 Logout</button>
-            </div>
-            <h1>Admin Panel</h1>
-            <p class="subtitle">Minivoetbal Management • Season 2025</p>
-        </header>
+  </header>
 
-        <div class="container">
-            <div class="success-message" id="successMessage">
-                Action completed successfully!
-            </div>
+  <section>
+    <h3>Wedstrijd registreren</h3>
+    <div id="players"></div>
+  </section>
+</div>
 
-            <div class="admin-controls">
-                <div class="control-card">
-                    <h3>🏆 Match Management</h3>
-                    <p style="color: rgba(255,255,255,0.7); margin-bottom: 1.5rem;">Record match results and player statistics</p>
-                    <button class="btn" onclick="showRecordMatchModal()">Record New Match</button>
-                    <button class="btn btn-secondary" onclick="showMatchHistoryModal()">View Match History</button>
-                </div>
-                
-                <div class="control-card">
-                    <h3>👥 Squad Management</h3>
-                    <p style="color: rgba(255,255,255,0.7); margin-bottom: 1.5rem;">Add, remove, and manage team players</p>
-                    <button class="btn" onclick="showAddPlayerModal()">Add Player</button>
-                    <button class="btn btn-secondary" onclick="showManageSquadModal()">Manage Squad</button>
-                </div>
-            </div>
-        </div>
+<script>
+  // Geldige login (SHA256 hash van 'wuste')
+  const validUser = "admin";
+  const validPassHash = "a96f67a2812dcd84f69aa31c3e315b92c9cba54d0b7fb9e8ff34480d598cc4b7"; 
 
-        <!-- Record Match Modal -->
-        <div class="modal" id="recordMatchModal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title">Record Match</h3>
-                    <button class="close-btn" onclick="closeModal('recordMatchModal')">&times;</button>
-                </div>
-                
-                <div class="form-group">
-                    <label>Match Date</label>
-                    <input type="date" id="matchDate">
-                </div>
-                
-                <div class="form-group">
-                    <label>Notes (optional)</label>
-                    <textarea id="matchNotes" rows="2" placeholder="Match notes, opponent, result..."></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label>Player Attendance & Stats</label>
-                    <div id="noPlayersMessage" class="no-data" style="display: none;">
-                        <p>No players in squad. Add players first before recording matches.</p>
-                    </div>
-                    <div class="player-attendance" id="playerAttendance">
-                        <!-- Players will be dynamically added here -->
-                    </div>
-                </div>
-                
-                <button class="btn" onclick="recordMatch()">Save Match</button>
-            </div>
-        </div>
+  async function sha256(str) {
+    const buf = new TextEncoder().encode(str);
+    const hashBuffer = await crypto.subtle.digest("SHA-256", buf);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+  }
 
-        <!-- Add Player Modal -->
-        <div class="modal" id="addPlayerModal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title">Add New Player</h3>
-                    <button class="close-btn" onclick="closeModal('addPlayerModal')">&times;</button>
-                </div>
-                <div class="form-group">
-                    <label for="playerName">Player Name</label>
-                    <input type="text" id="playerName" placeholder="Enter player name">
-                </div>
-                <button class="btn" onclick="addPlayer()">Add Player</button>
-            </div>
-        </div>
+  async function checkLogin() {
+    const user = document.getElementById("username").value;
+    const pass = document.getElementById("password").value;
+    const passHash = await sha256(pass);
 
-        <!-- Manage Squad Modal -->
-        <div class="modal" id="manageSquadModal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title">Manage Squad</h3>
-                    <button class="close-btn" onclick="closeModal('manageSquadModal')">&times;</button>
-                </div>
-                <div class="squad-list" id="squadList">
-                    <!-- Squad will be populated here -->
-                </div>
-            </div>
-        </div>
+    if (user === validUser && passHash === validPassHash) {
+      document.getElementById("login-overlay").style.display = "none";
+      document.getElementById("admin-panel").style.display = "block";
+    } else {
+      document.getElementById("error").style.display = "block";
+    }
+  }
 
-        <!-- Match History Modal -->
-        <div class="modal" id="matchHistoryModal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title">Match History</h3>
-                    <button class="close-btn" onclick="closeModal('matchHistoryModal')">&times;</button>
-                </div>
-                <div class="match-history" id="matchHistoryList">
-                    <!-- Match history will be populated here -->
-                </div>
-            </div>
-        </div>
-    </div>
+  function logout() {
+    document.getElementById("admin-panel").style.display = "none";
+    document.getElementById("login-overlay").style.display = "flex";
+    document.getElementById("username").value = "";
+    document.getElementById("password").value = "";
+  }
 
-    <script>
-        // Simple obfuscated credentials (not secure for production!)
-        // For better security, use server-side authentication
-        const AUTH_DATA = 'YWRtaW46cGFzc3dvcmQ='; // base64 encoded "admin:password"
-        
-        // Data structure - start with empty data
-        let teamData = {
-            players: [],
-            matches: []
-        };
+  // Dummy spelerslijst
+  const players = ["Speler 1", "Speler 2", "Speler 3", "Speler 4"];
+  const playerDiv = document.getElementById("players");
 
-        // Authentication functions
-        function handleLogin(event) {
-            event.preventDefault();
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            const credentials = btoa(username + ':' + password);
-            
-            if (credentials === AUTH_DATA) {
-                document.getElementById('loginScreen').style.display = 'none';
-                document.getElementById('mainContent').style.display = 'block';
-                localStorage.setItem('minivoetbalAuth', 'authenticated');
-                loadData();
-            } else {
-                document.getElementById('loginError').style.display = 'block';
-                setTimeout(() => {
-                    document.getElementById('loginError').style.display = 'none';
-                }, 3000);
-            }
-        }
+  players.forEach(p => {
+    const row = document.createElement("div");
+    row.className = "player-row";
 
-        function logout() {
-            localStorage.removeItem('minivoetbalAuth');
-            document.getElementById('loginScreen').style.display = 'flex';
-            document.getElementById('mainContent').style.display = 'none';
-            document.getElementById('username').value = '';
-            document.getElementById('password').value = '';
-        }
+    const name = document.createElement("span");
+    name.textContent = p;
+    row.appendChild(name);
 
-        function checkAuth() {
-            const isAuth = localStorage.getItem('minivoetbalAuth');
-            if (isAuth === 'authenticated') {
-                document.getElementById('loginScreen').style.display = 'none';
-                document.getElementById('mainContent').style.display = 'block';
-            }
-        }
+    ["Afwezig", "Aanwezig", "Uitstappen"].forEach(label => {
+      const btn = document.createElement("button");
+      btn.textContent = label;
+      row.appendChild(btn);
+    });
 
-        // Load data from localStorage
-        function loadData() {
-            const saved = localStorage.getItem('minivoetbalData');
-            if (saved) {
-                const loadedData = JSON.parse(saved);
-                if (!loadedData.matches) {
-                    loadedData.matches = [];
-                }
-                teamData = loadedData;
-            }
-        }
+    playerDiv.appendChild(row);
+  });
+</script>
 
-        // Save data to localStorage
-        function saveData() {
-            localStorage.setItem('minivoetbalData', JSON.stringify(teamData));
-            localStorage.setItem('minivoetbalLastUpdate', Date.now().toString());
-        }
-
-        // Show success message
-        function showSuccess(message = "Action completed successfully!") {
-            const successEl = document.getElementById('successMessage');
-            successEl.textContent = message;
-            successEl.classList.add('show');
-            setTimeout(() => {
-                successEl.classList.remove('show');
-            }, 3000);
-        }
-
-        // Modal functions
-        function showRecordMatchModal() {
-            const modal = document.getElementById('recordMatchModal');
-            
-            // Set today's date as default
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('matchDate').value = today;
-            
-            // Populate player attendance
-            renderPlayerAttendance();
-            
-            modal.classList.add('active');
-        }
-
-        function showAddPlayerModal() {
-            document.getElementById('addPlayerModal').classList.add('active');
-        }
-
-        function showManageSquadModal() {
-            renderSquadList();
-            document.getElementById('manageSquadModal').classList.add('active');
-        }
-
-        function showMatchHistoryModal() {
-            renderMatchHistory();
-            document.getElementById('matchHistoryModal').classList.add('active');
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.remove('active');
-            
-            // Clear forms
-            if (modalId === 'addPlayerModal') {
-                document.getElementById('playerName').value = '';
-            } else if (modalId === 'recordMatchModal') {
-                document.getElementById('matchNotes').value = '';
-            }
-        }
-
-        // Render player attendance checkboxes with stats inputs
-        function renderPlayerAttendance() {
-            const container = document.getElementById('playerAttendance');
-            const noPlayersMsg = document.getElementById('noPlayersMessage');
-            
-            container.innerHTML = '';
-            
-            if (teamData.players.length === 0) {
-                noPlayersMsg.style.display = 'block';
-                return;
-            }
-            
-            noPlayersMsg.style.display = 'none';
-
-            teamData.players.forEach((player, index) => {
-                const playerCard = document.createElement('div');
-                playerCard.className = 'player-card';
-                playerCard.id = `player-${index}`;
-                
-                playerCard.innerHTML = `
-                    <div class="player-header">
-                        <span class="player-name">${player.name}</span>
-                        <div class="attendance-toggle">
-                            <button class="toggle-btn" onclick="setAttendance(${index}, 'absent')">Absent</button>
-                            <button class="toggle-btn active" onclick="setAttendance(${index}, 'present')">Present</button>
-                            <button class="toggle-btn" onclick="setAttendance(${index}, 'sitout')">Sit Out</button>
-                        </div>
-                    </div>
-                    <div class="stats-inputs">
-                        <div class="stat-input">
-                            <label>Goals</label>
-                            <input type="number" id="goals-${index}" min="0" value="0">
-                        </div>
-                        <div class="stat-input">
-                            <label>Assists</label>
-                            <input type="number" id="assists-${index}" min="0" value="0">
-                        </div>
-                        <div class="stat-input">
-                            <label>Yellow</label>
-                            <input type="number" id="yellow-${index}" min="0" value="0">
-                        </div>
-                        <div class="stat-input">
-                            <label>Red</label>
-                            <input type="number" id="red-${index}" min="0" value="0">
-                        </div>
-                    </div>
-                `;
-                
-                container.appendChild(playerCard);
-            });
-        }
-
-        // Set player attendance status
-        function setAttendance(playerIndex, status) {
-            const card = document.getElementById(`player-${playerIndex}`);
-            const buttons = card.querySelectorAll('.toggle-btn');
-            
-            // Reset all buttons
-            buttons.forEach(btn => btn.classList.remove('active'));
-            
-            // Set active button and card style
-            if (status === 'present') {
-                buttons[1].classList.add('active');
-                card.className = 'player-card attended';
-            } else if (status === 'sitout') {
-                buttons[2].classList.add('active');
-                card.className = 'player-card sit-out';
-            } else {
-                buttons[0].classList.add('active');
-                card.className = 'player-card';
-            }
-            
-            // Store attendance status
-            card.dataset.attendance = status;
-        }
-
-        // Record match
-        function recordMatch() {
-            const matchDate = document.getElementById('matchDate').value;
-            const matchNotes = document.getElementById('matchNotes').value;
-            
-            if (!matchDate) {
-                alert('Please select a match date');
-                return;
-            }
-            
-            if (teamData.players.length === 0) {
-                alert('No players in squad. Add players first.');
-                return;
-            }
-
-            const matchData = {
-                id: Date.now(), // Simple ID for match identification
-                date: matchDate,
-                notes: matchNotes,
-                players: []
-            };
-
-            // Process each player
-            teamData.players.forEach((player, index) => {
-                const card = document.getElementById(`player-${index}`);
-                const attendance = card.dataset.attendance || 'present';
-                const goals = parseInt(document.getElementById(`goals-${index}`).value) || 0;
-                const assists = parseInt(document.getElementById(`assists-${index}`).value) || 0;
-                const yellow = parseInt(document.getElementById(`yellow-${index}`).value) || 0;
-                const red = parseInt(document.getElementById(`red-${index}`).value) || 0;
-
-                // Update player stats
-                player.games++;
-                
-                if (attendance === 'present') {
-                    player.attended++;
-                } else if (attendance === 'sitout') {
-                    player.sitOuts++;
-                }
-                
-                player.goals += goals;
-                player.assists += assists;
-                player.yellow += yellow;
-                player.red += red;
-
-                // Store match data
-                matchData.players.push({
-                    name: player.name,
-                    attendance: attendance,
-                    goals: goals,
-                    assists: assists,
-                    yellow: yellow,
-                    red: red
-                });
-            });
-
-            // Add match to history
-            teamData.matches.push(matchData);
-            
-            saveData();
-            closeModal('recordMatchModal');
-            showSuccess('Match recorded successfully!');
-        }
-
-        // Add new player
-        function addPlayer() {
-            const name = document.getElementById('playerName').value.trim();
-            if (!name) {
-                alert('Please enter a player name');
-                return;
-            }
-
-            // Check if player already exists
-            if (teamData.players.some(p => p.name.toLowerCase() === name.toLowerCase())) {
-                alert('Player already exists');
-                return;
-            }
-
-            teamData.players.push({
-                name: name,
-                games: 0,
-                attended: 0,
-                goals: 0,
-                assists: 0,
-                sitOuts: 0,
-                yellow: 0,
-                red: 0
-            });
-
-            saveData();
-            closeModal('addPlayerModal');
-            showSuccess(`${name} added to squad!`);
-        }
-
-        // Render squad management list
-        function renderSquadList() {
-            const container = document.getElementById('squadList');
-            container.innerHTML = '';
-
-            if (teamData.players.length === 0) {
-                container.innerHTML = '<div class="no-data"><p>No players in squad yet. Add some players to get started!</p></div>';
-                return;
-            }
-
-            teamData.players.forEach((player, index) => {
-                const playerDiv = document.createElement('div');
-                playerDiv.className = 'squad-player';
-                playerDiv.dataset.playerIndex = index;
-                
-                playerDiv.innerHTML = `
-                    <div class="player-info">
-                        <span class="player-name">${player.name}</span>
-                        <span class="player-stats">${player.games} games • ${player.goals} goals • ${player.assists} assists</span>
-                    </div>
-                    <div>
-                        <button class="btn btn-danger btn-small" onclick="deletePlayer(${index})">Remove</button>
-                    </div>
-                `;
-                
-                container.appendChild(playerDiv);
-            });
-        }
-
-        // Delete player - FIXED
-        function deletePlayer(index) {
-            const playerName = teamData.players[index].name;
-            if (confirm(`Are you sure you want to remove ${playerName} from the squad? This will delete all their statistics.`)) {
-                teamData.players.splice(index, 1);
-                saveData();
-                renderSquadList(); // Re-render the squad list
-                showSuccess(`${playerName} removed from squad`);
-            }
-        }
-
-        // Render match history - FIXED
-        function renderMatchHistory() {
-            const container = document.getElementById('matchHistoryList');
-            container.innerHTML = '';
-
-            if (teamData.matches.length === 0) {
-                container.innerHTML = '<div class="no-data"><p>No matches recorded yet</p></div>';
-                return;
-            }
-
-            // Sort matches by date (newest first)
-            const sortedMatches = [...teamData.matches].sort((a, b) => new Date(b.date) - new Date(a.date));
-
-            sortedMatches.forEach((match, sortedIndex) => {
-                const originalIndex = teamData.matches.findIndex(m => m.id === match.id);
-                const totalGoals = match.players.reduce((sum, p) => sum + p.goals, 0);
-                const attendedCount = match.players.filter(p => p.attendance === 'present').length;
-                
-                const matchDiv = document.createElement('div');
-                matchDiv.className = 'match-item';
-                
-                matchDiv.innerHTML = `
-                    <div class="match-info">
-                        <div class="match-date">${new Date(match.date).toLocaleDateString()}</div>
-                        <div class="match-stats">
-                            ${attendedCount} players • ${totalGoals} goals
-                            ${match.notes ? ` • ${match.notes}` : ''}
-                        </div>
-                    </div>
-                    <div>
-                        <button class="btn btn-danger btn-small" onclick="deleteMatch(${originalIndex})">Delete</button>
-                    </div>
-                `;
-                
-                container.appendChild(matchDiv);
-            });
-        }
-
-        // Delete match - FIXED
-        function deleteMatch(matchIndex) {
-            const match = teamData.matches[matchIndex];
-            if (confirm(`Are you sure you want to delete the match from ${new Date(match.date).toLocaleDateString()}?`)) {
-                
-                // Reverse the stats from this match
-                match.players.forEach(matchPlayer => {
-                    const player = teamData.players.find(p => p.name === matchPlayer.name);
-                    if (player) {
-                        player.games = Math.max(0, player.games - 1);
-                        if (matchPlayer.attendance === 'present') {
-                            player.attended = Math.max(0, player.attended - 1);
-                        } else if (matchPlayer.attendance === 'sitout') {
-                            player.sitOuts = Math.max(0, player.sitOuts - 1);
-                        }
-                        player.goals = Math.max(0, player.goals - matchPlayer.goals);
-                        player.assists = Math.max(0, player.assists - matchPlayer.assists);
-                        player.yellow = Math.max(0, player.yellow - matchPlayer.yellow);
-                        player.red = Math.max(0, player.red - matchPlayer.red);
-                    }
-                });
-                
-                teamData.matches.splice(matchIndex, 1);
-                saveData();
-                renderMatchHistory(); // Re-render the match history
-                showSuccess('Match deleted successfully');
-            }
-        }
-
-        // Initialize on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            checkAuth();
-            loadData();
-            
-            // Close modals when clicking outside
-            document.querySelectorAll('.modal').forEach(modal => {
-                modal.addEventListener('click', function(e) {
-                    if (e.target === modal) {
-                        closeModal(modal.id);
-                    }
-                });
-            });
-        });
-    </script>
 </body>
 </html>
