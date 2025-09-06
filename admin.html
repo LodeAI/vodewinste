@@ -1,741 +1,4 @@
-    </style>
-</head>
-<body>
-    <div class="bg-animation"></div>
-    
-    <!-- Login Screen -->
-    <div class="login-screen" id="loginScreen">
-        <div class="login-card">
-            <h2 class="login-title">Beheerder Inloggen</h2>
-            <form class="login-form" onsubmit="handleLogin(event)">
-                <input 
-                    type="text" 
-                    id="username" 
-                    placeholder="Gebruikersnaam" 
-                    class="login-input" 
-                    required
-                >
-                <input 
-                    type="password" 
-                    id="password" 
-                    placeholder="Wachtwoord" 
-                    class="login-input" 
-                    required
-                >
-                <button type="submit" class="login-btn">Inloggen</button>
-                <div class="login-error" id="loginError">Onjuiste inloggegevens</div>
-            </form>
-        </div>
-    </div>
-    
-    <!-- Main Content -->
-    <div id="mainContent" style="display: none;">
-        <header class="header">
-            <div class="header-actions">
-                <button onclick="viewStats()" class="header-btn">📊 Statistieken bekijken</button>
-                <button onclick="logout()" class="header-btn">🚪 Uitloggen</button>
-            </div>
-            <h1>Beheerderspaneel</h1>
-            <p class="subtitle">Minivoetbal Management • Seizoen 2025</p>
-        </header>
-
-        <div class="container">
-            <!-- GitHub Setup Section -->
-            <div class="github-setup">
-                <h3>⚙️ GitHub Configuratie</h3>
-                <div class="form-group">
-                    <label for="githubToken">GitHub Personal Access Token:</label>
-                    <input type="password" id="githubToken" placeholder="Voer je GitHub token in">
-                </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                    <div class="form-group">
-                        <label for="repoOwner">Repository Owner:</label>
-                        <input type="text" id="repoOwner" value="lodeai" placeholder="bijv. jouwgebruikersnaam">
-                    </div>
-                    <div class="form-group">
-                        <label for="repoName">Repository Name:</label>
-                        <input type="text" id="repoName" value="vodewinste" placeholder="bijv. vodewinste">
-                    </div>
-                </div>
-                <button onclick="testGitHubConnection()" class="btn">🔗 Test Verbinding</button>
-                <div id="githubStatus" class="github-status"></div>
-            </div>
-
-            <div class="success-message" id="successMessage">
-                Actie succesvol voltooid!
-            </div>
-
-            <div class="admin-controls">
-                <div class="control-card">
-                    <h3>🏆 Wedstrijdenbeheer</h3>
-                    <p style="color: rgba(255,255,255,0.7); margin-bottom: 1.5rem;">Wedstrijdresultaten en spelersstatistieken vastleggen</p>
-                    <button class="btn" onclick="showRecordMatchModal()">Nieuwe wedstrijd vastleggen</button>
-                    <button class="btn btn-secondary" onclick="showMatchHistoryModal()">Wedstrijdgeschiedenis bekijken</button>
-                </div>
-                
-                <div class="control-card">
-                    <h3>👥 Teambeheer</h3>
-                    <p style="color: rgba(255,255,255,0.7); margin-bottom: 1.5rem;">Spelers toevoegen, verwijderen en beheren</p>
-                    <button class="btn" onclick="showAddPlayerModal()">Speler toevoegen</button>
-                    <button class="btn btn-secondary" onclick="showManageSquadModal()">Team beheren</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Record Match Modal -->
-        <div class="modal" id="recordMatchModal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title">Wedstrijd vastleggen</h3>
-                    <button class="close-btn" onclick="closeModal('recordMatchModal')">&times;</button>
-                </div>
-                
-                <div class="form-group">
-                    <label>Wedstrijddatum</label>
-                    <input type="date" id="matchDate">
-                </div>
-                
-                <div class="form-group">
-                    <label>Opmerkingen (optioneel)</label>
-                    <textarea id="matchNotes" rows="2" placeholder="Wedstrijdnotities, tegenstander, resultaat..."></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label>Speleraanwezigheid & Statistieken</label>
-                    <div id="noPlayersMessage" class="no-data" style="display: none;">
-                        <p>Geen spelers in team. Voeg eerst spelers toe voordat je wedstrijden vastlegt.</p>
-                    </div>
-                    <div class="player-attendance" id="playerAttendance">
-                        <!-- Players will be dynamically added here -->
-                    </div>
-                </div>
-                
-                <button class="btn" onclick="recordMatch()">Wedstrijd opslaan</button>
-            </div>
-        </div>
-
-        <!-- Add Player Modal -->
-        <div class="modal" id="addPlayerModal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title">Nieuwe speler toevoegen</h3>
-                    <button class="close-btn" onclick="closeModal('addPlayerModal')">&times;</button>
-                </div>
-                <div class="form-group">
-                    <label for="playerName">Spelernaam</label>
-                    <input type="text" id="playerName" placeholder="Voer spelernaam in">
-                </div>
-                <button class="btn" onclick="addPlayer()">Speler toevoegen</button>
-            </div>
-        </div>
-
-        <!-- Manage Squad Modal -->
-        <div class="modal" id="manageSquadModal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title">Team beheren</h3>
-                    <button class="close-btn" onclick="closeModal('manageSquadModal')">&times;</button>
-                </div>
-                <div class="squad-list" id="squadList">
-                    <!-- Squad will be populated here -->
-                </div>
-            </div>
-        </div>
-
-        <!-- Match History Modal -->
-        <div class="modal" id="matchHistoryModal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title">Wedstrijdgeschiedenis</h3>
-                    <button class="close-btn" onclick="closeModal('matchHistoryModal')">&times;</button>
-                </div>
-                <div class="match-history" id="matchHistoryList">
-                    <!-- Match history will be populated here -->
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // Credentials: admin:wuste
-        const AUTH_DATA = 'YWRtaW46d3VzdGU='; // base64 encoded "admin:wuste"
-        
-        let teamData = {
-            players: [],
-            matches: [],
-            lastUpdated: null
-        };
-
-        // Authentication functions
-        function handleLogin(event) {
-            event.preventDefault();
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            const credentials = btoa(username + ':' + password);
-            
-            if (credentials === AUTH_DATA) {
-                document.getElementById('loginScreen').style.display = 'none';
-                document.getElementById('mainContent').style.display = 'block';
-                sessionStorage.setItem('minivoetbalAuth', 'authenticated');
-                loadData();
-            } else {
-                document.getElementById('loginError').style.display = 'block';
-                setTimeout(() => {
-                    document.getElementById('loginError').style.display = 'none';
-                }, 3000);
-            }
-        }
-
-        function logout() {
-            sessionStorage.removeItem('minivoetbalAuth');
-            document.getElementById('loginScreen').style.display = 'flex';
-            document.getElementById('mainContent').style.display = 'none';
-            document.getElementById('username').value = '';
-            document.getElementById('password').value = '';
-        }
-
-        function viewStats() {
-            window.location.href = 'index.html';
-        }
-
-        function checkAuth() {
-            const isAuth = sessionStorage.getItem('minivoetbalAuth');
-            if (isAuth === 'authenticated') {
-                document.getElementById('loginScreen').style.display = 'none';
-                document.getElementById('mainContent').style.display = 'block';
-            }
-        }
-
-        // GitHub API functions
-        async function testGitHubConnection() {
-            const token = document.getElementById('githubToken').value;
-            const owner = document.getElementById('repoOwner').value;
-            const repo = document.getElementById('repoName').value;
-            const status = document.getElementById('githubStatus');
-            
-            if (!token || !owner || !repo) {
-                status.className = 'github-status error';
-                status.textContent = '❌ Vul alle velden in';
-                return;
-            }
-            
-            try {
-                const response = await fetch(`https://api.github.com/repos/${owner}/${repo}`, {
-                    headers: {
-                        'Authorization': `token ${token}`,
-                        'Accept': 'application/vnd.github.v3+json'
-                    }
-                });
-                
-                if (response.ok) {
-                    status.className = 'github-status success';
-                    status.textContent = '✅ Verbinding succesvol!';
-                    loadData();
-                } else {
-                    status.className = 'github-status error';
-                    status.textContent = '❌ Verbinding mislukt. Controleer je instellingen.';
-                }
-            } catch (error) {
-                status.className = 'github-status error';
-                status.textContent = '❌ Fout: ' + error.message;
-            }
-        }
-
-        async function saveDataToGitHub(data) {
-            const token = document.getElementById('githubToken').value;
-            const owner = document.getElementById('repoOwner').value;
-            const repo = document.getElementById('repoName').value;
-            
-            if (!token || !owner || !repo) {
-                throw new Error('GitHub configuratie incomplete');
-            }
-            
-            // Get current file SHA (required for updates)
-            let sha = null;
-            try {
-                const getResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/data.json`, {
-                    headers: {
-                        'Authorization': `token ${token}`,
-                        'Accept': 'application/vnd.github.v3+json'
-                    }
-                });
-                if (getResponse.ok) {
-                    const fileData = await getResponse.json();
-                    sha = fileData.sha;
-                }
-            } catch (error) {
-                console.log('File might not exist yet, creating new one');
-            }
-            
-            // Update data timestamp
-            data.lastUpdated = new Date().toISOString();
-            
-            // Create/update file
-            const content = btoa(JSON.stringify(data, null, 2));
-            const updateData = {
-                message: `Update data - ${new Date().toLocaleString('nl-NL')}`,
-                content: content,
-                branch: 'main'
-            };
-            
-            if (sha) {
-                updateData.sha = sha;
-            }
-            
-            const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/data.json`, {
-                method: 'PUT',
-                headers: {
-                    'Authorization': `token ${token}`,
-                    'Accept': 'application/vnd.github.v3+json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(updateData)
-            });
-            
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(`GitHub API error: ${errorData.message}`);
-            }
-            
-            return response.json();
-        }
-
-        // Load data (try GitHub first, fallback to localStorage)
-        async function loadData() {
-            try {
-                // Try to load from GitHub Pages first
-                const response = await fetch('https://lodeai.github.io/vodewinste/data.json?' + new Date().getTime());
-                if (response.ok) {
-                    const data = await response.json();
-                    teamData = {
-                        players: data.players || [],
-                        matches: data.matches || [],
-                        lastUpdated: data.lastUpdated || null
-                    };
-                    return;
-                }
-            } catch (error) {
-                console.log('No GitHub data found, trying localStorage');
-            }
-            
-            // Fallback to localStorage
-            try {
-                const saved = localStorage.getItem('minivoetbalData');
-                if (saved) {
-                    const data = JSON.parse(saved);
-                    teamData = {
-                        players: data.players || [],
-                        matches: data.matches || [],
-                        lastUpdated: data.lastUpdated || null
-                    };
-                    return;
-                }
-            } catch (error) {
-                console.log('No localStorage data found');
-            }
-            
-            // If no data found, start fresh
-            teamData = { players: [], matches: [], lastUpdated: null };
-        }
-
-        // Save data (try GitHub first, fallback to localStorage)
-        async function saveData() {
-            teamData.lastUpdated = new Date().toISOString();
-            
-            // Try GitHub first
-            const token = document.getElementById('githubToken').value;
-            if (token) {
-                try {
-                    await saveDataToGitHub(teamData);
-                    console.log('Data saved to GitHub successfully');
-                    return true;
-                } catch (error) {
-                    console.error('Failed to save to GitHub:', error);
-                    alert('Fout bij opslaan naar GitHub: ' + error.message + '\nData wordt lokaal opgeslagen.');
-                }
-            }
-            
-            // Fallback to localStorage
-            try {
-                localStorage.setItem('minivoetbalData', JSON.stringify(teamData));
-                console.log('Data saved to localStorage successfully');
-                return true;
-            } catch (error) {
-                console.error('Failed to save data:', error);
-                alert('Fout bij opslaan van gegevens. Probeer het opnieuw.');
-                return false;
-            }
-        }
-
-        function showSuccess(message = "Actie succesvol voltooid!") {
-            const successEl = document.getElementById('successMessage');
-            successEl.textContent = message;
-            successEl.classList.add('show');
-            setTimeout(() => {
-                successEl.classList.remove('show');
-            }, 3000);
-        }
-
-        // Modal functions
-        function showRecordMatchModal() {
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('matchDate').value = today;
-            renderPlayerAttendance();
-            document.getElementById('recordMatchModal').classList.add('active');
-        }
-
-        function showAddPlayerModal() {
-            document.getElementById('addPlayerModal').classList.add('active');
-        }
-
-        function showManageSquadModal() {
-            renderSquadList();
-            document.getElementById('manageSquadModal').classList.add('active');
-        }
-
-        function showMatchHistoryModal() {
-            renderMatchHistory();
-            document.getElementById('matchHistoryModal').classList.add('active');
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.remove('active');
-            if (modalId === 'addPlayerModal') {
-                document.getElementById('playerName').value = '';
-            } else if (modalId === 'recordMatchModal') {
-                document.getElementById('matchNotes').value = '';
-            }
-        }
-
-        function renderPlayerAttendance() {
-            const container = document.getElementById('playerAttendance');
-            const noPlayersMsg = document.getElementById('noPlayersMessage');
-            
-            container.innerHTML = '';
-            
-            if (teamData.players.length === 0) {
-                noPlayersMsg.style.display = 'block';
-                return;
-            }
-            
-            noPlayersMsg.style.display = 'none';
-
-            teamData.players.forEach((player, index) => {
-                const playerCard = document.createElement('div');
-                playerCard.className = 'player-card attended';
-                playerCard.id = `player-${index}`;
-                playerCard.dataset.attendance = 'present';
-                
-                playerCard.innerHTML = `
-                    <div class="player-header">
-                        <span class="player-name">${player.name}</span>
-                    </div>
-                    <div class="attendance-toggle">
-                        <button class="toggle-btn" type="button" onclick="setAttendance(${index}, 'absent')">Afwezig</button>
-                        <button class="toggle-btn active" type="button" onclick="setAttendance(${index}, 'present')">Aanwezig</button>
-                        <button class="toggle-btn" type="button" onclick="setAttendance(${index}, 'sitout')">Wissel</button>
-                    </div>
-                    <div class="stats-inputs">
-                        <div class="stat-input">
-                            <label>Doelpunten</label>
-                            <input type="number" id="goals-${index}" min="0" value="0">
-                        </div>
-                        <div class="stat-input">
-                            <label>Assists</label>
-                            <input type="number" id="assists-${index}" min="0" value="0">
-                        </div>
-                        <div class="stat-input">
-                            <label>Geel</label>
-                            <input type="number" id="yellow-${index}" min="0" value="0">
-                        </div>
-                        <div class="stat-input">
-                            <label>Rood</label>
-                            <input type="number" id="red-${index}" min="0" value="0">
-                        </div>
-                    </div>
-                `;
-                
-                container.appendChild(playerCard);
-            });
-        }
-
-        function setAttendance(playerIndex, status) {
-            const card = document.getElementById(`player-${playerIndex}`);
-            const buttons = card.querySelectorAll('.toggle-btn');
-            
-            buttons.forEach(btn => btn.classList.remove('active'));
-            
-            if (status === 'present') {
-                buttons[1].classList.add('active');
-                card.className = 'player-card attended';
-            } else if (status === 'sitout') {
-                buttons[2].classList.add('active');
-                card.className = 'player-card sit-out';
-            } else {
-                buttons[0].classList.add('active');
-                card.className = 'player-card';
-            }
-            
-            card.dataset.attendance = status;
-        }
-
-        async function recordMatch() {
-            const matchDate = document.getElementById('matchDate').value;
-            const matchNotes = document.getElementById('matchNotes').value;
-            
-            if (!matchDate) {
-                alert('Selecteer een wedstrijddatum');
-                return;
-            }
-            
-            if (teamData.players.length === 0) {
-                alert('Geen spelers in team. Voeg eerst spelers toe.');
-                return;
-            }
-
-            const matchData = {
-                id: Date.now(),
-                date: matchDate,
-                notes: matchNotes,
-                players: []
-            };
-
-            teamData.players.forEach((player, index) => {
-                const card = document.getElementById(`player-${index}`);
-                const attendance = card.dataset.attendance || 'present';
-                const goals = parseInt(document.getElementById(`goals-${index}`).value) || 0;
-                const assists = parseInt(document.getElementById(`assists-${index}`).value) || 0;
-                const yellow = parseInt(document.getElementById(`yellow-${index}`).value) || 0;
-                const red = parseInt(document.getElementById(`red-${index}`).value) || 0;
-
-                // Initialize stats object if it doesn't exist
-                if (!player.stats) {
-                    player.stats = {
-                        matches: 0,
-                        goals: 0,
-                        assists: 0,
-                        yellowCards: 0,
-                        redCards: 0,
-                        substitutions: 0
-                    };
-                }
-
-                // Update new format (stats object)
-                player.stats.matches++;
-                player.stats.goals += goals;
-                player.stats.assists += assists;
-                player.stats.yellowCards += yellow;
-                player.stats.redCards += red;
-                
-                if (attendance === 'sitout') {
-                    player.stats.substitutions++;
-                }
-
-                // Keep old format for backwards compatibility
-                player.games = (player.games || 0) + 1;
-                if (attendance === 'present') {
-                    player.attended = (player.attended || 0) + 1;
-                } else if (attendance === 'sitout') {
-                    player.sitOuts = (player.sitOuts || 0) + 1;
-                }
-                player.goals = (player.goals || 0) + goals;
-                player.assists = (player.assists || 0) + assists;
-                player.yellow = (player.yellow || 0) + yellow;
-                player.red = (player.red || 0) + red;
-
-                matchData.players.push({
-                    name: player.name,
-                    attendance: attendance,
-                    goals: goals,
-                    assists: assists,
-                    yellow: yellow,
-                    red: red
-                });
-            });
-
-            teamData.matches.push(matchData);
-            
-            if (await saveData()) {
-                closeModal('recordMatchModal');
-                showSuccess('Wedstrijd succesvol vastgelegd!');
-            }
-        }
-
-        async function addPlayer() {
-            const name = document.getElementById('playerName').value.trim();
-            if (!name) {
-                alert('Voer een spelernaam in');
-                return;
-            }
-
-            if (teamData.players.some(p => p.name.toLowerCase() === name.toLowerCase())) {
-                alert('Speler bestaat al');
-                return;
-            }
-
-            teamData.players.push({
-                id: Date.now(),
-                name: name,
-                stats: {
-                    matches: 0,
-                    goals: 0,
-                    assists: 0,
-                    yellowCards: 0,
-                    redCards: 0,
-                    substitutions: 0
-                },
-                // Keep old format for backwards compatibility
-                games: 0,
-                attended: 0,
-                goals: 0,
-                assists: 0,
-                sitOuts: 0,
-                yellow: 0,
-                red: 0
-            });
-
-            if (await saveData()) {
-                closeModal('addPlayerModal');
-                showSuccess(`${name} toegevoegd aan team!`);
-            }
-        }
-
-        function renderSquadList() {
-            const container = document.getElementById('squadList');
-            container.innerHTML = '';
-
-            if (teamData.players.length === 0) {
-                container.innerHTML = '<div class="no-data"><p>Nog geen spelers in team. Voeg spelers toe om te beginnen!</p></div>';
-                return;
-            }
-
-            teamData.players.forEach((player, index) => {
-                const games = player.games || player.stats?.matches || 0;
-                const goals = player.goals || player.stats?.goals || 0;
-                const assists = player.assists || player.stats?.assists || 0;
-                
-                const playerDiv = document.createElement('div');
-                playerDiv.className = 'squad-player';
-                
-                playerDiv.innerHTML = `
-                    <div class="player-info">
-                        <span class="player-name">${player.name}</span>
-                        <span class="player-stats">${games} wedstrijden • ${goals} doelpunten • ${assists} assists</span>
-                    </div>
-                    <div>
-                        <button class="btn btn-danger btn-small" onclick="deletePlayer(${index})">Verwijderen</button>
-                    </div>
-                `;
-                
-                container.appendChild(playerDiv);
-            });
-        }
-
-        async function deletePlayer(index) {
-            const playerName = teamData.players[index].name;
-            if (confirm(`Weet je zeker dat je ${playerName} uit het team wilt verwijderen? Dit verwijdert al hun statistieken.`)) {
-                teamData.players.splice(index, 1);
-                
-                if (await saveData()) {
-                    renderSquadList();
-                    showSuccess(`${playerName} verwijderd uit team`);
-                }
-            }
-        }
-
-        function renderMatchHistory() {
-            const container = document.getElementById('matchHistoryList');
-            container.innerHTML = '';
-
-            if (teamData.matches.length === 0) {
-                container.innerHTML = '<div class="no-data"><p>Nog geen wedstrijden vastgelegd</p></div>';
-                return;
-            }
-
-            const sortedMatches = [...teamData.matches].sort((a, b) => new Date(b.date) - new Date(a.date));
-
-            sortedMatches.forEach((match, sortedIndex) => {
-                const originalIndex = teamData.matches.findIndex(m => m.id === match.id);
-                const totalGoals = match.players.reduce((sum, p) => sum + p.goals, 0);
-                const attendedCount = match.players.filter(p => p.attendance === 'present').length;
-                
-                const matchDiv = document.createElement('div');
-                matchDiv.className = 'match-item';
-                
-                matchDiv.innerHTML = `
-                    <div class="match-info">
-                        <div class="match-date">${new Date(match.date).toLocaleDateString('nl-NL')}</div>
-                        <div class="match-stats">
-                            ${attendedCount} spelers • ${totalGoals} doelpunten
-                            ${match.notes ? ` • ${match.notes}` : ''}
-                        </div>
-                    </div>
-                    <div>
-                        <button class="btn btn-danger btn-small" onclick="deleteMatch(${originalIndex})">Verwijderen</button>
-                    </div>
-                `;
-                
-                container.appendChild(matchDiv);
-            });
-        }
-
-        async function deleteMatch(matchIndex) {
-            const match = teamData.matches[matchIndex];
-            if (confirm(`Weet je zeker dat je de wedstrijd van ${new Date(match.date).toLocaleDateString('nl-NL')} wilt verwijderen?`)) {
-                
-                match.players.forEach(matchPlayer => {
-                    const player = teamData.players.find(p => p.name === matchPlayer.name);
-                    if (player) {
-                        // Update new format (stats object)
-                        if (player.stats) {
-                            player.stats.matches = Math.max(0, player.stats.matches - 1);
-                            player.stats.goals = Math.max(0, player.stats.goals - matchPlayer.goals);
-                            player.stats.assists = Math.max(0, player.stats.assists - matchPlayer.assists);
-                            player.stats.yellowCards = Math.max(0, player.stats.yellowCards - matchPlayer.yellow);
-                            player.stats.redCards = Math.max(0, player.stats.redCards - matchPlayer.red);
-                            if (matchPlayer.attendance === 'sitout') {
-                                player.stats.substitutions = Math.max(0, player.stats.substitutions - 1);
-                            }
-                        }
-
-                        // Update old format for backwards compatibility
-                        player.games = Math.max(0, (player.games || 0) - 1);
-                        if (matchPlayer.attendance === 'present') {
-                            player.attended = Math.max(0, (player.attended || 0) - 1);
-                        } else if (matchPlayer.attendance === 'sitout') {
-                            player.sitOuts = Math.max(0, (player.sitOuts || 0) - 1);
-                        }
-                        player.goals = Math.max(0, (player.goals || 0) - matchPlayer.goals);
-                        player.assists = Math.max(0, (player.assists || 0) - matchPlayer.assists);
-                        player.yellow = Math.max(0, (player.yellow || 0) - matchPlayer.yellow);
-                        player.red = Math.max(0, (player.red || 0) - matchPlayer.red);
-                    }
-                });
-                
-                teamData.matches.splice(matchIndex, 1);
-                
-                if (await saveData()) {
-                    renderMatchHistory();
-                    showSuccess('Wedstrijd succesvol verwijderd');
-                }
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            checkAuth();
-            loadData();
-            
-            document.querySelectorAll('.modal').forEach(modal => {
-                modal.addEventListener('click', function(e) {
-                    if (e.target === modal) {
-                        closeModal(modal.id);
-                    }
-                });
-            });
-        });
-    </script>
-</body>
-</html><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="nl">
 <head>
     <meta charset="UTF-8">
@@ -952,6 +215,34 @@
             color: var(--primary);
         }
 
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--light);
+            font-weight: 500;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            color: var(--light);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(0, 255, 136, 0.1);
+        }
+
         .github-status {
             margin-top: 1rem;
             padding: 1rem;
@@ -971,6 +262,24 @@
             border: 1px solid var(--danger);
             color: var(--danger);
             display: block;
+        }
+
+        .success-message {
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid var(--success);
+            color: var(--success);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .success-message.show {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .admin-controls {
@@ -1034,6 +343,12 @@
             border-color: var(--primary);
         }
 
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            width: auto;
+        }
+
         .modal {
             display: none;
             position: fixed;
@@ -1058,7 +373,7 @@
             border: 1px solid var(--glass-border);
             border-radius: 20px;
             padding: 2rem;
-            max-width: 900px;
+            max-width: 1000px;
             width: 100%;
             max-height: 90vh;
             overflow-y: auto;
@@ -1083,4 +398,514 @@
             color: var(--light);
             font-size: 2rem;
             cursor: pointer;
-            transition
+            transition: color 0.3s ease;
+        }
+
+        .close-btn:hover {
+            color: var(--primary);
+        }
+
+        /* Match Summary */
+        .match-summary {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+            text-align: center;
+        }
+
+        .summary-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .summary-label {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .summary-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* Player Cards */
+        .player-attendance {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .player-card {
+            background: var(--glass);
+            border: 2px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .player-card.status-present {
+            border-color: var(--success);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .player-card.status-absent {
+            border-color: var(--danger);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .player-card.status-sitout {
+            border-color: var(--warning);
+            background: rgba(251, 191, 36, 0.1);
+        }
+
+        .player-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .player-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--light);
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--glass-border);
+            transition: all 0.3s ease;
+        }
+
+        .player-card.status-present .status-indicator {
+            background: var(--success);
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+        }
+
+        .player-card.status-absent .status-indicator {
+            background: var(--danger);
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+        }
+
+        .player-card.status-sitout .status-indicator {
+            background: var(--warning);
+            box-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+        }
+
+        .attendance-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .attendance-btn {
+            padding: 0.8rem;
+            border: 2px solid transparent;
+            border-radius: 10px;
+            background: var(--glass);
+            color: var(--light);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .attendance-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .attendance-btn.btn-present {
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        .attendance-btn.btn-present.active {
+            background: var(--success);
+            color: var(--dark);
+        }
+
+        .attendance-btn.btn-absent {
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        .attendance-btn.btn-absent.active {
+            background: var(--danger);
+            color: var(--light);
+        }
+
+        .attendance-btn.btn-sitout {
+            border-color: var(--warning);
+            color: var(--warning);
+        }
+
+        .attendance-btn.btn-sitout.active {
+            background: var(--warning);
+            color: var(--dark);
+        }
+
+        .stats-inputs {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        .stat-input {
+            text-align: center;
+        }
+
+        .stat-input label {
+            display: block;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .stat-input input {
+            width: 100%;
+            padding: 0.8rem;
+            background: var(--darker);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            color: var(--light);
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .stat-input input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(0, 255, 136, 0.1);
+        }
+
+        .squad-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .squad-player {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .player-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .player-stats {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .match-history {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .match-item {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .match-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .match-date {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--light);
+        }
+
+        .match-stats {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 3rem;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .header-actions {
+                position: static;
+                margin-bottom: 1rem;
+            }
+            
+            .match-summary {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .stats-inputs {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .attendance-buttons {
+                grid-template-columns: 1fr;
+            }
+            
+            .squad-player, .match-item {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+    
+    <!-- Login Screen -->
+    <div class="login-screen" id="loginScreen">
+        <div class="login-card">
+            <h2 class="login-title">Beheerder Inloggen</h2>
+            <form class="login-form" onsubmit="handleLogin(event)">
+                <input 
+                    type="text" 
+                    id="username" 
+                    placeholder="Gebruikersnaam" 
+                    class="login-input" 
+                    required
+                >
+                <input 
+                    type="password" 
+                    id="password" 
+                    placeholder="Wachtwoord" 
+                    class="login-input" 
+                    required
+                >
+                <button type="submit" class="login-btn">Inloggen</button>
+                <div class="login-error" id="loginError">Onjuiste inloggegevens</div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div id="mainContent" style="display: none;">
+        <header class="header">
+            <div class="header-actions">
+                <button onclick="viewStats()" class="header-btn">📊 Statistieken bekijken</button>
+                <button onclick="logout()" class="header-btn">🚪 Uitloggen</button>
+            </div>
+            <h1>Beheerderspaneel</h1>
+            <p class="subtitle">Minivoetbal Management • Seizoen 2025</p>
+        </header>
+
+        <div class="container">
+            <!-- GitHub Setup Section -->
+            <div class="github-setup">
+                <h3>⚙️ GitHub Configuratie</h3>
+                <div class="form-group">
+                    <label for="githubToken">GitHub Personal Access Token:</label>
+                    <input type="password" id="githubToken" placeholder="Voer je GitHub token in">
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label for="repoOwner">Repository Owner:</label>
+                        <input type="text" id="repoOwner" value="lodeai" placeholder="bijv. jouwgebruikersnaam">
+                    </div>
+                    <div class="form-group">
+                        <label for="repoName">Repository Name:</label>
+                        <input type="text" id="repoName" value="vodewinste" placeholder="bijv. vodewinste">
+                    </div>
+                </div>
+                <button onclick="testGitHubConnection()" class="btn">🔗 Test Verbinding</button>
+                <div id="githubStatus" class="github-status"></div>
+            </div>
+
+            <div class="success-message" id="successMessage">
+                Actie succesvol voltooid!
+            </div>
+
+            <div class="admin-controls">
+                <div class="control-card">
+                    <h3>🏆 Wedstrijdenbeheer</h3>
+                    <p style="color: rgba(255,255,255,0.7); margin-bottom: 1.5rem;">Wedstrijdresultaten en spelersstatistieken vastleggen</p>
+                    <button class="btn" onclick="showRecordMatchModal()">Nieuwe wedstrijd vastleggen</button>
+                    <button class="btn btn-secondary" onclick="showMatchHistoryModal()">Wedstrijdgeschiedenis bekijken</button>
+                </div>
+                
+                <div class="control-card">
+                    <h3>👥 Teambeheer</h3>
+                    <p style="color: rgba(255,255,255,0.7); margin-bottom: 1.5rem;">Spelers toevoegen, verwijderen en beheren</p>
+                    <button class="btn" onclick="showAddPlayerModal()">Speler toevoegen</button>
+                    <button class="btn btn-secondary" onclick="showManageSquadModal()">Team beheren</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Record Match Modal -->
+        <div class="modal" id="recordMatchModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Wedstrijd vastleggen</h3>
+                    <button class="close-btn" onclick="closeModal('recordMatchModal')">&times;</button>
+                </div>
+                
+                <div class="form-group">
+                    <label>Wedstrijddatum</label>
+                    <input type="date" id="matchDate">
+                </div>
+                
+                <div class="form-group">
+                    <label>Opmerkingen (optioneel)</label>
+                    <textarea id="matchNotes" rows="2" placeholder="Wedstrijdnotities, tegenstander, resultaat..."></textarea>
+                </div>
+                
+                <!-- Match Summary -->
+                <div class="match-summary" id="matchSummary">
+                    <div class="summary-item">
+                        <div class="summary-label">Doelpunten</div>
+                        <div class="summary-value" id="totalGoals">0</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Assists</div>
+                        <div class="summary-value" id="totalAssists">0</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Sit-Outs</div>
+                        <div class="summary-value" id="totalSitouts">0</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Geel</div>
+                        <div class="summary-value" id="totalYellow">0</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Rood</div>
+                        <div class="summary-value" id="totalRed">0</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Speleraanwezigheid & Statistieken</label>
+                    <div id="noPlayersMessage" class="no-data" style="display: none;">
+                        <p>Geen spelers in team. Voeg eerst spelers toe voordat je wedstrijden vastlegt.</p>
+                    </div>
+                    <div class="player-attendance" id="playerAttendance">
+                        <!-- Players will be dynamically added here -->
+                    </div>
+                </div>
+                
+                <button class="btn" onclick="recordMatch()">Wedstrijd opslaan</button>
+            </div>
+        </div>
+
+        <!-- Add Player Modal -->
+        <div class="modal" id="addPlayerModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Nieuwe speler toevoegen</h3>
+                    <button class="close-btn" onclick="closeModal('addPlayerModal')">&times;</button>
+                </div>
+                <div class="form-group">
+                    <label for="playerName">Spelernaam</label>
+                    <input type="text" id="playerName" placeholder="Voer spelernaam in">
+                </div>
+                <button class="btn" onclick="addPlayer()">Speler toevoegen</button>
+            </div>
+        </div>
+
+        <!-- Manage Squad Modal -->
+        <div class="modal" id="manageSquadModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Team beheren</h3>
+                    <button class="close-btn" onclick="closeModal('manageSquadModal')">&times;</button>
+                </div>
+                <div class="squad-list" id="squadList">
+                    <!-- Squad will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Match History Modal -->
+        <div class="modal" id="matchHistoryModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Wedstrijdgeschiedenis</h3>
+                    <button class="close-btn" onclick="closeModal('matchHistoryModal')">&times;</button>
+                </div>
+                <div class="match-history" id="matchHistoryList">
+                    <!-- Match history will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Credentials: admin:wuste
+        const AUTH_DATA = 'YWRtaW46d3VzdGU='; // base64 encoded "admin:wuste"
+        
+        let teamData = {
+            players: [],
+            matches: [],
+            lastUpdated: null
+        };
+
+        // Authentication functions
+        function handleLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const credentials = btoa(username + ':' + password);
+            
+            if (credentials === AUTH_DATA) {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('mainContent').style.display = 'block';
+                sessionStorage.setItem('minivoetbalAuth', 'authenticated');
+                loadGitHubSettings();
+                loadData();
+            } else {
+                document.getElementById('loginError').style.display = 'block';
+                setTimeout(() => {
+                    document.getElementById('loginError').style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        function logout() {
+            sessionStorage.removeItem('minivoetbalAuth');
+            document.getElementById('loginScreen').style.display = 'flex';
+            document.getElementById('mainContent').style.display = 'none';
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+        }
+
+        function viewStats() {
+            window.location.href = 'index.html';
+        }
+
+        
