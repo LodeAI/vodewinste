@@ -243,6 +243,45 @@
             box-shadow: 0 0 0 2px rgba(0, 255, 136, 0.1);
         }
 
+        .match-score-inputs {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 1rem;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .score-input {
+            text-align: center;
+        }
+
+        .score-input label {
+            display: block;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 0.5rem;
+        }
+
+        .score-input input {
+            width: 100%;
+            padding: 1rem;
+            background: var(--darker);
+            border: 2px solid var(--glass-border);
+            border-radius: 10px;
+            color: var(--light);
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+
+        .score-vs {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-align: center;
+        }
+
         .github-status {
             margin-top: 1rem;
             padding: 1rem;
@@ -779,21 +818,41 @@
                     <label>Wedstrijddatum</label>
                     <input type="date" id="matchDate">
                 </div>
+
+                <!-- Match Score Section -->
+                <div class="form-group">
+                    <label>Eindresultaat</label>
+                    <div class="match-score-inputs">
+                        <div class="score-input">
+                            <label>Ons Team</label>
+                            <input type="number" id="teamGoals" min="0" value="0" onchange="updateMatchSummary()">
+                        </div>
+                        <div class="score-vs">VS</div>
+                        <div class="score-input">
+                            <label>Tegenstander</label>
+                            <input type="number" id="opponentGoals" min="0" value="0" onchange="updateMatchSummary()">
+                        </div>
+                    </div>
+                </div>
                 
                 <div class="form-group">
                     <label>Opmerkingen (optioneel)</label>
-                    <textarea id="matchNotes" rows="2" placeholder="Wedstrijdnotities, tegenstander, resultaat..."></textarea>
+                    <textarea id="matchNotes" rows="2" placeholder="Wedstrijdnotities, tegenstander naam, bijzonderheden..."></textarea>
                 </div>
                 
                 <!-- Match Summary -->
                 <div class="match-summary" id="matchSummary">
                     <div class="summary-item">
-                        <div class="summary-label">Doelpunten</div>
+                        <div class="summary-label">Individuele Doelpunten</div>
                         <div class="summary-value" id="totalGoals">0</div>
                     </div>
                     <div class="summary-item">
                         <div class="summary-label">Assists</div>
                         <div class="summary-value" id="totalAssists">0</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Doelpuntensaldo</div>
+                        <div class="summary-value" id="goalDifference">0</div>
                     </div>
                     <div class="summary-item">
                         <div class="summary-label">Sit-Outs</div>
@@ -844,68 +903,4 @@
                 <div class="modal-header">
                     <h3 class="modal-title">Team beheren</h3>
                     <button class="close-btn" onclick="closeModal('manageSquadModal')">&times;</button>
-                </div>
-                <div class="squad-list" id="squadList">
-                    <!-- Squad will be populated here -->
-                </div>
-            </div>
-        </div>
-
-        <!-- Match History Modal -->
-        <div class="modal" id="matchHistoryModal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title">Wedstrijdgeschiedenis</h3>
-                    <button class="close-btn" onclick="closeModal('matchHistoryModal')">&times;</button>
-                </div>
-                <div class="match-history" id="matchHistoryList">
-                    <!-- Match history will be populated here -->
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // Credentials
-        const AUTH_DATA = 'YWRtaW46d3VzdGU=';
-        
-        let teamData = {
-            players: [],
-            matches: [],
-            lastUpdated: null
-        };
-
-        // Authentication functions
-        function handleLogin(event) {
-            event.preventDefault();
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            const credentials = btoa(username + ':' + password);
-            
-            if (credentials === AUTH_DATA) {
-                document.getElementById('loginScreen').style.display = 'none';
-                document.getElementById('mainContent').style.display = 'block';
-                sessionStorage.setItem('minivoetbalAuth', 'authenticated');
-                loadGitHubSettings();
-                loadData();
-            } else {
-                document.getElementById('loginError').style.display = 'block';
-                setTimeout(() => {
-                    document.getElementById('loginError').style.display = 'none';
-                }, 3000);
-            }
-        }
-
-        function logout() {
-            sessionStorage.removeItem('minivoetbalAuth');
-            document.getElementById('loginScreen').style.display = 'flex';
-            document.getElementById('mainContent').style.display = 'none';
-            document.getElementById('username').value = '';
-            document.getElementById('password').value = '';
-        }
-
-        function viewStats() {
-            window.location.href = 'index.html';
-        }
-
-        
+                
