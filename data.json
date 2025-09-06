@@ -4,17 +4,17 @@
       "id": 1757156478409,
       "name": "Lode Verschelde",
       "stats": {
-        "matches": 0,
+        "matches": 1,
         "goals": 0,
-        "assists": 0,
+        "assists": 2,
         "yellowCards": 0,
         "redCards": 0,
         "substitutions": 0
       },
-      "games": 0,
-      "attended": 0,
+      "games": 1,
+      "attended": 1,
       "goals": 0,
-      "assists": 0,
+      "assists": 2,
       "sitOuts": 0,
       "yellow": 0,
       "red": 0
@@ -23,15 +23,15 @@
       "id": 1757157507785,
       "name": "Pieterjan Vermeiren",
       "stats": {
-        "matches": 0,
+        "matches": 1,
         "goals": 0,
         "assists": 0,
         "yellowCards": 0,
         "redCards": 0,
         "substitutions": 0
       },
-      "games": 0,
-      "attended": 0,
+      "games": 1,
+      "attended": 1,
       "goals": 0,
       "assists": 0,
       "sitOuts": 0,
@@ -42,15 +42,15 @@
       "id": 1757157564052,
       "name": "Alexander Ackermans",
       "stats": {
-        "matches": 0,
+        "matches": 1,
         "goals": 0,
         "assists": 0,
         "yellowCards": 0,
         "redCards": 0,
         "substitutions": 0
       },
-      "games": 0,
-      "attended": 0,
+      "games": 1,
+      "attended": 1,
       "goals": 0,
       "assists": 0,
       "sitOuts": 0,
@@ -61,17 +61,17 @@
       "id": 1757157572713,
       "name": "Niek Couvreur",
       "stats": {
-        "matches": 0,
-        "goals": 0,
-        "assists": 0,
+        "matches": 1,
+        "goals": 1,
+        "assists": 1,
         "yellowCards": 0,
         "redCards": 0,
         "substitutions": 0
       },
-      "games": 0,
-      "attended": 0,
-      "goals": 0,
-      "assists": 0,
+      "games": 1,
+      "attended": 1,
+      "goals": 1,
+      "assists": 1,
       "sitOuts": 0,
       "yellow": 0,
       "red": 0
@@ -80,14 +80,14 @@
       "id": 1757157584876,
       "name": "Bert Ameye",
       "stats": {
-        "matches": 0,
+        "matches": 1,
         "goals": 0,
         "assists": 0,
         "yellowCards": 0,
         "redCards": 0,
         "substitutions": 0
       },
-      "games": 0,
+      "games": 1,
       "attended": 0,
       "goals": 0,
       "assists": 0,
@@ -99,14 +99,14 @@
       "id": 1757157598996,
       "name": "Tommy Baes",
       "stats": {
-        "matches": 0,
+        "matches": 1,
         "goals": 0,
         "assists": 0,
         "yellowCards": 0,
         "redCards": 0,
         "substitutions": 0
       },
-      "games": 0,
+      "games": 1,
       "attended": 0,
       "goals": 0,
       "assists": 0,
@@ -118,16 +118,16 @@
       "id": 1757157633776,
       "name": "Hendriek Laloo",
       "stats": {
-        "matches": 0,
-        "goals": 0,
+        "matches": 1,
+        "goals": 3,
         "assists": 0,
         "yellowCards": 0,
         "redCards": 0,
         "substitutions": 0
       },
-      "games": 0,
-      "attended": 0,
-      "goals": 0,
+      "games": 1,
+      "attended": 1,
+      "goals": 3,
       "assists": 0,
       "sitOuts": 0,
       "yellow": 0,
@@ -137,15 +137,15 @@
       "id": 1757157646687,
       "name": "Frederick Meulebrouck",
       "stats": {
-        "matches": 0,
+        "matches": 1,
         "goals": 0,
         "assists": 0,
         "yellowCards": 0,
         "redCards": 0,
         "substitutions": 0
       },
-      "games": 0,
-      "attended": 0,
+      "games": 1,
+      "attended": 1,
       "goals": 0,
       "assists": 0,
       "sitOuts": 0,
@@ -156,17 +156,17 @@
       "id": 1757157656288,
       "name": "Matthias Savels",
       "stats": {
-        "matches": 0,
+        "matches": 1,
         "goals": 0,
-        "assists": 0,
+        "assists": 1,
         "yellowCards": 0,
         "redCards": 0,
         "substitutions": 0
       },
-      "games": 0,
-      "attended": 0,
+      "games": 1,
+      "attended": 1,
       "goals": 0,
-      "assists": 0,
+      "assists": 1,
       "sitOuts": 0,
       "yellow": 0,
       "red": 0
@@ -175,14 +175,14 @@
       "id": 1757157668422,
       "name": "Jochen Van Vyve",
       "stats": {
-        "matches": 0,
+        "matches": 1,
         "goals": 0,
         "assists": 0,
         "yellowCards": 0,
         "redCards": 0,
         "substitutions": 0
       },
-      "games": 0,
+      "games": 1,
       "attended": 0,
       "goals": 0,
       "assists": 0,
@@ -194,17 +194,17 @@
       "id": 1757157680737,
       "name": "Mathijs Verschave",
       "stats": {
-        "matches": 0,
-        "goals": 0,
-        "assists": 0,
+        "matches": 1,
+        "goals": 1,
+        "assists": 1,
         "yellowCards": 0,
         "redCards": 0,
         "substitutions": 0
       },
-      "games": 0,
-      "attended": 0,
-      "goals": 0,
-      "assists": 0,
+      "games": 1,
+      "attended": 1,
+      "goals": 1,
+      "assists": 1,
       "sitOuts": 0,
       "yellow": 0,
       "red": 0
@@ -213,14 +213,14 @@
       "id": 1757157695577,
       "name": "Arne Vlietinck",
       "stats": {
-        "matches": 0,
+        "matches": 1,
         "goals": 0,
         "assists": 0,
         "yellowCards": 0,
         "redCards": 0,
         "substitutions": 0
       },
-      "games": 0,
+      "games": 1,
       "attended": 0,
       "goals": 0,
       "assists": 0,
@@ -232,14 +232,14 @@
       "id": 1757157708098,
       "name": "Sebastian Rock",
       "stats": {
-        "matches": 0,
+        "matches": 1,
         "goals": 0,
         "assists": 0,
         "yellowCards": 0,
         "redCards": 0,
         "substitutions": 0
       },
-      "games": 0,
+      "games": 1,
       "attended": 0,
       "goals": 0,
       "assists": 0,
@@ -251,14 +251,14 @@
       "id": 1757157721074,
       "name": "Frederik Vansteenkiste",
       "stats": {
-        "matches": 0,
+        "matches": 1,
         "goals": 0,
         "assists": 0,
         "yellowCards": 0,
         "redCards": 0,
         "substitutions": 0
       },
-      "games": 0,
+      "games": 1,
       "attended": 0,
       "goals": 0,
       "assists": 0,
@@ -267,6 +267,126 @@
       "red": 0
     }
   ],
-  "matches": [],
-  "lastUpdated": "2025-09-06T11:22:26.438Z"
+  "matches": [
+    {
+      "id": 1757158388260,
+      "date": "2025-09-01",
+      "notes": "FC BINNEEEUUH",
+      "players": [
+        {
+          "name": "Lode Verschelde",
+          "attendance": "present",
+          "goals": 0,
+          "assists": 2,
+          "yellow": 0,
+          "red": 0
+        },
+        {
+          "name": "Pieterjan Vermeiren",
+          "attendance": "present",
+          "goals": 0,
+          "assists": 0,
+          "yellow": 0,
+          "red": 0
+        },
+        {
+          "name": "Alexander Ackermans",
+          "attendance": "present",
+          "goals": 0,
+          "assists": 0,
+          "yellow": 0,
+          "red": 0
+        },
+        {
+          "name": "Niek Couvreur",
+          "attendance": "present",
+          "goals": 1,
+          "assists": 1,
+          "yellow": 0,
+          "red": 0
+        },
+        {
+          "name": "Bert Ameye",
+          "attendance": "absent",
+          "goals": 0,
+          "assists": 0,
+          "yellow": 0,
+          "red": 0
+        },
+        {
+          "name": "Tommy Baes",
+          "attendance": "absent",
+          "goals": 0,
+          "assists": 0,
+          "yellow": 0,
+          "red": 0
+        },
+        {
+          "name": "Hendriek Laloo",
+          "attendance": "present",
+          "goals": 3,
+          "assists": 0,
+          "yellow": 0,
+          "red": 0
+        },
+        {
+          "name": "Frederick Meulebrouck",
+          "attendance": "present",
+          "goals": 0,
+          "assists": 0,
+          "yellow": 0,
+          "red": 0
+        },
+        {
+          "name": "Matthias Savels",
+          "attendance": "present",
+          "goals": 0,
+          "assists": 1,
+          "yellow": 0,
+          "red": 0
+        },
+        {
+          "name": "Jochen Van Vyve",
+          "attendance": "absent",
+          "goals": 0,
+          "assists": 0,
+          "yellow": 0,
+          "red": 0
+        },
+        {
+          "name": "Mathijs Verschave",
+          "attendance": "present",
+          "goals": 1,
+          "assists": 1,
+          "yellow": 0,
+          "red": 0
+        },
+        {
+          "name": "Arne Vlietinck",
+          "attendance": "absent",
+          "goals": 0,
+          "assists": 0,
+          "yellow": 0,
+          "red": 0
+        },
+        {
+          "name": "Sebastian Rock",
+          "attendance": "absent",
+          "goals": 0,
+          "assists": 0,
+          "yellow": 0,
+          "red": 0
+        },
+        {
+          "name": "Frederik Vansteenkiste",
+          "attendance": "absent",
+          "goals": 0,
+          "assists": 0,
+          "yellow": 0,
+          "red": 0
+        }
+      ]
+    }
+  ],
+  "lastUpdated": "2025-09-06T11:33:08.682Z"
 }
