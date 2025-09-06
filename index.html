@@ -90,25 +90,6 @@
             font-size: 1.2rem;
         }
 
-        .admin-link {
-            position: absolute;
-            top: 2rem;
-            right: 2rem;
-            padding: 0.5rem 1rem;
-            background: var(--glass);
-            border: 1px solid var(--glass-border);
-            border-radius: 8px;
-            color: var(--light);
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-        }
-
-        .admin-link:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-        }
-
         .container {
             max-width: 1400px;
             margin: 0 auto;
@@ -250,15 +231,64 @@
             font-size: 0.9rem;
         }
 
+        /* Attendance bar styles */
+        .attendance-cell {
+            padding: 1rem 0.5rem;
+        }
+
+        .attendance-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .bar-container {
+            flex: 1;
+            height: 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            min-width: 80px;
+        }
+
+        .bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary) 0%, #00cc6f 100%);
+            border-radius: 8px;
+            transition: width 0.8s ease;
+            position: relative;
+        }
+
+        .bar-text {
+            font-size: 0.85rem;
+            color: var(--light);
+            font-weight: 500;
+            min-width: 60px;
+            text-align: right;
+        }
+
+        /* Card styling */
+        .card-display {
+            display: inline-block;
+            background: var(--warning);
+            color: var(--dark);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            min-width: 25px;
+            text-align: center;
+        }
+
+        .card-red {
+            background: var(--danger);
+            color: var(--light);
+        }
+
         @media (max-width: 768px) {
             .header h1 {
                 font-size: 2rem;
-            }
-            
-            .admin-link {
-                position: static;
-                display: inline-block;
-                margin-bottom: 1rem;
             }
             
             .stats-overview {
@@ -271,6 +301,19 @@
             
             th, td {
                 padding: 0.8rem 0.5rem;
+            }
+            
+            .attendance-cell {
+                padding: 0.8rem 0.3rem;
+            }
+            
+            .bar-container {
+                min-width: 60px;
+            }
+            
+            .bar-text {
+                min-width: 45px;
+                font-size: 0.8rem;
             }
             
             .stat-value {
@@ -293,7 +336,6 @@
     <div class="bg-animation"></div>
     
     <header class="header">
-        <a href="admin.html" class="admin-link">⚙️ Beheerderspaneel</a>
         <h1>Minivoetbal Stats</h1>
         <p class="subtitle">Seizoen 2025</p>
     </header>
@@ -302,20 +344,24 @@
         <!-- Stats Overview -->
         <div class="stats-overview" id="statsOverview">
             <div class="stat-card">
-                <div class="stat-value" id="totalPlayers">0</div>
-                <div class="stat-label">Spelers</div>
+                <div class="stat-value" id="gamesPlayed">0</div>
+                <div class="stat-label">Gespeelde wedstrijden</div>
             </div>
             <div class="stat-card">
-                <div class="stat-value" id="totalMatches">0</div>
-                <div class="stat-label">Wedstrijden</div>
+                <div class="stat-value" id="gamesWon">0</div>
+                <div class="stat-label">Gewonnen</div>
             </div>
             <div class="stat-card">
-                <div class="stat-value" id="totalGoals">0</div>
-                <div class="stat-label">Doelpunten</div>
+                <div class="stat-value" id="gamesDraw">0</div>
+                <div class="stat-label">Gelijkspel</div>
             </div>
             <div class="stat-card">
-                <div class="stat-value" id="totalAssists">0</div>
-                <div class="stat-label">Assists</div>
+                <div class="stat-value" id="gamesLost">0</div>
+                <div class="stat-label">Verloren</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="goalDifference">+0</div>
+                <div class="stat-label">Doelpuntensaldo</div>
             </div>
         </div>
 
@@ -335,11 +381,10 @@
                             <th>#</th>
                             <th onclick="sortTable('name')">Naam</th>
                             <th onclick="sortTable('goals')">Doelpunten</th>
-                            <th onclick="sortTable('assists')">Assists</th>
                             <th onclick="sortTable('attendance')">Aanwezigheid</th>
                             <th onclick="sortTable('games')">Wedstrijden</th>
-                            <th onclick="sortTable('yellow')">Geel</th>
-                            <th onclick="sortTable('red')">Rood</th>
+                            <th onclick="sortTable('yellow')">Gele kaarten</th>
+                            <th onclick="sortTable('red')">Rode kaarten</th>
                         </tr>
                     </thead>
                     <tbody id="playerTableBody">
@@ -348,7 +393,7 @@
                 </table>
                 <div id="noData" class="no-data" style="display: none;">
                     <p>Nog geen spelersgegevens beschikbaar.</p>
-                    <p>Gebruik het <a href="admin.html" style="color: var(--primary);">beheerderspaneel</a> om spelers toe te voegen.</p>
+                    <p>Gebruik het beheerderspaneel om spelers toe te voegen.</p>
                 </div>
             </div>
         </div>
@@ -394,20 +439,60 @@
             teamData = { players: [], matches: [] };
         }
 
-        function updateOverviewStats() {
-            const totalPlayers = teamData.players.length;
-            const totalMatches = teamData.matches.length;
-            const totalGoals = teamData.players.reduce((sum, player) => {
-                return sum + (player.goals || player.stats?.goals || 0);
-            }, 0);
-            const totalAssists = teamData.players.reduce((sum, player) => {
-                return sum + (player.assists || player.stats?.assists || 0);
-            }, 0);
+        function calculateTeamStats() {
+            const matches = teamData.matches || [];
+            let gamesPlayed = 0;
+            let gamesWon = 0;
+            let gamesDraw = 0;
+            let gamesLost = 0;
+            let goalsFor = 0;
+            let goalsAgainst = 0;
 
-            document.getElementById('totalPlayers').textContent = totalPlayers;
-            document.getElementById('totalMatches').textContent = totalMatches;
-            document.getElementById('totalGoals').textContent = totalGoals;
-            document.getElementById('totalAssists').textContent = totalAssists;
+            matches.forEach(match => {
+                if (match.homeScore !== undefined && match.awayScore !== undefined) {
+                    gamesPlayed++;
+                    goalsFor += match.homeScore || 0;
+                    goalsAgainst += match.awayScore || 0;
+                    
+                    if (match.homeScore > match.awayScore) {
+                        gamesWon++;
+                    } else if (match.homeScore === match.awayScore) {
+                        gamesDraw++;
+                    } else {
+                        gamesLost++;
+                    }
+                }
+            });
+
+            return {
+                gamesPlayed,
+                gamesWon,
+                gamesDraw,
+                gamesLost,
+                goalDifference: goalsFor - goalsAgainst
+            };
+        }
+
+        function updateOverviewStats() {
+            const stats = calculateTeamStats();
+            
+            document.getElementById('gamesPlayed').textContent = stats.gamesPlayed;
+            document.getElementById('gamesWon').textContent = stats.gamesWon;
+            document.getElementById('gamesDraw').textContent = stats.gamesDraw;
+            document.getElementById('gamesLost').textContent = stats.gamesLost;
+            
+            const goalDiff = stats.goalDifference;
+            const goalDiffEl = document.getElementById('goalDifference');
+            goalDiffEl.textContent = goalDiff >= 0 ? `+${goalDiff}` : `${goalDiff}`;
+            
+            // Color code the goal difference
+            if (goalDiff > 0) {
+                goalDiffEl.style.color = 'var(--primary)';
+            } else if (goalDiff < 0) {
+                goalDiffEl.style.color = 'var(--danger)';
+            } else {
+                goalDiffEl.style.color = 'var(--warning)';
+            }
         }
 
         function calculateAttendancePercentage(player) {
@@ -425,20 +510,20 @@
                 const bGoals = b.goals || b.stats?.goals || 0;
                 if (bGoals !== aGoals) return bGoals - aGoals;
                 
-                // Secondary: Assists (descending)
-                const aAssists = a.assists || a.stats?.assists || 0;
-                const bAssists = b.assists || b.stats?.assists || 0;
-                if (bAssists !== aAssists) return bAssists - aAssists;
-                
-                // Tertiary: Attendance percentage (descending)
+                // Secondary: Attendance percentage (descending)
                 const aAttendance = calculateAttendancePercentage(a);
                 const bAttendance = calculateAttendancePercentage(b);
                 if (bAttendance !== aAttendance) return bAttendance - aAttendance;
                 
-                // Quaternary: Games played (descending)
+                // Tertiary: Games played (descending)
                 const aGames = a.games || a.stats?.matches || 0;
                 const bGames = b.games || b.stats?.matches || 0;
-                return bGames - aGames;
+                if (bGames !== aGames) return bGames - aGames;
+                
+                // Quaternary: Yellow cards (ascending - fewer is better)
+                const aYellow = a.yellow || a.stats?.yellowCards || 0;
+                const bYellow = b.yellow || b.stats?.yellowCards || 0;
+                return aYellow - bYellow;
             });
         }
 
@@ -488,10 +573,6 @@
                             aVal = a.goals || a.stats?.goals || 0;
                             bVal = b.goals || b.stats?.goals || 0;
                             break;
-                        case 'assists':
-                            aVal = a.assists || a.stats?.assists || 0;
-                            bVal = b.assists || b.stats?.assists || 0;
-                            break;
                         case 'attendance':
                             aVal = calculateAttendancePercentage(a);
                             bVal = calculateAttendancePercentage(b);
@@ -525,7 +606,6 @@
             sortedPlayers.forEach((player, index) => {
                 const games = player.games || player.stats?.matches || 0;
                 const goals = player.goals || player.stats?.goals || 0;
-                const assists = player.assists || player.stats?.assists || 0;
                 const attended = player.attended || 0;
                 const yellow = player.yellow || player.stats?.yellowCards || 0;
                 const red = player.red || player.stats?.redCards || 0;
@@ -537,11 +617,17 @@
                     <td class="rank">${index + 1}</td>
                     <td class="player-name">${player.name}</td>
                     <td>${goals}</td>
-                    <td>${assists}</td>
-                    <td>${attended}/${games} <span class="percentage">(${attendancePercentage}%)</span></td>
+                    <td class="attendance-cell">
+                        <div class="attendance-bar">
+                            <div class="bar-container">
+                                <div class="bar-fill" style="width: ${attendancePercentage}%"></div>
+                            </div>
+                            <div class="bar-text">${attended}/${games}</div>
+                        </div>
+                    </td>
                     <td>${games}</td>
-                    <td>${yellow}</td>
-                    <td>${red}</td>
+                    <td><span class="card-display">${yellow}</span></td>
+                    <td><span class="card-display card-red">${red}</span></td>
                 `;
                 
                 tableBody.appendChild(row);
