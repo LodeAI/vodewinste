@@ -1,5 +1,25 @@
 {
-  "players": [],
+  "players": [
+    {
+      "id": 1757156478409,
+      "name": "Lode Verschelde",
+      "stats": {
+        "matches": 0,
+        "goals": 0,
+        "assists": 0,
+        "yellowCards": 0,
+        "redCards": 0,
+        "substitutions": 0
+      },
+      "games": 0,
+      "attended": 0,
+      "goals": 0,
+      "assists": 0,
+      "sitOuts": 0,
+      "yellow": 0,
+      "red": 0
+    }
+  ],
   "matches": [
     {
       "id": 1757155858215,
@@ -25,5 +45,5 @@
       ]
     }
   ],
-  "lastUpdated": "2025-09-06T10:59:17.572Z"
+  "lastUpdated": "2025-09-06T11:01:18.837Z"
 }
