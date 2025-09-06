@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel - Minivoetbal</title>
+    <title>Beheerderspaneel - Minivoetbal</title>
     <style>
         * {
             margin: 0;
@@ -32,7 +32,6 @@
             overflow-x: hidden;
         }
 
-        /* Animated background */
         .bg-animation {
             position: fixed;
             width: 100%;
@@ -62,7 +61,6 @@
             50% { transform: rotate(180deg) scale(1.1); }
         }
 
-        /* Login Screen */
         .login-screen {
             position: fixed;
             top: 0;
@@ -141,7 +139,6 @@
             box-shadow: 0 10px 30px rgba(0, 255, 136, 0.3);
         }
 
-        /* Header */
         .header {
             padding: 2rem;
             text-align: center;
@@ -189,6 +186,7 @@
             text-decoration: none;
             font-size: 0.9rem;
             transition: all 0.3s ease;
+            cursor: pointer;
         }
 
         .header-btn:hover {
@@ -196,14 +194,12 @@
             color: var(--primary);
         }
 
-        /* Container */
         .container {
             max-width: 1400px;
             margin: 0 auto;
             padding: 2rem;
         }
 
-        /* Admin controls */
         .admin-controls {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -219,8 +215,6 @@
             padding: 2rem;
             text-align: center;
             transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
         }
 
         .control-card:hover {
@@ -267,7 +261,6 @@
             border-color: var(--primary);
         }
 
-        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -292,7 +285,7 @@
             border: 1px solid var(--glass-border);
             border-radius: 20px;
             padding: 2rem;
-            max-width: 600px;
+            max-width: 900px;
             width: 100%;
             max-height: 90vh;
             overflow-y: auto;
@@ -353,11 +346,10 @@
             box-shadow: 0 0 0 3px rgba(0, 255, 136, 0.1);
         }
 
-        /* Match recording specific styles */
         .player-attendance {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
             margin-bottom: 2rem;
         }
 
@@ -367,6 +359,7 @@
             border-radius: 15px;
             padding: 1.5rem;
             transition: all 0.3s ease;
+            min-height: 200px;
         }
 
         .player-card.attended {
@@ -384,27 +377,32 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
         }
 
         .player-name {
             font-weight: 600;
             color: var(--primary);
+            font-size: 1.1rem;
         }
 
         .attendance-toggle {
             display: flex;
-            gap: 0.5rem;
+            gap: 0.25rem;
+            flex-wrap: wrap;
         }
 
         .toggle-btn {
-            padding: 0.5rem 1rem;
+            padding: 0.4rem 0.8rem;
             border: 1px solid var(--glass-border);
             background: var(--glass);
             color: var(--light);
-            border-radius: 8px;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             transition: all 0.3s ease;
+            white-space: nowrap;
         }
 
         .toggle-btn.active {
@@ -415,8 +413,9 @@
 
         .stats-inputs {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 0.5rem;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
         }
 
         .stat-input {
@@ -426,17 +425,18 @@
         }
 
         .stat-input label {
-            font-size: 0.8rem;
-            margin-bottom: 0.25rem;
-        }
-
-        .stat-input input {
-            width: 60px;
-            padding: 0.5rem;
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
             text-align: center;
         }
 
-        /* Squad management */
+        .stat-input input {
+            width: 70px;
+            padding: 0.6rem;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
         .squad-list {
             max-height: 400px;
             overflow-y: auto;
@@ -480,7 +480,6 @@
             margin: 0 0.25rem;
         }
 
-        /* Match history */
         .match-history {
             background: var(--glass);
             border: 1px solid var(--glass-border);
@@ -521,36 +520,6 @@
             margin-top: 0.25rem;
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2rem;
-            }
-            
-            .header-actions {
-                position: static;
-                justify-content: center;
-                margin-top: 1rem;
-            }
-            
-            .admin-controls {
-                grid-template-columns: 1fr;
-            }
-            
-            .player-attendance {
-                grid-template-columns: 1fr;
-            }
-            
-            .stats-inputs {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .attendance-toggle {
-                flex-direction: column;
-            }
-        }
-
-        /* Success message */
         .success-message {
             background: rgba(16, 185, 129, 0.2);
             border: 1px solid var(--success);
@@ -572,11 +541,39 @@
             to { transform: translateY(0); opacity: 1; }
         }
 
-        /* No data message */
         .no-data {
             text-align: center;
             padding: 2rem;
             color: rgba(255, 255, 255, 0.6);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .header-actions {
+                position: static;
+                justify-content: center;
+                margin-top: 1rem;
+            }
+            
+            .admin-controls {
+                grid-template-columns: 1fr;
+            }
+            
+            .player-attendance {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-inputs {
+                grid-template-columns: 1fr;
+            }
+            
+            .attendance-toggle {
+                justify-content: center;
+                margin-top: 0.5rem;
+            }
         }
     </style>
 </head>
@@ -586,24 +583,24 @@
     <!-- Login Screen -->
     <div class="login-screen" id="loginScreen">
         <div class="login-card">
-            <h2 class="login-title">Admin Login</h2>
+            <h2 class="login-title">Beheerder Inloggen</h2>
             <form class="login-form" onsubmit="handleLogin(event)">
                 <input 
                     type="text" 
                     id="username" 
-                    placeholder="Username" 
+                    placeholder="Gebruikersnaam" 
                     class="login-input" 
                     required
                 >
                 <input 
                     type="password" 
                     id="password" 
-                    placeholder="Password" 
+                    placeholder="Wachtwoord" 
                     class="login-input" 
                     required
                 >
-                <button type="submit" class="login-btn">Login</button>
-                <div class="login-error" id="loginError">Invalid credentials</div>
+                <button type="submit" class="login-btn">Inloggen</button>
+                <div class="login-error" id="loginError">Onjuiste inloggegevens</div>
             </form>
         </div>
     </div>
@@ -612,31 +609,31 @@
     <div id="mainContent" style="display: none;">
         <header class="header">
             <div class="header-actions">
-                <a href="index.html" class="header-btn">📊 View Stats</a>
-                <button onclick="logout()" class="header-btn">🚪 Logout</button>
+                <button onclick="viewStats()" class="header-btn">📊 Statistieken bekijken</button>
+                <button onclick="logout()" class="header-btn">🚪 Uitloggen</button>
             </div>
-            <h1>Admin Panel</h1>
-            <p class="subtitle">Minivoetbal Management • Season 2025</p>
+            <h1>Beheerderspaneel</h1>
+            <p class="subtitle">Minivoetbal Management • Seizoen 2025</p>
         </header>
 
         <div class="container">
             <div class="success-message" id="successMessage">
-                Action completed successfully!
+                Actie succesvol voltooid!
             </div>
 
             <div class="admin-controls">
                 <div class="control-card">
-                    <h3>🏆 Match Management</h3>
-                    <p style="color: rgba(255,255,255,0.7); margin-bottom: 1.5rem;">Record match results and player statistics</p>
-                    <button class="btn" onclick="showRecordMatchModal()">Record New Match</button>
-                    <button class="btn btn-secondary" onclick="showMatchHistoryModal()">View Match History</button>
+                    <h3>🏆 Wedstrijdenbeheer</h3>
+                    <p style="color: rgba(255,255,255,0.7); margin-bottom: 1.5rem;">Wedstrijdresultaten en spelersstatistieken vastleggen</p>
+                    <button class="btn" onclick="showRecordMatchModal()">Nieuwe wedstrijd vastleggen</button>
+                    <button class="btn btn-secondary" onclick="showMatchHistoryModal()">Wedstrijdgeschiedenis bekijken</button>
                 </div>
                 
                 <div class="control-card">
-                    <h3>👥 Squad Management</h3>
-                    <p style="color: rgba(255,255,255,0.7); margin-bottom: 1.5rem;">Add, remove, and manage team players</p>
-                    <button class="btn" onclick="showAddPlayerModal()">Add Player</button>
-                    <button class="btn btn-secondary" onclick="showManageSquadModal()">Manage Squad</button>
+                    <h3>👥 Teambeheer</h3>
+                    <p style="color: rgba(255,255,255,0.7); margin-bottom: 1.5rem;">Spelers toevoegen, verwijderen en beheren</p>
+                    <button class="btn" onclick="showAddPlayerModal()">Speler toevoegen</button>
+                    <button class="btn btn-secondary" onclick="showManageSquadModal()">Team beheren</button>
                 </div>
             </div>
         </div>
@@ -645,31 +642,31 @@
         <div class="modal" id="recordMatchModal">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3 class="modal-title">Record Match</h3>
+                    <h3 class="modal-title">Wedstrijd vastleggen</h3>
                     <button class="close-btn" onclick="closeModal('recordMatchModal')">&times;</button>
                 </div>
                 
                 <div class="form-group">
-                    <label>Match Date</label>
+                    <label>Wedstrijddatum</label>
                     <input type="date" id="matchDate">
                 </div>
                 
                 <div class="form-group">
-                    <label>Notes (optional)</label>
-                    <textarea id="matchNotes" rows="2" placeholder="Match notes, opponent, result..."></textarea>
+                    <label>Opmerkingen (optioneel)</label>
+                    <textarea id="matchNotes" rows="2" placeholder="Wedstrijdnotities, tegenstander, resultaat..."></textarea>
                 </div>
                 
                 <div class="form-group">
-                    <label>Player Attendance & Stats</label>
+                    <label>Speleraanwezigheid & Statistieken</label>
                     <div id="noPlayersMessage" class="no-data" style="display: none;">
-                        <p>No players in squad. Add players first before recording matches.</p>
+                        <p>Geen spelers in team. Voeg eerst spelers toe voordat je wedstrijden vastlegt.</p>
                     </div>
                     <div class="player-attendance" id="playerAttendance">
                         <!-- Players will be dynamically added here -->
                     </div>
                 </div>
                 
-                <button class="btn" onclick="recordMatch()">Save Match</button>
+                <button class="btn" onclick="recordMatch()">Wedstrijd opslaan</button>
             </div>
         </div>
 
@@ -677,14 +674,14 @@
         <div class="modal" id="addPlayerModal">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3 class="modal-title">Add New Player</h3>
+                    <h3 class="modal-title">Nieuwe speler toevoegen</h3>
                     <button class="close-btn" onclick="closeModal('addPlayerModal')">&times;</button>
                 </div>
                 <div class="form-group">
-                    <label for="playerName">Player Name</label>
-                    <input type="text" id="playerName" placeholder="Enter player name">
+                    <label for="playerName">Spelernaam</label>
+                    <input type="text" id="playerName" placeholder="Voer spelernaam in">
                 </div>
-                <button class="btn" onclick="addPlayer()">Add Player</button>
+                <button class="btn" onclick="addPlayer()">Speler toevoegen</button>
             </div>
         </div>
 
@@ -692,7 +689,7 @@
         <div class="modal" id="manageSquadModal">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3 class="modal-title">Manage Squad</h3>
+                    <h3 class="modal-title">Team beheren</h3>
                     <button class="close-btn" onclick="closeModal('manageSquadModal')">&times;</button>
                 </div>
                 <div class="squad-list" id="squadList">
@@ -705,7 +702,7 @@
         <div class="modal" id="matchHistoryModal">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3 class="modal-title">Match History</h3>
+                    <h3 class="modal-title">Wedstrijdgeschiedenis</h3>
                     <button class="close-btn" onclick="closeModal('matchHistoryModal')">&times;</button>
                 </div>
                 <div class="match-history" id="matchHistoryList">
@@ -716,14 +713,13 @@
     </div>
 
     <script>
-        // Simple obfuscated credentials (not secure for production!)
-        // For better security, use server-side authentication
-        const AUTH_DATA = 'YWRtaW46cGFzc3dvcmQ='; // base64 encoded "admin:password"
+        // Credentials: admin:wuste
+        const AUTH_DATA = 'YWRtaW46d3VzdGU='; // base64 encoded "admin:wuste"
         
-        // Data structure - start with empty data
         let teamData = {
             players: [],
-            matches: []
+            matches: [],
+            lastUpdated: null
         };
 
         // Authentication functions
@@ -736,7 +732,7 @@
             if (credentials === AUTH_DATA) {
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('mainContent').style.display = 'block';
-                localStorage.setItem('minivoetbalAuth', 'authenticated');
+                sessionStorage.setItem('minivoetbalAuth', 'authenticated');
                 loadData();
             } else {
                 document.getElementById('loginError').style.display = 'block';
@@ -747,41 +743,63 @@
         }
 
         function logout() {
-            localStorage.removeItem('minivoetbalAuth');
+            sessionStorage.removeItem('minivoetbalAuth');
             document.getElementById('loginScreen').style.display = 'flex';
             document.getElementById('mainContent').style.display = 'none';
             document.getElementById('username').value = '';
             document.getElementById('password').value = '';
         }
 
+        function viewStats() {
+            window.location.href = 'index.html';
+        }
+
         function checkAuth() {
-            const isAuth = localStorage.getItem('minivoetbalAuth');
+            const isAuth = sessionStorage.getItem('minivoetbalAuth');
             if (isAuth === 'authenticated') {
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('mainContent').style.display = 'block';
             }
         }
 
-        // Load data from localStorage
-        function loadData() {
-            const saved = localStorage.getItem('minivoetbalData');
-            if (saved) {
-                const loadedData = JSON.parse(saved);
-                if (!loadedData.matches) {
-                    loadedData.matches = [];
+        // Load data from localStorage (fallback to server later if needed)
+        async function loadData() {
+            try {
+                // Try to load from localStorage first (for local development)
+                const saved = localStorage.getItem('minivoetbalData');
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    teamData = {
+                        players: data.players || [],
+                        matches: data.matches || [],
+                        lastUpdated: data.lastUpdated || null
+                    };
+                    return;
                 }
-                teamData = loadedData;
+            } catch (error) {
+                console.log('No localStorage data found');
+            }
+            
+            // If no localStorage data, start fresh
+            teamData = { players: [], matches: [], lastUpdated: null };
+        }
+
+        // Save data to localStorage (works locally without server)
+        async function saveData() {
+            teamData.lastUpdated = Date.now();
+            
+            try {
+                localStorage.setItem('minivoetbalData', JSON.stringify(teamData));
+                console.log('Data saved to localStorage successfully');
+                return true;
+            } catch (error) {
+                console.error('Failed to save data:', error);
+                alert('Fout bij opslaan van gegevens. Probeer het opnieuw.');
+                return false;
             }
         }
 
-        // Save data to localStorage
-        function saveData() {
-            localStorage.setItem('minivoetbalData', JSON.stringify(teamData));
-            localStorage.setItem('minivoetbalLastUpdate', Date.now().toString());
-        }
-
-        // Show success message
-        function showSuccess(message = "Action completed successfully!") {
+        function showSuccess(message = "Actie succesvol voltooid!") {
             const successEl = document.getElementById('successMessage');
             successEl.textContent = message;
             successEl.classList.add('show');
@@ -792,16 +810,10 @@
 
         // Modal functions
         function showRecordMatchModal() {
-            const modal = document.getElementById('recordMatchModal');
-            
-            // Set today's date as default
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('matchDate').value = today;
-            
-            // Populate player attendance
             renderPlayerAttendance();
-            
-            modal.classList.add('active');
+            document.getElementById('recordMatchModal').classList.add('active');
         }
 
         function showAddPlayerModal() {
@@ -820,8 +832,6 @@
 
         function closeModal(modalId) {
             document.getElementById(modalId).classList.remove('active');
-            
-            // Clear forms
             if (modalId === 'addPlayerModal') {
                 document.getElementById('playerName').value = '';
             } else if (modalId === 'recordMatchModal') {
@@ -829,7 +839,6 @@
             }
         }
 
-        // Render player attendance checkboxes with stats inputs
         function renderPlayerAttendance() {
             const container = document.getElementById('playerAttendance');
             const noPlayersMsg = document.getElementById('noPlayersMessage');
@@ -845,21 +854,22 @@
 
             teamData.players.forEach((player, index) => {
                 const playerCard = document.createElement('div');
-                playerCard.className = 'player-card';
+                playerCard.className = 'player-card attended';
                 playerCard.id = `player-${index}`;
+                playerCard.dataset.attendance = 'present';
                 
                 playerCard.innerHTML = `
                     <div class="player-header">
                         <span class="player-name">${player.name}</span>
-                        <div class="attendance-toggle">
-                            <button class="toggle-btn" onclick="setAttendance(${index}, 'absent')">Absent</button>
-                            <button class="toggle-btn active" onclick="setAttendance(${index}, 'present')">Present</button>
-                            <button class="toggle-btn" onclick="setAttendance(${index}, 'sitout')">Sit Out</button>
-                        </div>
+                    </div>
+                    <div class="attendance-toggle">
+                        <button class="toggle-btn" type="button" onclick="setAttendance(${index}, 'absent')">Afwezig</button>
+                        <button class="toggle-btn active" type="button" onclick="setAttendance(${index}, 'present')">Aanwezig</button>
+                        <button class="toggle-btn" type="button" onclick="setAttendance(${index}, 'sitout')">Wissel</button>
                     </div>
                     <div class="stats-inputs">
                         <div class="stat-input">
-                            <label>Goals</label>
+                            <label>Doelpunten</label>
                             <input type="number" id="goals-${index}" min="0" value="0">
                         </div>
                         <div class="stat-input">
@@ -867,11 +877,11 @@
                             <input type="number" id="assists-${index}" min="0" value="0">
                         </div>
                         <div class="stat-input">
-                            <label>Yellow</label>
+                            <label>Geel</label>
                             <input type="number" id="yellow-${index}" min="0" value="0">
                         </div>
                         <div class="stat-input">
-                            <label>Red</label>
+                            <label>Rood</label>
                             <input type="number" id="red-${index}" min="0" value="0">
                         </div>
                     </div>
@@ -881,15 +891,12 @@
             });
         }
 
-        // Set player attendance status
         function setAttendance(playerIndex, status) {
             const card = document.getElementById(`player-${playerIndex}`);
             const buttons = card.querySelectorAll('.toggle-btn');
             
-            // Reset all buttons
             buttons.forEach(btn => btn.classList.remove('active'));
             
-            // Set active button and card style
             if (status === 'present') {
                 buttons[1].classList.add('active');
                 card.className = 'player-card attended';
@@ -901,33 +908,30 @@
                 card.className = 'player-card';
             }
             
-            // Store attendance status
             card.dataset.attendance = status;
         }
 
-        // Record match
-        function recordMatch() {
+        async function recordMatch() {
             const matchDate = document.getElementById('matchDate').value;
             const matchNotes = document.getElementById('matchNotes').value;
             
             if (!matchDate) {
-                alert('Please select a match date');
+                alert('Selecteer een wedstrijddatum');
                 return;
             }
             
             if (teamData.players.length === 0) {
-                alert('No players in squad. Add players first.');
+                alert('Geen spelers in team. Voeg eerst spelers toe.');
                 return;
             }
 
             const matchData = {
-                id: Date.now(), // Simple ID for match identification
+                id: Date.now(),
                 date: matchDate,
                 notes: matchNotes,
                 players: []
             };
 
-            // Process each player
             teamData.players.forEach((player, index) => {
                 const card = document.getElementById(`player-${index}`);
                 const attendance = card.dataset.attendance || 'present';
@@ -936,7 +940,6 @@
                 const yellow = parseInt(document.getElementById(`yellow-${index}`).value) || 0;
                 const red = parseInt(document.getElementById(`red-${index}`).value) || 0;
 
-                // Update player stats
                 player.games++;
                 
                 if (attendance === 'present') {
@@ -950,7 +953,6 @@
                 player.yellow += yellow;
                 player.red += red;
 
-                // Store match data
                 matchData.players.push({
                     name: player.name,
                     attendance: attendance,
@@ -961,25 +963,23 @@
                 });
             });
 
-            // Add match to history
             teamData.matches.push(matchData);
             
-            saveData();
-            closeModal('recordMatchModal');
-            showSuccess('Match recorded successfully!');
+            if (await saveData()) {
+                closeModal('recordMatchModal');
+                showSuccess('Wedstrijd succesvol vastgelegd!');
+            }
         }
 
-        // Add new player
-        function addPlayer() {
+        async function addPlayer() {
             const name = document.getElementById('playerName').value.trim();
             if (!name) {
-                alert('Please enter a player name');
+                alert('Voer een spelernaam in');
                 return;
             }
 
-            // Check if player already exists
             if (teamData.players.some(p => p.name.toLowerCase() === name.toLowerCase())) {
-                alert('Player already exists');
+                alert('Speler bestaat al');
                 return;
             }
 
@@ -994,33 +994,32 @@
                 red: 0
             });
 
-            saveData();
-            closeModal('addPlayerModal');
-            showSuccess(`${name} added to squad!`);
+            if (await saveData()) {
+                closeModal('addPlayerModal');
+                showSuccess(`${name} toegevoegd aan team!`);
+            }
         }
 
-        // Render squad management list
         function renderSquadList() {
             const container = document.getElementById('squadList');
             container.innerHTML = '';
 
             if (teamData.players.length === 0) {
-                container.innerHTML = '<div class="no-data"><p>No players in squad yet. Add some players to get started!</p></div>';
+                container.innerHTML = '<div class="no-data"><p>Nog geen spelers in team. Voeg spelers toe om te beginnen!</p></div>';
                 return;
             }
 
             teamData.players.forEach((player, index) => {
                 const playerDiv = document.createElement('div');
                 playerDiv.className = 'squad-player';
-                playerDiv.dataset.playerIndex = index;
                 
                 playerDiv.innerHTML = `
                     <div class="player-info">
                         <span class="player-name">${player.name}</span>
-                        <span class="player-stats">${player.games} games • ${player.goals} goals • ${player.assists} assists</span>
+                        <span class="player-stats">${player.games} wedstrijden • ${player.goals} doelpunten • ${player.assists} assists</span>
                     </div>
                     <div>
-                        <button class="btn btn-danger btn-small" onclick="deletePlayer(${index})">Remove</button>
+                        <button class="btn btn-danger btn-small" onclick="deletePlayer(${index})">Verwijderen</button>
                     </div>
                 `;
                 
@@ -1028,28 +1027,27 @@
             });
         }
 
-        // Delete player - FIXED
-        function deletePlayer(index) {
+        async function deletePlayer(index) {
             const playerName = teamData.players[index].name;
-            if (confirm(`Are you sure you want to remove ${playerName} from the squad? This will delete all their statistics.`)) {
+            if (confirm(`Weet je zeker dat je ${playerName} uit het team wilt verwijderen? Dit verwijdert al hun statistieken.`)) {
                 teamData.players.splice(index, 1);
-                saveData();
-                renderSquadList(); // Re-render the squad list
-                showSuccess(`${playerName} removed from squad`);
+                
+                if (await saveData()) {
+                    renderSquadList();
+                    showSuccess(`${playerName} verwijderd uit team`);
+                }
             }
         }
 
-        // Render match history - FIXED
         function renderMatchHistory() {
             const container = document.getElementById('matchHistoryList');
             container.innerHTML = '';
 
             if (teamData.matches.length === 0) {
-                container.innerHTML = '<div class="no-data"><p>No matches recorded yet</p></div>';
+                container.innerHTML = '<div class="no-data"><p>Nog geen wedstrijden vastgelegd</p></div>';
                 return;
             }
 
-            // Sort matches by date (newest first)
             const sortedMatches = [...teamData.matches].sort((a, b) => new Date(b.date) - new Date(a.date));
 
             sortedMatches.forEach((match, sortedIndex) => {
@@ -1062,14 +1060,14 @@
                 
                 matchDiv.innerHTML = `
                     <div class="match-info">
-                        <div class="match-date">${new Date(match.date).toLocaleDateString()}</div>
+                        <div class="match-date">${new Date(match.date).toLocaleDateString('nl-NL')}</div>
                         <div class="match-stats">
-                            ${attendedCount} players • ${totalGoals} goals
+                            ${attendedCount} spelers • ${totalGoals} doelpunten
                             ${match.notes ? ` • ${match.notes}` : ''}
                         </div>
                     </div>
                     <div>
-                        <button class="btn btn-danger btn-small" onclick="deleteMatch(${originalIndex})">Delete</button>
+                        <button class="btn btn-danger btn-small" onclick="deleteMatch(${originalIndex})">Verwijderen</button>
                     </div>
                 `;
                 
@@ -1077,12 +1075,10 @@
             });
         }
 
-        // Delete match - FIXED
-        function deleteMatch(matchIndex) {
+        async function deleteMatch(matchIndex) {
             const match = teamData.matches[matchIndex];
-            if (confirm(`Are you sure you want to delete the match from ${new Date(match.date).toLocaleDateString()}?`)) {
+            if (confirm(`Weet je zeker dat je de wedstrijd van ${new Date(match.date).toLocaleDateString('nl-NL')} wilt verwijderen?`)) {
                 
-                // Reverse the stats from this match
                 match.players.forEach(matchPlayer => {
                     const player = teamData.players.find(p => p.name === matchPlayer.name);
                     if (player) {
@@ -1100,18 +1096,18 @@
                 });
                 
                 teamData.matches.splice(matchIndex, 1);
-                saveData();
-                renderMatchHistory(); // Re-render the match history
-                showSuccess('Match deleted successfully');
+                
+                if (await saveData()) {
+                    renderMatchHistory();
+                    showSuccess('Wedstrijd succesvol verwijderd');
+                }
             }
         }
 
-        // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
             checkAuth();
             loadData();
             
-            // Close modals when clicking outside
             document.querySelectorAll('.modal').forEach(modal => {
                 modal.addEventListener('click', function(e) {
                     if (e.target === modal) {

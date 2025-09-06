@@ -31,7 +31,6 @@
             overflow-x: hidden;
         }
 
-        /* Animated background */
         .bg-animation {
             position: fixed;
             width: 100%;
@@ -61,7 +60,6 @@
             50% { transform: rotate(180deg) scale(1.1); }
         }
 
-        /* Header */
         .header {
             padding: 2rem;
             text-align: center;
@@ -92,14 +90,12 @@
             font-size: 1.2rem;
         }
 
-        /* Container */
         .container {
             max-width: 1400px;
             margin: 0 auto;
             padding: 2rem;
         }
 
-        /* Stats Grid */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -157,7 +153,6 @@
             letter-spacing: 1px;
         }
 
-        /* Players Table */
         .players-section {
             background: var(--glass);
             backdrop-filter: blur(10px);
@@ -271,7 +266,6 @@
             transition: width 0.3s ease;
         }
 
-        /* No data message */
         .no-data {
             text-align: center;
             padding: 3rem;
@@ -284,7 +278,22 @@
             color: var(--primary);
         }
 
-        /* Responsive */
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: var(--primary);
+        }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid var(--danger);
+            color: var(--danger);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
         @media (max-width: 768px) {
             .header h1 {
                 font-size: 2rem;
@@ -299,7 +308,6 @@
             }
         }
 
-        /* Last updated info */
         .last-updated {
             text-align: center;
             margin-top: 2rem;
@@ -320,21 +328,25 @@
     </header>
 
     <div class="container">
+        <div id="errorMessage" class="error-message" style="display: none;">
+            <p>Kan gegevens niet laden. Controleer of de server draait en probeer het opnieuw.</p>
+        </div>
+
         <div class="stats-grid" id="statsGrid">
             <div class="stat-card">
-                <div class="stat-value" id="totalPlayers">0</div>
+                <div class="stat-value" id="totalPlayers">-</div>
                 <div class="stat-label">Spelers</div>
             </div>
             <div class="stat-card">
-                <div class="stat-value" id="totalGoals">0</div>
+                <div class="stat-value" id="totalGoals">-</div>
                 <div class="stat-label">Doelpunten</div>
             </div>
             <div class="stat-card">
-                <div class="stat-value" id="totalYellow">0</div>
+                <div class="stat-value" id="totalYellow">-</div>
                 <div class="stat-label">Gele kaarten</div>
             </div>
             <div class="stat-card">
-                <div class="stat-value" id="totalRed">0</div>
+                <div class="stat-value" id="totalRed">-</div>
                 <div class="stat-label">Rode kaarten</div>
             </div>
         </div>
@@ -342,6 +354,10 @@
         <div class="players-section">
             <h2 class="section-title">Spelers</h2>
             <div class="table-wrapper">
+                <div id="loadingMessage" class="loading">
+                    <h3>Gegevens laden...</h3>
+                    <p>Even geduld, spelersgegevens worden opgehaald.</p>
+                </div>
                 <div id="noDataMessage" class="no-data" style="display: none;">
                     <h3>Nog geen spelersdata</h3>
                     <p>Statistieken verschijnen hier zodra wedstrijden zijn ingevoerd door de beheerder.</p>
@@ -349,57 +365,74 @@
                 <table id="playersTableContainer" style="display: none;">
                     <thead>
                         <tr>
-                            <th>Naam</th>
+                            <th>Speler</th>
                             <th>Wedstrijden</th>
                             <th>Aanwezigheid</th>
                             <th>Doelpunten</th>
                             <th>Assists</th>
-                            <th>Uitzitten</th>
+                            <th>Wisselbeurt</th>
                             <th>Geel</th>
                             <th>Rood</th>
                         </tr>
                     </thead>
                     <tbody id="playersTable">
-                        <!-- Players will be added here -->
                     </tbody>
                 </table>
             </div>
         </div>
 
         <div class="last-updated" id="lastUpdated">
-            Laatst bijgewerkt: Nooit
+            Laatst bijgewerkt: Laden...
         </div>
     </div>
 
     <script>
-        // Initialize with empty data
         let teamData = {
             players: [],
-            matches: []
+            matches: [],
+            lastUpdated: null
         };
 
-        // Load data from localStorage (read-only)
-        function loadData() {
-            const saved = localStorage.getItem('minivoetbalData');
-            if (saved) {
-                teamData = JSON.parse(saved);
+        // Load data from localStorage (for local development)
+        async function loadData() {
+            try {
+                const saved = localStorage.getItem('minivoetbalData');
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    teamData = {
+                        players: data.players || [],
+                        matches: data.matches || [],
+                        lastUpdated: data.lastUpdated || null
+                    };
+                    
+                    document.getElementById('errorMessage').style.display = 'none';
+                    renderAll();
+                    updateLastUpdated();
+                    return;
+                }
+            } catch (error) {
+                console.error('Error loading from localStorage:', error);
             }
-            renderAll();
-            updateLastUpdated();
+            
+            // If no data found, show appropriate messages
+            document.getElementById('loadingMessage').style.display = 'none';
+            document.getElementById('noDataMessage').style.display = 'block';
+            document.getElementById('totalPlayers').textContent = '0';
+            document.getElementById('totalGoals').textContent = '0';
+            document.getElementById('totalYellow').textContent = '0';
+            document.getElementById('totalRed').textContent = '0';
         }
 
-        // Render everything (view-only)
         function renderAll() {
             renderStats();
             renderPlayersTable();
         }
 
-        // Calculate and render overall stats
         function renderStats() {
             const totalPlayers = teamData.players.length;
-            const totalGoals = teamData.players.reduce((sum, p) => sum + p.goals, 0);
-            const totalYellow = teamData.players.reduce((sum, p) => sum + p.yellow, 0);
-            const totalRed = teamData.players.reduce((sum, p) => sum + p.red, 0);
+            const totalGoals = teamData.players.reduce((sum, p) => sum + (p.goals || 0), 0);
+            const totalYellow = teamData.players.reduce((sum, p) => sum + (p.yellow || 0), 0);
+            const totalRed = teamData.players.reduce((sum, p) => sum + (p.red || 0), 0);
 
             document.getElementById('totalPlayers').textContent = totalPlayers;
             document.getElementById('totalGoals').textContent = totalGoals;
@@ -407,12 +440,13 @@
             document.getElementById('totalRed').textContent = totalRed;
         }
 
-        // Render players table (view-only, no actions column)
         function renderPlayersTable() {
             const tbody = document.getElementById('playersTable');
             const tableContainer = document.getElementById('playersTableContainer');
             const noDataMessage = document.getElementById('noDataMessage');
+            const loadingMessage = document.getElementById('loadingMessage');
             
+            loadingMessage.style.display = 'none';
             tbody.innerHTML = '';
 
             if (teamData.players.length === 0) {
@@ -424,59 +458,48 @@
             tableContainer.style.display = 'table';
             noDataMessage.style.display = 'none';
 
-            // Sort players by goals (descending) for better viewing experience
-            const sortedPlayers = [...teamData.players].sort((a, b) => b.goals - a.goals);
+            // Sort players by goals (descending)
+            const sortedPlayers = [...teamData.players].sort((a, b) => (b.goals || 0) - (a.goals || 0));
 
             sortedPlayers.forEach((player) => {
-                const attendanceRate = player.games > 0 ? Math.round((player.attended / player.games) * 100) : 0;
+                const attendanceRate = (player.games || 0) > 0 ? Math.round(((player.attended || 0) / player.games) * 100) : 0;
                 
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td class="player-name">${player.name}</td>
-                    <td>${player.games}</td>
+                    <td class="player-name">${player.name || 'Onbekend'}</td>
+                    <td>${player.games || 0}</td>
                     <td>
                         <div class="attendance-bar">
                             <div class="attendance-fill" style="width: ${attendanceRate}%"></div>
                         </div>
                         ${attendanceRate}%
                     </td>
-                    <td>${player.goals}</td>
-                    <td>${player.assists}</td>
-                    <td>${player.sitOuts}</td>
-                    <td>${player.yellow > 0 ? `<span class="badge badge-yellow">${player.yellow}</span>` : '0'}</td>
-                    <td>${player.red > 0 ? `<span class="badge badge-red">${player.red}</span>` : '0'}</td>
+                    <td>${player.goals || 0}</td>
+                    <td>${player.assists || 0}</td>
+                    <td>${player.sitOuts || 0}</td>
+                    <td>${(player.yellow || 0) > 0 ? `<span class="badge badge-yellow">${player.yellow}</span>` : '0'}</td>
+                    <td>${(player.red || 0) > 0 ? `<span class="badge badge-red">${player.red}</span>` : '0'}</td>
                 `;
                 tbody.appendChild(row);
             });
         }
 
-        // Update last updated timestamp
         function updateLastUpdated() {
-            const lastUpdate = localStorage.getItem('minivoetbalLastUpdate');
             const lastUpdatedElement = document.getElementById('lastUpdated');
             
-            if (lastUpdate) {
-                const date = new Date(parseInt(lastUpdate));
+            if (teamData.lastUpdated) {
+                const date = new Date(teamData.lastUpdated);
                 lastUpdatedElement.textContent = `Laatst bijgewerkt: ${date.toLocaleString('nl-NL')}`;
             } else {
-                lastUpdatedElement.textContent = 'Laatst bijgewerkt: Nooit';
+                lastUpdatedElement.textContent = 'Laatst bijgewerkt: Onbekend';
             }
         }
 
-        // Auto-refresh data every 30 seconds to sync with admin changes
-        setInterval(() => {
-            const currentData = JSON.stringify(teamData);
-            loadData();
-            const newData = JSON.stringify(teamData);
-            
-            // Only re-render if data changed
-            if (currentData !== newData) {
-                console.log('Data bijgewerkt vanuit beheerderspaneel');
-            }
-        }, 30000);
+        // Auto-refresh every 30 seconds
+        setInterval(loadData, 30000);
 
-        // Initialize on page load
-        loadData();
+        // Load data when page loads
+        document.addEventListener('DOMContentLoaded', loadData);
     </script>
 </body>
 </html>
