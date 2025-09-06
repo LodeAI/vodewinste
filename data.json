@@ -1,25 +1,5 @@
 {
-  "players": [
-    {
-      "id": 1757155810863,
-      "name": "Test1 Speler1",
-      "stats": {
-        "matches": 1,
-        "goals": 1,
-        "assists": 0,
-        "yellowCards": 1,
-        "redCards": 1,
-        "substitutions": 0
-      },
-      "games": 1,
-      "attended": 1,
-      "goals": 1,
-      "assists": 0,
-      "sitOuts": 0,
-      "yellow": 1,
-      "red": 1
-    }
-  ],
+  "players": [],
   "matches": [
     {
       "id": 1757155858215,
@@ -45,5 +25,5 @@
       ]
     }
   ],
-  "lastUpdated": "2025-09-06T10:59:16.079Z"
+  "lastUpdated": "2025-09-06T10:59:17.572Z"
 }
