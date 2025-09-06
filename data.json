@@ -246,6 +246,25 @@
       "sitOuts": 0,
       "yellow": 0,
       "red": 0
+    },
+    {
+      "id": 1757157721074,
+      "name": "Frederik Vansteenkiste",
+      "stats": {
+        "matches": 0,
+        "goals": 0,
+        "assists": 0,
+        "yellowCards": 0,
+        "redCards": 0,
+        "substitutions": 0
+      },
+      "games": 0,
+      "attended": 0,
+      "goals": 0,
+      "assists": 0,
+      "sitOuts": 0,
+      "yellow": 0,
+      "red": 0
     }
   ],
   "matches": [
@@ -273,5 +292,5 @@
       ]
     }
   ],
-  "lastUpdated": "2025-09-06T11:21:48.320Z"
+  "lastUpdated": "2025-09-06T11:22:01.310Z"
 }
