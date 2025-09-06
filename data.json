@@ -56,6 +56,25 @@
       "sitOuts": 0,
       "yellow": 0,
       "red": 0
+    },
+    {
+      "id": 1757157572713,
+      "name": "Niek Couvreur",
+      "stats": {
+        "matches": 0,
+        "goals": 0,
+        "assists": 0,
+        "yellowCards": 0,
+        "redCards": 0,
+        "substitutions": 0
+      },
+      "games": 0,
+      "attended": 0,
+      "goals": 0,
+      "assists": 0,
+      "sitOuts": 0,
+      "yellow": 0,
+      "red": 0
     }
   ],
   "matches": [
@@ -83,5 +102,5 @@
       ]
     }
   ],
-  "lastUpdated": "2025-09-06T11:19:24.327Z"
+  "lastUpdated": "2025-09-06T11:19:32.940Z"
 }
