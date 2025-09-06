@@ -267,30 +267,6 @@
       "red": 0
     }
   ],
-  "matches": [
-    {
-      "id": 1757155858215,
-      "date": "2025-09-06",
-      "notes": "MVC Pottestampers",
-      "players": [
-        {
-          "name": "Test1 Speler1",
-          "attendance": "present",
-          "goals": 1,
-          "assists": 0,
-          "yellow": 1,
-          "red": 1
-        },
-        {
-          "name": "Test2 Speler2",
-          "attendance": "absent",
-          "goals": 0,
-          "assists": 0,
-          "yellow": 0,
-          "red": 0
-        }
-      ]
-    }
-  ],
-  "lastUpdated": "2025-09-06T11:22:01.310Z"
+  "matches": [],
+  "lastUpdated": "2025-09-06T11:22:26.438Z"
 }
