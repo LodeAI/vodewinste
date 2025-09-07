@@ -842,7 +842,7 @@
                     </div>
                 </div>
                 
-                <button class="btn" onclick="recordMatch()">Wedstrijd opslaan</button>
+                <button class="btn" id="saveMatchBtn" onclick="recordMatch()">Wedstrijd opslaan</button>
             </div>
         </div>
 
@@ -900,6 +900,8 @@
             owner: 'lodeai',
             repo: 'vodewinste'
         };
+
+        let currentEditingMatch = null;
 
         // Set today's date as default on page load
         document.addEventListener('DOMContentLoaded', function() {
@@ -1140,8 +1142,24 @@
             showModal('manageSquadModal');
         }
 
+        // Reset match modal to default state
+        function resetMatchModal() {
+            document.querySelector('#recordMatchModal .modal-title').textContent = 'Wedstrijd vastleggen';
+            document.getElementById('saveMatchBtn').textContent = 'Wedstrijd opslaan';
+            document.getElementById('saveMatchBtn').onclick = recordMatch;
+            currentEditingMatch = null;
+            
+            // Reset form fields
+            document.getElementById('matchDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('teamGoals').value = '0';
+            document.getElementById('opponentGoals').value = '0';
+            document.getElementById('matchNotes').value = '';
+        }
+
         // Match management
         function showRecordMatchModal() {
+            resetMatchModal();
+            
             const playerAttendance = document.getElementById('playerAttendance');
             
             if (teamData.players.length === 0) {
@@ -1324,6 +1342,169 @@
             showMessage('Wedstrijd succesvol opgeslagen!');
         }
 
+        function editMatch(matchId) {
+            currentEditingMatch = teamData.matches.find(m => m.id === matchId);
+            if (!currentEditingMatch) return;
+
+            // Update modal title and button
+            document.querySelector('#recordMatchModal .modal-title').textContent = 'Wedstrijd bewerken';
+            document.getElementById('saveMatchBtn').textContent = 'Wijzigingen opslaan';
+            document.getElementById('saveMatchBtn').onclick = updateMatch;
+
+            // Populate form with existing match data
+            document.getElementById('matchDate').value = currentEditingMatch.date;
+            document.getElementById('teamGoals').value = currentEditingMatch.teamGoals;
+            document.getElementById('opponentGoals').value = currentEditingMatch.opponentGoals;
+            document.getElementById('matchNotes').value = currentEditingMatch.notes || '';
+
+            // Populate player attendance and stats
+            const playerAttendance = document.getElementById('playerAttendance');
+            
+            if (teamData.players.length === 0) {
+                document.getElementById('noPlayersMessage').style.display = 'block';
+                playerAttendance.innerHTML = '';
+            } else {
+                document.getElementById('noPlayersMessage').style.display = 'none';
+                playerAttendance.innerHTML = teamData.players.map(player => {
+                    const matchPlayerData = currentEditingMatch.players.find(mp => mp.id === player.id);
+                    const attendance = matchPlayerData ? matchPlayerData.attendance : 'absent';
+                    const stats = matchPlayerData ? matchPlayerData.stats : { goals: 0, assists: 0, yellowCards: 0, redCards: 0 };
+                    
+                    return `
+                        <div class="player-card status-${attendance}" id="player-${player.id}">
+                            <div class="player-header">
+                                <div class="player-name">${player.name}</div>
+                                <div class="status-indicator"></div>
+                            </div>
+                            
+                            <div class="attendance-buttons">
+                                <button class="attendance-btn btn-present ${attendance === 'present' ? 'active' : ''}" onclick="setAttendance(${player.id}, 'present')">
+                                    Aanwezig
+                                </button>
+                                <button class="attendance-btn btn-absent ${attendance === 'absent' ? 'active' : ''}" onclick="setAttendance(${player.id}, 'absent')">
+                                    Afwezig
+                                </button>
+                                <button class="attendance-btn btn-sitout ${attendance === 'sitout' ? 'active' : ''}" onclick="setAttendance(${player.id}, 'sitout')">
+                                    Sit-Out
+                                </button>
+                            </div>
+                            
+                            <div class="stats-inputs" id="stats-${player.id}" style="display: ${attendance === 'present' ? 'grid' : 'none'};">
+                                <div class="stat-input">
+                                    <label>Goals</label>
+                                    <input type="number" min="0" value="${stats.goals}" onchange="updateMatchSummary()">
+                                </div>
+                                <div class="stat-input">
+                                    <label>Assists</label>
+                                    <input type="number" min="0" value="${stats.assists}" onchange="updateMatchSummary()">
+                                </div>
+                                <div class="stat-input">
+                                    <label>Geel</label>
+                                    <input type="number" min="0" value="${stats.yellowCards}" onchange="updateMatchSummary()">
+                                </div>
+                                <div class="stat-input">
+                                    <label>Rood</label>
+                                    <input type="number" min="0" value="${stats.redCards}" onchange="updateMatchSummary()">
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            updateMatchSummary();
+            closeModal('matchHistoryModal');
+            showModal('recordMatchModal');
+        }
+
+        function updateMatch() {
+            if (!currentEditingMatch) return;
+
+            const matchDate = document.getElementById('matchDate').value;
+            const teamGoals = parseInt(document.getElementById('teamGoals').value) || 0;
+            const opponentGoals = parseInt(document.getElementById('opponentGoals').value) || 0;
+            const matchNotes = document.getElementById('matchNotes').value;
+            
+            if (!matchDate) {
+                alert('Selecteer een wedstrijddatum');
+                return;
+            }
+
+            // First, revert the old stats from all players
+            currentEditingMatch.players.forEach(matchPlayer => {
+                const player = teamData.players.find(p => p.id === matchPlayer.id);
+                if (player) {
+                    if (matchPlayer.attendance === 'present' || matchPlayer.attendance === 'sitout') {
+                        player.stats.matches--;
+                    }
+                    if (matchPlayer.attendance === 'present') {
+                        player.stats.goals -= matchPlayer.stats.goals;
+                        player.stats.assists -= matchPlayer.stats.assists;
+                        player.stats.yellowCards -= matchPlayer.stats.yellowCards;
+                        player.stats.redCards -= matchPlayer.stats.redCards;
+                    }
+                    if (matchPlayer.attendance === 'sitout') {
+                        player.stats.sitOuts--;
+                    }
+                }
+            });
+
+            // Update match data
+            currentEditingMatch.date = matchDate;
+            currentEditingMatch.teamGoals = teamGoals;
+            currentEditingMatch.opponentGoals = opponentGoals;
+            currentEditingMatch.goalDifference = teamGoals - opponentGoals;
+            currentEditingMatch.notes = matchNotes;
+            currentEditingMatch.players = [];
+
+            // Collect new player data and update stats
+            teamData.players.forEach(player => {
+                const playerCard = document.getElementById(`player-${player.id}`);
+                let attendance = 'absent';
+                let stats = { goals: 0, assists: 0, yellowCards: 0, redCards: 0 };
+                
+                if (playerCard.classList.contains('status-present')) {
+                    attendance = 'present';
+                    const statsInputs = document.getElementById(`stats-${player.id}`);
+                    const inputs = statsInputs.querySelectorAll('input');
+                    stats = {
+                        goals: parseInt(inputs[0].value) || 0,
+                        assists: parseInt(inputs[1].value) || 0,
+                        yellowCards: parseInt(inputs[2].value) || 0,
+                        redCards: parseInt(inputs[3].value) || 0
+                    };
+                } else if (playerCard.classList.contains('status-sitout')) {
+                    attendance = 'sitout';
+                }
+
+                currentEditingMatch.players.push({
+                    id: player.id,
+                    name: player.name,
+                    attendance: attendance,
+                    stats: stats
+                });
+
+                // Add new stats to player totals
+                if (attendance === 'present' || attendance === 'sitout') {
+                    player.stats.matches++;
+                }
+                if (attendance === 'present') {
+                    player.stats.goals += stats.goals;
+                    player.stats.assists += stats.assists;
+                    player.stats.yellowCards += stats.yellowCards;
+                    player.stats.redCards += stats.redCards;
+                }
+                if (attendance === 'sitout') {
+                    player.stats.sitOuts++;
+                }
+            });
+
+            saveData();
+            closeModal('recordMatchModal');
+            showMessage('Wedstrijd succesvol bijgewerkt!');
+            currentEditingMatch = null;
+        }
+
         function showMatchHistoryModal() {
             const matchHistoryList = document.getElementById('matchHistoryList');
             
@@ -1342,9 +1523,14 @@
                                     ${match.notes ? ` • ${match.notes}` : ''}
                                 </div>
                             </div>
-                            <button class="btn btn-danger btn-small" onclick="removeMatch(${match.id})">
-                                Verwijderen
-                            </button>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button class="btn btn-secondary btn-small" onclick="editMatch(${match.id})">
+                                    Bewerken
+                                </button>
+                                <button class="btn btn-danger btn-small" onclick="removeMatch(${match.id})">
+                                    Verwijderen
+                                </button>
+                            </div>
                         </div>
                     `).join('');
             }
