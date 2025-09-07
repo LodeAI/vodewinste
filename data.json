@@ -4,9 +4,9 @@
       "id": 1757156478409,
       "name": "Lode Verschelde",
       "stats": {
-        "matches": 1,
+        "matches": 2,
         "goals": 0,
-        "assists": 2,
+        "assists": 4,
         "yellowCards": 0,
         "redCards": 0,
         "substitutions": 0
@@ -23,7 +23,7 @@
       "id": 1757157507785,
       "name": "Pieterjan Vermeiren",
       "stats": {
-        "matches": 1,
+        "matches": 2,
         "goals": 0,
         "assists": 0,
         "yellowCards": 0,
@@ -42,7 +42,7 @@
       "id": 1757157564052,
       "name": "Alexander Ackermans",
       "stats": {
-        "matches": 1,
+        "matches": 2,
         "goals": 0,
         "assists": 0,
         "yellowCards": 0,
@@ -61,9 +61,9 @@
       "id": 1757157572713,
       "name": "Niek Couvreur",
       "stats": {
-        "matches": 1,
-        "goals": 1,
-        "assists": 1,
+        "matches": 2,
+        "goals": 2,
+        "assists": 2,
         "yellowCards": 0,
         "redCards": 0,
         "substitutions": 0
@@ -118,8 +118,8 @@
       "id": 1757157633776,
       "name": "Hendriek Laloo",
       "stats": {
-        "matches": 1,
-        "goals": 3,
+        "matches": 2,
+        "goals": 6,
         "assists": 0,
         "yellowCards": 0,
         "redCards": 0,
@@ -137,7 +137,7 @@
       "id": 1757157646687,
       "name": "Frederick Meulebrouck",
       "stats": {
-        "matches": 1,
+        "matches": 2,
         "goals": 0,
         "assists": 0,
         "yellowCards": 0,
@@ -156,9 +156,9 @@
       "id": 1757157656288,
       "name": "Matthias Savels",
       "stats": {
-        "matches": 1,
+        "matches": 2,
         "goals": 0,
-        "assists": 1,
+        "assists": 2,
         "yellowCards": 0,
         "redCards": 0,
         "substitutions": 0
@@ -194,9 +194,9 @@
       "id": 1757157680737,
       "name": "Mathijs Verschave",
       "stats": {
-        "matches": 1,
-        "goals": 1,
-        "assists": 1,
+        "matches": 2,
+        "goals": 2,
+        "assists": 2,
         "yellowCards": 0,
         "redCards": 0,
         "substitutions": 0
@@ -276,10 +276,10 @@
         {
           "id": 1757156478409,
           "name": "Lode Verschelde",
-          "attendance": "absent",
+          "attendance": "present",
           "stats": {
             "goals": 0,
-            "assists": 0,
+            "assists": 2,
             "yellowCards": 0,
             "redCards": 0
           }
@@ -287,7 +287,7 @@
         {
           "id": 1757157507785,
           "name": "Pieterjan Vermeiren",
-          "attendance": "absent",
+          "attendance": "present",
           "stats": {
             "goals": 0,
             "assists": 0,
@@ -298,7 +298,7 @@
         {
           "id": 1757157564052,
           "name": "Alexander Ackermans",
-          "attendance": "absent",
+          "attendance": "present",
           "stats": {
             "goals": 0,
             "assists": 0,
@@ -309,10 +309,10 @@
         {
           "id": 1757157572713,
           "name": "Niek Couvreur",
-          "attendance": "absent",
+          "attendance": "present",
           "stats": {
-            "goals": 0,
-            "assists": 0,
+            "goals": 1,
+            "assists": 1,
             "yellowCards": 0,
             "redCards": 0
           }
@@ -342,9 +342,9 @@
         {
           "id": 1757157633776,
           "name": "Hendriek Laloo",
-          "attendance": "absent",
+          "attendance": "present",
           "stats": {
-            "goals": 0,
+            "goals": 3,
             "assists": 0,
             "yellowCards": 0,
             "redCards": 0
@@ -353,7 +353,7 @@
         {
           "id": 1757157646687,
           "name": "Frederick Meulebrouck",
-          "attendance": "absent",
+          "attendance": "present",
           "stats": {
             "goals": 0,
             "assists": 0,
@@ -364,10 +364,10 @@
         {
           "id": 1757157656288,
           "name": "Matthias Savels",
-          "attendance": "absent",
+          "attendance": "present",
           "stats": {
             "goals": 0,
-            "assists": 0,
+            "assists": 1,
             "yellowCards": 0,
             "redCards": 0
           }
@@ -386,10 +386,10 @@
         {
           "id": 1757157680737,
           "name": "Mathijs Verschave",
-          "attendance": "absent",
+          "attendance": "present",
           "stats": {
-            "goals": 0,
-            "assists": 0,
+            "goals": 1,
+            "assists": 1,
             "yellowCards": 0,
             "redCards": 0
           }
@@ -433,5 +433,5 @@
       "goalDifference": 0
     }
   ],
-  "lastUpdated": "2025-09-07T06:24:39.485Z"
+  "lastUpdated": "2025-09-07T06:26:04.991Z"
 }
