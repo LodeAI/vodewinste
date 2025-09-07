@@ -445,7 +445,7 @@
 
     <script>
         let teamData = { players: [], matches: [] };
-        let currentSort = { column: 'goals', direction: 'desc' };
+        let currentSort = { column: 'default', direction: 'desc' };
 
         // Load data from GitHub Pages or localStorage
         async function loadData() {
@@ -695,7 +695,7 @@
         // Initialize the page
         document.addEventListener('DOMContentLoaded', async function() {
             // Reset sorting to default on page load
-            currentSort = { column: 'goals', direction: 'desc' };
+            currentSort = { column: 'default', direction: 'desc' };
             
             await loadData();
             updateOverviewStats();
