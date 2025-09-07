@@ -571,8 +571,8 @@
                 if (bAttendance !== aAttendance) return bAttendance - aAttendance;
                 
                 // Quaternary: Fewer sit-outs is better (ascending)
-                const aSitOut = getSitOutCount(a);
-                const bSitOut = getSitOutCount(b);
+                const aSitOut = a.sitout || a.stats?.sitout || 0;
+                const bSitOut = b.sitout || b.stats?.sitout || 0;
                 return aSitOut - bSitOut;
             });
         }
