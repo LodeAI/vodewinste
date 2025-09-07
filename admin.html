@@ -908,24 +908,32 @@
             document.getElementById('matchDate').value = new Date().toISOString().split('T')[0];
         });
 
-        // Simple authentication
-        function handleLogin() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            
-            if (username === 'admin' && password === 'wuste') {
-                document.getElementById('loginScreen').style.display = 'none';
-                document.getElementById('mainContent').style.display = 'block';
-                sessionStorage.setItem('minivoetbalAuth', 'authenticated');
-                loadGitHubSettings();
-                loadData();
-            } else {
-                document.getElementById('loginError').style.display = 'block';
-                setTimeout(() => {
-                    document.getElementById('loginError').style.display = 'none';
-                }, 3000);
-            }
-        }
+// Simple authentication with base64 encoding
+function handleLogin() {
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    
+    // Encoded credentials (base64)
+    const encodedUsername = 'YWRtaW4=';
+    const encodedPassword = 'd3VzdGU='; 
+    
+    // Encode input values for comparison
+    const inputUsername = btoa(username);
+    const inputPassword = btoa(password);
+    
+    if (inputUsername === encodedUsername && inputPassword === encodedPassword) {
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('mainContent').style.display = 'block';
+        sessionStorage.setItem('minivoetbalAuth', 'authenticated');
+        loadGitHubSettings();
+        loadData();
+    } else {
+        document.getElementById('loginError').style.display = 'block';
+        setTimeout(() => {
+            document.getElementById('loginError').style.display = 'none';
+        }, 3000);
+    }
+}
 
         // GitHub functions
         function loadGitHubSettings() {
