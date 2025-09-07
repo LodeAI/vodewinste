@@ -251,6 +251,20 @@
             border-radius: 8px;
             transition: width 0.8s ease;
             position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 30px;
+        }
+
+        .bar-percentage {
+            color: var(--dark);
+            font-size: 0.75rem;
+            font-weight: bold;
+            position: absolute;
+            z-index: 1;
+            white-space: nowrap;
+            text-shadow: 0 0 2px rgba(255, 255, 255, 0.5);
         }
 
         .bar-text {
@@ -277,6 +291,31 @@
         .card-red {
             background: var(--danger);
             color: var(--light);
+        }
+
+        /* Admin link styles */
+        .admin-link {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            padding: 8px 16px;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .admin-link:hover {
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--primary);
+            border-color: var(--primary);
+            transform: translateY(-2px);
         }
 
         @media (max-width: 768px) {
@@ -311,6 +350,13 @@
             
             .stat-value {
                 font-size: 2rem;
+            }
+
+            .admin-link {
+                bottom: 15px;
+                right: 15px;
+                padding: 6px 12px;
+                font-size: 0.8rem;
             }
         }
 
@@ -392,6 +438,9 @@
         </div>
     </div>
 
+    <!-- Admin Panel Link -->
+    <a href="admin.html" class="admin-link">Beheerderspaneel</a>
+
     <script>
         let teamData = { players: [], matches: [] };
         let currentSort = { column: 'goals', direction: 'desc' };
@@ -441,26 +490,10 @@
             let goalsFor = 0;
             let goalsAgainst = 0;
 
-            // If matches data structure is different, try to get totals from players or use default values
+            // If no matches, return zeros
             if (matches.length === 0) {
-                // Try to get stats from overall team data if available
-                if (teamData.teamStats) {
-                    return {
-                        gamesPlayed: teamData.teamStats.gamesPlayed || 0,
-                        gamesWon: teamData.teamStats.gamesWon || 0,
-                        gamesDraw: teamData.teamStats.gamesDraw || 0,
-                        gamesLost: teamData.teamStats.gamesLost || 0,
-                        goalDifference: teamData.teamStats.goalDifference || 0
-                    };
-                }
-                
-                // Fallback: calculate from player data if available
-                const totalPlayerGames = teamData.players.reduce((sum, player) => {
-                    return Math.max(sum, player.games || player.stats?.matches || 0);
-                }, 0);
-                
                 return {
-                    gamesPlayed: totalPlayerGames,
+                    gamesPlayed: 0,
                     gamesWon: 0,
                     gamesDraw: 0,
                     gamesLost: 0,
@@ -469,18 +502,19 @@
             }
 
             matches.forEach(match => {
-                // Handle different possible data structures
-                let homeScore = match.homeScore || match.ourScore || match.score?.home;
-                let awayScore = match.awayScore || match.theirScore || match.score?.away;
+                // Handle the current data structure with teamGoals and opponentGoals
+                let ourScore = match.teamGoals || match.homeScore || match.ourScore || match.score?.home;
+                let theirScore = match.opponentGoals || match.awayScore || match.theirScore || match.score?.away;
                 
-                if (homeScore !== undefined && awayScore !== undefined) {
+                // Only count matches where both scores are defined and not null
+                if (ourScore !== undefined && ourScore !== null && theirScore !== undefined && theirScore !== null) {
                     gamesPlayed++;
-                    goalsFor += homeScore || 0;
-                    goalsAgainst += awayScore || 0;
+                    goalsFor += ourScore;
+                    goalsAgainst += theirScore;
                     
-                    if (homeScore > awayScore) {
+                    if (ourScore > theirScore) {
                         gamesWon++;
-                    } else if (homeScore === awayScore) {
+                    } else if (ourScore === theirScore) {
                         gamesDraw++;
                     } else {
                         gamesLost++;
@@ -520,11 +554,16 @@
         }
 
         function calculateAttendancePercentage(player) {
-            const games = player.games || player.stats?.matches || 0;
+            // Get total matches from the matches array
+            const totalMatches = teamData.matches ? teamData.matches.length : 0;
             const attended = player.attended || 0;
             
-            if (games === 0) return 0;
-            return Math.round((attended / games) * 100);
+            if (totalMatches === 0) return 0;
+            return Math.round((attended / totalMatches) * 100);
+        }
+
+        function getTotalMatches() {
+            return teamData.matches ? teamData.matches.length : 0;
         }
 
         function defaultSort(players) {
@@ -632,7 +671,7 @@
             tableBody.innerHTML = '';
             
             sortedPlayers.forEach((player, index) => {
-                const games = player.games || player.stats?.matches || 0;
+                const totalMatches = getTotalMatches();
                 const goals = player.goals || player.stats?.goals || 0;
                 const assists = player.assists || player.stats?.assists || 0;
                 const attended = player.attended || 0;
@@ -650,9 +689,11 @@
                     <td class="attendance-cell">
                         <div class="attendance-bar">
                             <div class="bar-container">
-                                <div class="bar-fill" style="width: ${attendancePercentage}%"></div>
+                                <div class="bar-fill" style="width: ${attendancePercentage}%">
+                                    ${attendancePercentage >= 25 ? `<span class="bar-percentage">${attendancePercentage}%</span>` : ''}
+                                </div>
                             </div>
-                            <div class="bar-text">${attended}/${games}</div>
+                            <div class="bar-text">${attended}/${totalMatches}</div>
                         </div>
                     </td>
                     <td>${sitout}</td>
