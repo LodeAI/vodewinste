@@ -461,22 +461,7 @@
                     return;
                 }
             } catch (error) {
-                console.log('No GitHub data found, trying localStorage');
-            }
-            
-            // Fallback to localStorage
-            try {
-                const saved = localStorage.getItem('minivoetbalData');
-                if (saved) {
-                    const data = JSON.parse(saved);
-                    teamData = {
-                        players: data.players || [],
-                        matches: data.matches || []
-                    };
-                    return;
-                }
-            } catch (error) {
-                console.log('No localStorage data found');
+                console.log('No data found.');
             }
             
             // If no data found, start with empty data
