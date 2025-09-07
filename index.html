@@ -6,7 +6,7 @@
     <title>Vo De Winste</title>
     
     <!-- Soccer Ball Favicon -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3Cstyle%3E.cls-1%7Bfill:%23ffffff%7D.cls-2%7Bfill:%23000000%7D%3C/style%3E%3C/defs%3E%3Ccircle class='cls-1' cx='50' cy='50' r='48'/%3E%3Cpath class='cls-2' d='M50 2c26.51 0 48 21.49 48 48S76.51 98 50 98 2 76.51 2 50 23.49 2 50 2m0-2C22.39 0 0 22.39 0 50s22.39 50 50 50 50-22.39 50-50S77.61 0 50 0z'/%3E%3Cpath class='cls-2' d='M50 15L35 30l-5 20 5 20 15 15 15-15 5-20-5-20L50 15z'/%3E%3Cpath class='cls-2' d='M30 25L20 35l5 15 10-10-5-15z'/%3E%3Cpath class='cls-2' d='M70 25l10 10-5 15-10-10 5-15z'/%3E%3Cpath class='cls-2' d='M25 60l-5 15 10 10 10-10-15-15z'/%3E%3Cpath class='cls-2' d='M75 60l5 15-10 10-10-10 15-15z'/%3E%3C/svg%3E">
+    <link rel="icon" href="⚽" type="image/x-icon">
     
     <style>
         * {
@@ -587,8 +587,8 @@
                 if (bAttendance !== aAttendance) return bAttendance - aAttendance;
                 
                 // Quaternary: Fewer sit-outs is better (ascending)
-                const aSitOut = a.sitout || a.stats?.sitout || 0;
-                const bSitOut = b.sitout || b.stats?.sitout || 0;
+                const aSitOut = getSitOutCount(a);
+                const bSitOut = getSitOutCount(b);
                 return aSitOut - bSitOut;
             });
         }
