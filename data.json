@@ -142,8 +142,21 @@
         "sitOuts": 0,
         "attendance": 0
       }
+    },
+    {
+      "id": 1757629153436,
+      "name": "Mathijs Verschave",
+      "stats": {
+        "matches": 0,
+        "goals": 0,
+        "assists": 0,
+        "yellowCards": 0,
+        "redCards": 0,
+        "sitOuts": 0,
+        "attendance": 0
+      }
     }
   ],
   "matches": [],
-  "lastUpdated": "2025-09-11T22:19:04.641Z"
+  "lastUpdated": "2025-09-11T22:19:13.436Z"
 }
