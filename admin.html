@@ -939,6 +939,7 @@
     </div>
 
     <script>
+        // Data objects
         let teamData = {
             players: [],
             matches: [],
@@ -955,7 +956,10 @@
 
         // Set today's date as default on page load
         document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('matchDate').value = new Date().toISOString().split('T')[0];
+            const dateInput = document.getElementById('matchDate');
+            if (dateInput) {
+                dateInput.value = new Date().toISOString().split('T')[0];
+            }
         });
 
         // Simple authentication with base64 encoding
@@ -964,8 +968,8 @@
             const password = document.getElementById('password').value;
             
             // Encoded credentials (base64)
-            const encodedUsername = 'YWRtaW4=';
-            const encodedPassword = 'd3VzdGU='; 
+            const encodedUsername = 'YWRtaW4='; // admin
+            const encodedPassword = 'd3VzdGU='; // wuste (example)
             
             // Encode input values for comparison
             const inputUsername = btoa(username);
@@ -990,9 +994,9 @@
             const settings = localStorage.getItem('minivoetbalGitHubSettings');
             if (settings) {
                 gitHubSettings = JSON.parse(settings);
-                document.getElementById('githubToken').value = gitHubSettings.token;
-                document.getElementById('repoOwner').value = gitHubSettings.owner;
-                document.getElementById('repoName').value = gitHubSettings.repo;
+                document.getElementById('githubToken').value = gitHubSettings.token || '';
+                document.getElementById('repoOwner').value = gitHubSettings.owner || '';
+                document.getElementById('repoName').value = gitHubSettings.repo || '';
             }
         }
 
@@ -1031,8 +1035,17 @@
             }
         }
 
+        // Load data.json from GitHub (if available)
         async function loadData() {
             try {
+                // Ensure we have the latest settings from localStorage
+                loadGitHubSettings();
+
+                if (!gitHubSettings.token || !gitHubSettings.owner || !gitHubSettings.repo) {
+                    // Nothing configured yet
+                    return;
+                }
+
                 const response = await fetch(`https://api.github.com/repos/${gitHubSettings.owner}/${gitHubSettings.repo}/contents/data.json`, {
                     headers: {
                         'Authorization': `token ${gitHubSettings.token}`,
@@ -1042,10 +1055,12 @@
         
                 if (response.ok) {
                     const data = await response.json();
-                    const content = JSON.parse(atob(data.content));
+                    const decoded = atob(data.content);
+                    const content = JSON.parse(decoded);
                     teamData = { ...teamData, ...content };
                     
                     // Ensure all players have proper stats structure
+                    teamData.players = teamData.players || [];
                     teamData.players.forEach(player => {
                         if (!player.stats) {
                             player.stats = {
@@ -1058,14 +1073,8 @@
                                 attendance: 0
                             };
                         }
-                        // Add attendance field if missing
-                        if (player.stats.attendance === undefined) {
-                            player.stats.attendance = 0;
-                        }
-                        // Add sitOuts field if missing
-                        if (player.stats.sitOuts === undefined) {
-                            player.stats.sitOuts = 0;
-                        }
+                        if (player.stats.attendance === undefined) player.stats.attendance = 0;
+                        if (player.stats.sitOuts === undefined) player.stats.sitOuts = 0;
                     });
                     
                     console.log('Data loaded from GitHub:', teamData);
@@ -1082,102 +1091,13 @@
             }
         }
 
-        function showMatchHistoryModal() {
-            const matchHistoryList = document.getElementById('matchHistoryList');
-            
-            if (teamData.matches.length === 0) {
-                matchHistoryList.innerHTML = '<div class="no-data"><p>Nog geen wedstrijden gespeeld.</p></div>';
-            } else {
-                matchHistoryList.innerHTML = teamData.matches
-                    .sort((a, b) => new Date(b.date) - new Date(a.date))
-                    .map(match => {
-                        const presentPlayers = match.players.filter(p => p.attendance === 'present').length;
-                        const sitOutPlayers = match.players.filter(p => p.attendance === 'sitout').length;
-                        const totalGoals = match.players.reduce((sum, p) => sum + (p.stats?.goals || 0), 0);
-                        const totalAssists = match.players.reduce((sum, p) => sum + (p.stats?.assists || 0), 0);
-                        
-                        return `
-                            <div class="match-item">
-                                <div class="match-info">
-                                    <div class="match-date">${new Date(match.date).toLocaleDateString('nl-NL')}</div>
-                                    <div class="match-stats">
-                                        Resultaat: ${match.teamGoals}-${match.opponentGoals} • 
-                                        Saldo: ${match.goalDifference > 0 ? '+' : ''}${match.goalDifference} • 
-                                        ${presentPlayers} gespeeld, ${sitOutPlayers} sit-out • 
-                                        ${totalGoals} goals, ${totalAssists} assists
-                                        ${match.notes ? ` • ${match.notes}` : ''}
-                                    </div>
-                                </div>
-                                <div style="display: flex; gap: 0.5rem;">
-                                    <button class="btn btn-secondary btn-small" onclick="editMatch(${match.id})">
-                                        Bewerken
-                                    </button>
-                                    <button class="btn btn-danger btn-small" onclick="removeMatch(${match.id})">
-                                        Verwijderen
-                                    </button>
-                                </div>
-                            </div>
-                        `;
-                    }).join('');
-            }
-            
-            showModal('matchHistoryModal');
-        }
-
-        // UPDATED: Remove match function with proper stat recalculation
-        function removeMatch(matchId) {
-            if (confirm('Weet je zeker dat je deze wedstrijd wilt verwijderen? Dit kan niet ongedaan gemaakt worden.')) {
-                // Remove match from data
-                teamData.matches = teamData.matches.filter(m => m.id !== matchId);
-                
-                // Recalculate all stats from remaining matches
-                recalculateAllStats(false);
-                
-                saveData();
-                showMatchHistoryModal();
-                showMessage('Wedstrijd verwijderd!');
-            }
-        }
-
-        // Allow Enter key to submit login
-        document.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter' && document.getElementById('loginScreen').style.display !== 'none') {
-                handleLogin();
-            }
-        });
-
-        // Close modals when clicking outside
-        window.onclick = function(event) {
-            if (event.target.classList.contains('modal')) {
-                event.target.classList.remove('active');
-            }
-        }
-
-        // Check if user is already logged in
-        if (sessionStorage.getItem('minivoetbalAuth') === 'authenticated') {
-            document.getElementById('loginScreen').style.display = 'none';
-            document.getElementById('mainContent').style.display = 'block';
-            loadGitHubSettings();
-            loadData();
-        }
-        
-} else if (response.status === 404) {
-                    console.log('No existing data file found, starting fresh');
-                } else {
-                    throw new Error(`Failed to load data: ${response.status}`);
-                }
-            } catch (error) {
-                console.error('Error loading data:', error);
-                showMessage('Fout bij laden van data. Controleer GitHub instellingen.', 'error');
-            }
-        }
-
+        // Save teamData to GitHub (data.json)
         async function saveData() {
             try {
                 saveGitHubSettings();
                 teamData.lastUpdated = new Date().toISOString();
 
-                // Get current file to get SHA for update
+                // Try to get existing file to obtain SHA (for update)
                 let sha = null;
                 try {
                     const response = await fetch(`https://api.github.com/repos/${gitHubSettings.owner}/${gitHubSettings.repo}/contents/data.json`, {
@@ -1191,10 +1111,13 @@
                         sha = data.sha;
                     }
                 } catch (e) {
-                    // File might not exist yet
+                    // ignore - file might not exist yet
                 }
 
-                const content = btoa(JSON.stringify(teamData, null, 2));
+                // Properly encode Unicode characters
+                const payload = JSON.stringify(teamData, null, 2);
+                const content = btoa(unescape(encodeURIComponent(payload)));
+
                 const body = {
                     message: `Update team data - ${new Date().toLocaleDateString('nl-NL')}`,
                     content: content
@@ -1217,7 +1140,8 @@
                 if (saveResponse.ok) {
                     showMessage('Data succesvol opgeslagen!');
                 } else {
-                    throw new Error(`Save failed: ${saveResponse.status}`);
+                    const text = await saveResponse.text();
+                    throw new Error(`Save failed: ${saveResponse.status} ${text}`);
                 }
             } catch (error) {
                 console.error('Error saving data:', error);
@@ -1225,7 +1149,7 @@
             }
         }
 
-        // NEW: Function to recalculate all player statistics from match data
+        // Recalculate all player statistics from matches
         function recalculateAllStats(showConfirmation = true) {
             console.log('Recalculating all player statistics...');
             
@@ -1243,23 +1167,22 @@
             });
 
             // Recalculate from all matches
-            teamData.matches.forEach(match => {
-                match.players.forEach(matchPlayer => {
+            (teamData.matches || []).forEach(match => {
+                (match.players || []).forEach(matchPlayer => {
                     const player = teamData.players.find(p => p.id === matchPlayer.id);
                     if (player) {
-                        // Count total matches (present + sitout)
                         if (matchPlayer.attendance === 'present') {
                             player.stats.matches++;
                             player.stats.attendance++;
-                            player.stats.goals += matchPlayer.stats.goals || 0;
-                            player.stats.assists += matchPlayer.stats.assists || 0;
-                            player.stats.yellowCards += matchPlayer.stats.yellowCards || 0;
-                            player.stats.redCards += matchPlayer.stats.redCards || 0;
+                            player.stats.goals += matchPlayer.stats?.goals || 0;
+                            player.stats.assists += matchPlayer.stats?.assists || 0;
+                            player.stats.yellowCards += matchPlayer.stats?.yellowCards || 0;
+                            player.stats.redCards += matchPlayer.stats?.redCards || 0;
                         } else if (matchPlayer.attendance === 'sitout') {
                             player.stats.matches++;
                             player.stats.sitOuts++;
                         }
-                        // absent players don't get any stats incremented
+                        // absent players: no stats increment
                     }
                 });
             });
@@ -1272,7 +1195,7 @@
             }
         }
 
-        // NEW: Debug function to show detailed stats calculation
+        // Debug function to show detailed stats calculation
         function showDebugStats() {
             const debugContent = document.getElementById('debugContent');
             const statsDebug = document.getElementById('statsDebug');
@@ -1295,12 +1218,12 @@
                             <strong>Match Details:</strong><br>
                 `;
                 
-                teamData.matches.forEach((match, index) => {
-                    const matchPlayer = match.players.find(mp => mp.id === player.id);
+                (teamData.matches || []).forEach((match, index) => {
+                    const matchPlayer = (match.players || []).find(mp => mp.id === player.id);
                     if (matchPlayer) {
                         debugHtml += `Match ${index + 1} (${match.date}): ${matchPlayer.attendance}`;
                         if (matchPlayer.attendance === 'present' && matchPlayer.stats) {
-                            debugHtml += ` - ${matchPlayer.stats.goals}G, ${matchPlayer.stats.assists}A, ${matchPlayer.stats.yellowCards}Y, ${matchPlayer.stats.redCards}R`;
+                            debugHtml += ` - ${matchPlayer.stats.goals || 0}G, ${matchPlayer.stats.assists || 0}A, ${matchPlayer.stats.yellowCards || 0}Y, ${matchPlayer.stats.redCards || 0}R`;
                         }
                         debugHtml += '<br>';
                     } else {
@@ -1315,7 +1238,7 @@
             statsDebug.style.display = 'block';
         }
 
-        // Modal functions
+        // Modal helpers
         function showModal(modalId) {
             document.getElementById(modalId).classList.add('active');
         }
@@ -1324,6 +1247,7 @@
             document.getElementById(modalId).classList.remove('active');
         }
 
+        // Toast / message
         function showMessage(message, type = 'success') {
             const messageElement = document.getElementById('successMessage');
             messageElement.textContent = message;
@@ -1377,8 +1301,8 @@
         function removePlayer(playerId) {
             if (confirm('Weet je zeker dat je deze speler wilt verwijderen? Dit verwijdert ook alle wedstrijddata van deze speler.')) {
                 // Remove player from all matches
-                teamData.matches.forEach(match => {
-                    match.players = match.players.filter(p => p.id !== playerId);
+                (teamData.matches || []).forEach(match => {
+                    match.players = (match.players || []).filter(p => p.id !== playerId);
                 });
                 
                 // Remove player from team
@@ -1393,7 +1317,7 @@
         function showManageSquadModal() {
             const squadList = document.getElementById('squadList');
             
-            if (teamData.players.length === 0) {
+            if (!teamData.players || teamData.players.length === 0) {
                 squadList.innerHTML = '<div class="no-data"><p>Geen spelers in team. Voeg eerst spelers toe.</p></div>';
             } else {
                 squadList.innerHTML = teamData.players.map(player => `
@@ -1416,25 +1340,30 @@
 
         // Reset match modal to default state
         function resetMatchModal() {
-            document.querySelector('#recordMatchModal .modal-title').textContent = 'Wedstrijd vastleggen';
-            document.getElementById('saveMatchBtn').textContent = 'Wedstrijd opslaan';
-            document.getElementById('saveMatchBtn').onclick = recordMatch;
+            const modalTitle = document.querySelector('#recordMatchModal .modal-title');
+            if (modalTitle) modalTitle.textContent = 'Wedstrijd vastleggen';
+            const saveBtn = document.getElementById('saveMatchBtn');
+            if (saveBtn) {
+                saveBtn.textContent = 'Wedstrijd opslaan';
+                saveBtn.onclick = recordMatch;
+            }
             currentEditingMatch = null;
             
             // Reset form fields
-            document.getElementById('matchDate').value = new Date().toISOString().split('T')[0];
+            const dateInput = document.getElementById('matchDate');
+            if (dateInput) dateInput.value = new Date().toISOString().split('T')[0];
             document.getElementById('teamGoals').value = '0';
             document.getElementById('opponentGoals').value = '0';
             document.getElementById('matchNotes').value = '';
         }
 
-        // Match management
+        // Show record match modal and populate players
         function showRecordMatchModal() {
             resetMatchModal();
             
             const playerAttendance = document.getElementById('playerAttendance');
             
-            if (teamData.players.length === 0) {
+            if (!teamData.players || teamData.players.length === 0) {
                 document.getElementById('noPlayersMessage').style.display = 'block';
                 playerAttendance.innerHTML = '';
             } else {
@@ -1484,8 +1413,10 @@
             showModal('recordMatchModal');
         }
 
+        // Set attendance and toggle UI
         function setAttendance(playerId, status) {
             const playerCard = document.getElementById(`player-${playerId}`);
+            if (!playerCard) return;
             const statsInputs = document.getElementById(`stats-${playerId}`);
             const buttons = playerCard.querySelectorAll('.attendance-btn');
             
@@ -1495,20 +1426,24 @@
             
             // Set new status
             playerCard.classList.add(`status-${status}`);
-            playerCard.querySelector(`.btn-${status}`).classList.add('active');
+            const btnToActivate = playerCard.querySelector(`.btn-${status}`);
+            if (btnToActivate) btnToActivate.classList.add('active');
             
             // Show/hide stats inputs
             if (status === 'present') {
-                statsInputs.style.display = 'grid';
+                if (statsInputs) statsInputs.style.display = 'grid';
             } else {
-                statsInputs.style.display = 'none';
-                // Reset stats inputs
-                statsInputs.querySelectorAll('input').forEach(input => input.value = '0');
+                if (statsInputs) {
+                    statsInputs.style.display = 'none';
+                    // Reset stats inputs
+                    statsInputs.querySelectorAll('input').forEach(input => input.value = '0');
+                }
             }
             
             updateMatchSummary();
         }
 
+        // Update the small summary in the record/edit modal
         function updateMatchSummary() {
             let totalGoals = 0;
             let totalAssists = 0;
@@ -1516,27 +1451,26 @@
             let totalYellow = 0;
             let totalRed = 0;
 
-            // Calculate individual player stats
-            teamData.players.forEach(player => {
+            (teamData.players || []).forEach(player => {
                 const playerCard = document.getElementById(`player-${player.id}`);
                 if (playerCard && playerCard.classList.contains('status-present')) {
                     const statsInputs = document.getElementById(`stats-${player.id}`);
-                    const inputs = statsInputs.querySelectorAll('input');
-                    totalGoals += parseInt(inputs[0].value) || 0;
-                    totalAssists += parseInt(inputs[1].value) || 0;
-                    totalYellow += parseInt(inputs[2].value) || 0;
-                    totalRed += parseInt(inputs[3].value) || 0;
+                    if (statsInputs) {
+                        const inputs = statsInputs.querySelectorAll('input');
+                        totalGoals += parseInt(inputs[0].value) || 0;
+                        totalAssists += parseInt(inputs[1].value) || 0;
+                        totalYellow += parseInt(inputs[2].value) || 0;
+                        totalRed += parseInt(inputs[3].value) || 0;
+                    }
                 } else if (playerCard && playerCard.classList.contains('status-sitout')) {
                     totalSitouts++;
                 }
             });
 
-            // Calculate goal difference
             const teamGoals = parseInt(document.getElementById('teamGoals').value) || 0;
             const opponentGoals = parseInt(document.getElementById('opponentGoals').value) || 0;
             const goalDifference = teamGoals - opponentGoals;
 
-            // Update summary
             document.getElementById('totalGoals').textContent = totalGoals;
             document.getElementById('totalAssists').textContent = totalAssists;
             document.getElementById('totalSitouts').textContent = totalSitouts;
@@ -1545,7 +1479,7 @@
             document.getElementById('goalDifference').textContent = goalDifference > 0 ? `+${goalDifference}` : goalDifference;
         }
 
-        // UPDATED: Record match function with proper stat tracking
+        // Record a new match
         function recordMatch() {
             const matchDate = document.getElementById('matchDate').value;
             const teamGoals = parseInt(document.getElementById('teamGoals').value) || 0;
@@ -1568,22 +1502,24 @@
             };
 
             // Collect player data and update player stats
-            teamData.players.forEach(player => {
+            (teamData.players || []).forEach(player => {
                 const playerCard = document.getElementById(`player-${player.id}`);
                 let attendance = 'absent';
                 let stats = { goals: 0, assists: 0, yellowCards: 0, redCards: 0 };
                 
-                if (playerCard.classList.contains('status-present')) {
+                if (playerCard && playerCard.classList.contains('status-present')) {
                     attendance = 'present';
                     const statsInputs = document.getElementById(`stats-${player.id}`);
-                    const inputs = statsInputs.querySelectorAll('input');
-                    stats = {
-                        goals: parseInt(inputs[0].value) || 0,
-                        assists: parseInt(inputs[1].value) || 0,
-                        yellowCards: parseInt(inputs[2].value) || 0,
-                        redCards: parseInt(inputs[3].value) || 0
-                    };
-                } else if (playerCard.classList.contains('status-sitout')) {
+                    if (statsInputs) {
+                        const inputs = statsInputs.querySelectorAll('input');
+                        stats = {
+                            goals: parseInt(inputs[0].value) || 0,
+                            assists: parseInt(inputs[1].value) || 0,
+                            yellowCards: parseInt(inputs[2].value) || 0,
+                            redCards: parseInt(inputs[3].value) || 0
+                        };
+                    }
+                } else if (playerCard && playerCard.classList.contains('status-sitout')) {
                     attendance = 'sitout';
                 }
 
@@ -1595,7 +1531,11 @@
                     stats: stats
                 });
 
-                // Update player totals based on attendance
+                // Update player totals based on attendance (incremental)
+                if (!player.stats) {
+                    player.stats = { matches: 0, goals: 0, assists: 0, yellowCards: 0, redCards: 0, sitOuts: 0, attendance: 0 };
+                }
+
                 if (attendance === 'present') {
                     player.stats.matches++;
                     player.stats.attendance++;
@@ -1610,21 +1550,26 @@
                 // Absent players: no stats updated
             });
 
+            teamData.matches = teamData.matches || [];
             teamData.matches.push(matchData);
             saveData();
             closeModal('recordMatchModal');
             showMessage('Wedstrijd succesvol opgeslagen!');
         }
 
-        // UPDATED: Edit match function
+        // Edit an existing match
         function editMatch(matchId) {
-            currentEditingMatch = teamData.matches.find(m => m.id === matchId);
+            currentEditingMatch = (teamData.matches || []).find(m => m.id === matchId);
             if (!currentEditingMatch) return;
 
             // Update modal title and button
-            document.querySelector('#recordMatchModal .modal-title').textContent = 'Wedstrijd bewerken';
-            document.getElementById('saveMatchBtn').textContent = 'Wijzigingen opslaan';
-            document.getElementById('saveMatchBtn').onclick = updateMatch;
+            const modalTitle = document.querySelector('#recordMatchModal .modal-title');
+            if (modalTitle) modalTitle.textContent = 'Wedstrijd bewerken';
+            const saveBtn = document.getElementById('saveMatchBtn');
+            if (saveBtn) {
+                saveBtn.textContent = 'Wijzigingen opslaan';
+                saveBtn.onclick = updateMatch;
+            }
 
             // Populate form with existing match data
             document.getElementById('matchDate').value = currentEditingMatch.date;
@@ -1632,18 +1577,17 @@
             document.getElementById('opponentGoals').value = currentEditingMatch.opponentGoals;
             document.getElementById('matchNotes').value = currentEditingMatch.notes || '';
 
-            // Populate player attendance and stats
             const playerAttendance = document.getElementById('playerAttendance');
             
-            if (teamData.players.length === 0) {
+            if (!teamData.players || teamData.players.length === 0) {
                 document.getElementById('noPlayersMessage').style.display = 'block';
                 playerAttendance.innerHTML = '';
             } else {
                 document.getElementById('noPlayersMessage').style.display = 'none';
                 playerAttendance.innerHTML = teamData.players.map(player => {
-                    const matchPlayerData = currentEditingMatch.players.find(mp => mp.id === player.id);
+                    const matchPlayerData = (currentEditingMatch.players || []).find(mp => mp.id === player.id);
                     const attendance = matchPlayerData ? matchPlayerData.attendance : 'absent';
-                    const stats = matchPlayerData ? matchPlayerData.stats : { goals: 0, assists: 0, yellowCards: 0, redCards: 0 };
+                    const stats = matchPlayerData ? (matchPlayerData.stats || { goals: 0, assists: 0, yellowCards: 0, redCards: 0 }) : { goals: 0, assists: 0, yellowCards: 0, redCards: 0 };
                     
                     return `
                         <div class="player-card status-${attendance}" id="player-${player.id}">
@@ -1667,19 +1611,19 @@
                             <div class="stats-inputs" id="stats-${player.id}" style="display: ${attendance === 'present' ? 'grid' : 'none'};">
                                 <div class="stat-input">
                                     <label>Goals</label>
-                                    <input type="number" min="0" value="${stats.goals}" onchange="updateMatchSummary()">
+                                    <input type="number" min="0" value="${stats.goals || 0}" onchange="updateMatchSummary()">
                                 </div>
                                 <div class="stat-input">
                                     <label>Assists</label>
-                                    <input type="number" min="0" value="${stats.assists}" onchange="updateMatchSummary()">
+                                    <input type="number" min="0" value="${stats.assists || 0}" onchange="updateMatchSummary()">
                                 </div>
                                 <div class="stat-input">
                                     <label>Geel</label>
-                                    <input type="number" min="0" value="${stats.yellowCards}" onchange="updateMatchSummary()">
+                                    <input type="number" min="0" value="${stats.yellowCards || 0}" onchange="updateMatchSummary()">
                                 </div>
                                 <div class="stat-input">
                                     <label>Rood</label>
-                                    <input type="number" min="0" value="${stats.redCards}" onchange="updateMatchSummary()">
+                                    <input type="number" min="0" value="${stats.redCards || 0}" onchange="updateMatchSummary()">
                                 </div>
                             </div>
                         </div>
@@ -1688,11 +1632,12 @@
             }
 
             updateMatchSummary();
+            // close history and show edit modal
             closeModal('matchHistoryModal');
             showModal('recordMatchModal');
         }
 
-        // UPDATED: Update match function with proper stat recalculation
+        // Update an edited match
         function updateMatch() {
             if (!currentEditingMatch) return;
 
@@ -1715,22 +1660,24 @@
 
             // Update player data for this match
             currentEditingMatch.players = [];
-            teamData.players.forEach(player => {
+            (teamData.players || []).forEach(player => {
                 const playerCard = document.getElementById(`player-${player.id}`);
                 let attendance = 'absent';
                 let stats = { goals: 0, assists: 0, yellowCards: 0, redCards: 0 };
                 
-                if (playerCard.classList.contains('status-present')) {
+                if (playerCard && playerCard.classList.contains('status-present')) {
                     attendance = 'present';
                     const statsInputs = document.getElementById(`stats-${player.id}`);
-                    const inputs = statsInputs.querySelectorAll('input');
-                    stats = {
-                        goals: parseInt(inputs[0].value) || 0,
-                        assists: parseInt(inputs[1].value) || 0,
-                        yellowCards: parseInt(inputs[2].value) || 0,
-                        redCards: parseInt(inputs[3].value) || 0
-                    };
-                } else if (playerCard.classList.contains('status-sitout')) {
+                    if (statsInputs) {
+                        const inputs = statsInputs.querySelectorAll('input');
+                        stats = {
+                            goals: parseInt(inputs[0].value) || 0,
+                            assists: parseInt(inputs[1].value) || 0,
+                            yellowCards: parseInt(inputs[2].value) || 0,
+                            redCards: parseInt(inputs[3].value) || 0
+                        };
+                    }
+                } else if (playerCard && playerCard.classList.contains('status-sitout')) {
                     attendance = 'sitout';
                 }
 
@@ -1751,51 +1698,56 @@
             currentEditingMatch = null;
         }
 
+        // Show match history
         function showMatchHistoryModal() {
             const matchHistoryList = document.getElementById('matchHistoryList');
+            const matches = teamData.matches || [];
             
-            if (teamData.matches.length === 0) {
+            if (matches.length === 0) {
                 matchHistoryList.innerHTML = '<div class="no-data"><p>Nog geen wedstrijden gespeeld.</p></div>';
             } else {
-                matchHistoryList.innerHTML = teamData.matches
-                    .sort((a, b) => new Date(b.date) - new Date(a.date))
-                    .map(match => {
-                        const presentPlayers = match.players.filter(p => p.attendance === 'present').length;
-                        const sitOutPlayers = match.players.filter(p => p.attendance === 'sitout').length;
-                        const totalGoals = match.players.reduce((sum, p) => sum + (p.stats?.goals || 0), 0);
-                        const totalAssists = match.players.reduce((sum, p) => sum + (p.stats?.assists || 0), 0);
-                        
-                        return `
-                            <div class="match-item">
-                                <div class="match-info">
-                                    <div class="match-date">${new Date(match.date).toLocaleDateString('nl-NL')}</div>
-                                    <div class="match-stats">
-                                        Resultaat: ${match.teamGoals}-${match.opponentGoals} • 
-                                        Saldo: ${match.goalDifference > 0 ? '+' : ''}${match.goalDifference} • 
-                                        ${presentPlayers} gespeeld, ${sitOutPlayers} sit-out • 
-                                        ${totalGoals} goals, ${totalAssists} assists
-                                        ${match.notes ? ` • ${match.notes}` : ''}
-                                    </div>
-                                </div>
-                                <div style="display: flex; gap: 0.5rem;">
-                                    <button class="btn btn-secondary btn-small" onclick="editMatch(${match.id})">
-                                        Bewerken
-                                    </button>
-                                    <button class="btn btn-danger btn-small" onclick="removeMatch(${match.id})">
-                                        Verwijderen
-                                    </button>
+                // sort by newest first
+                const sorted = matches.slice().sort((a, b) => new Date(b.date) - new Date(a.date));
+                matchHistoryList.innerHTML = sorted.map(match => {
+                    const presentPlayers = (match.players || []).filter(p => p.attendance === 'present').length;
+                    const sitOutPlayers = (match.players || []).filter(p => p.attendance === 'sitout').length;
+                    const totalGoals = (match.players || []).reduce((sum, p) => sum + ((p.stats && p.stats.goals) || 0), 0);
+                    const totalAssists = (match.players || []).reduce((sum, p) => sum + ((p.stats && p.stats.assists) || 0), 0);
+                    const goalDiff = match.goalDifference || (match.teamGoals - match.opponentGoals);
+                    const notesPart = match.notes ? ` • ${match.notes}` : '';
+                    
+                    return `
+                        <div class="match-item">
+                            <div class="match-info">
+                                <div class="match-date">${new Date(match.date).toLocaleDateString('nl-NL')}</div>
+                                <div class="match-stats">
+                                    Resultaat: ${match.teamGoals}-${match.opponentGoals} • 
+                                    Saldo: ${goalDiff > 0 ? '+' : ''}${goalDiff} • 
+                                    ${presentPlayers} gespeeld, ${sitOutPlayers} sit-out • 
+                                    ${totalGoals} goals, ${totalAssists} assists
+                                    ${notesPart}
                                 </div>
                             </div>
-                        `;
-                    }).join('');
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button class="btn btn-secondary btn-small" onclick="editMatch(${match.id})">
+                                    Bewerken
+                                </button>
+                                <button class="btn btn-danger btn-small" onclick="removeMatch(${match.id})">
+                                    Verwijderen
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
             }
             
             showModal('matchHistoryModal');
         }
 
+        // Remove a match and recalculate stats
         function removeMatch(matchId) {
             if (confirm('Weet je zeker dat je deze wedstrijd wilt verwijderen? Dit kan niet ongedaan gemaakt worden.')) {
-                teamData.matches = teamData.matches.filter(m => m.id !== matchId);
+                teamData.matches = (teamData.matches || []).filter(m => m.id !== matchId);
                 recalculateAllStats(false);
                 saveData();
                 showMatchHistoryModal();
@@ -1803,27 +1755,31 @@
             }
         }
 
-        // Allow Enter key to submit login
+        // Global keyboard and click handlers
         document.addEventListener('keypress', function(e) {
             if (e.key === 'Enter' && document.getElementById('loginScreen').style.display !== 'none') {
                 handleLogin();
             }
         });
 
-        // Close modals when clicking outside
         window.onclick = function(event) {
             if (event.target.classList.contains('modal')) {
                 event.target.classList.remove('active');
             }
-        }
+        };
 
-        // Check if user is already logged in
-        if (sessionStorage.getItem('minivoetbalAuth') === 'authenticated') {
-            document.getElementById('loginScreen').style.display = 'none';
-            document.getElementById('mainContent').style.display = 'block';
-            loadGitHubSettings();
-            loadData();
-        }
+        // Auto-login if previously authenticated
+        (function initFromSession() {
+            if (sessionStorage.getItem('minivoetbalAuth') === 'authenticated') {
+                // Elements exist since script is at the end of body
+                const loginScreen = document.getElementById('loginScreen');
+                const mainContent = document.getElementById('mainContent');
+                if (loginScreen) loginScreen.style.display = 'none';
+                if (mainContent) mainContent.style.display = 'block';
+                loadGitHubSettings();
+                loadData();
+            }
+        })();
     </script>
 </body>
 </html>
