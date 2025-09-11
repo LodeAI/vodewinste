@@ -1741,4 +1741,100 @@
                         yellowCards: parseInt(inputs[2].value) || 0,
                         redCards: parseInt(inputs[3].value) || 0
                     };
-                } else if (
+                } else if (playerCard.classList.contains('status-sitout')) {
+                    attendance = 'sitout';
+                }
+
+                currentEditingMatch.players.push({
+                    id: player.id,
+                    name: player.name,
+                    attendance: attendance,
+                    stats: stats
+                });
+            });
+
+            // Recalculate ALL stats from scratch to ensure consistency
+            recalculateAllStats(false);
+            
+            saveData();
+            closeModal('recordMatchModal');
+            showMessage('Wedstrijd succesvol bijgewerkt!');
+            currentEditingMatch = null;
+        }
+
+        function showMatchHistoryModal() {
+            const matchHistoryList = document.getElementById('matchHistoryList');
+            
+            if (teamData.matches.length === 0) {
+                matchHistoryList.innerHTML = '<div class="no-data"><p>Nog geen wedstrijden gespeeld.</p></div>';
+            } else {
+                matchHistoryList.innerHTML = teamData.matches
+                    .sort((a, b) => new Date(b.date) - new Date(a.date))
+                    .map(match => {
+                        const presentPlayers = match.players.filter(p => p.attendance === 'present').length;
+                        const sitOutPlayers = match.players.filter(p => p.attendance === 'sitout').length;
+                        const totalGoals = match.players.reduce((sum, p) => sum + (p.stats?.goals || 0), 0);
+                        const totalAssists = match.players.reduce((sum, p) => sum + (p.stats?.assists || 0), 0);
+                        
+                        return `
+                            <div class="match-item">
+                                <div class="match-info">
+                                    <div class="match-date">${new Date(match.date).toLocaleDateString('nl-NL')}</div>
+                                    <div class="match-stats">
+                                        Resultaat: ${match.teamGoals}-${match.opponentGoals} • 
+                                        Saldo: ${match.goalDifference > 0 ? '+' : ''}${match.goalDifference} • 
+                                        ${presentPlayers} gespeeld, ${sitOutPlayers} sit-out • 
+                                        ${totalGoals} goals, ${totalAssists} assists
+                                        ${match.notes ? ` • ${match.notes}` : ''}
+                                    </div>
+                                </div>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <button class="btn btn-secondary btn-small" onclick="editMatch(${match.id})">
+                                        Bewerken
+                                    </button>
+                                    <button class="btn btn-danger btn-small" onclick="removeMatch(${match.id})">
+                                        Verwijderen
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+            }
+            
+            showModal('matchHistoryModal');
+        }
+
+        function removeMatch(matchId) {
+            if (confirm('Weet je zeker dat je deze wedstrijd wilt verwijderen? Dit kan niet ongedaan gemaakt worden.')) {
+                teamData.matches = teamData.matches.filter(m => m.id !== matchId);
+                recalculateAllStats(false);
+                saveData();
+                showMatchHistoryModal();
+                showMessage('Wedstrijd verwijderd!');
+            }
+        }
+
+        // Allow Enter key to submit login
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && document.getElementById('loginScreen').style.display !== 'none') {
+                handleLogin();
+            }
+        });
+
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.classList.remove('active');
+            }
+        }
+
+        // Check if user is already logged in
+        if (sessionStorage.getItem('minivoetbalAuth') === 'authenticated') {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('mainContent').style.display = 'block';
+            loadGitHubSettings();
+            loadData();
+        }
+    </script>
+</body>
+</html>
