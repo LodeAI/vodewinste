@@ -1170,9 +1170,8 @@
             loadGitHubSettings();
             loadData();
         }
-    </script>
-</body>
-</html>response.status === 404) {
+        
+} else if (response.status === 404) {
                     console.log('No existing data file found, starting fresh');
                 } else {
                     throw new Error(`Failed to load data: ${response.status}`);
