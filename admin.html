@@ -1031,57 +1031,56 @@
             }
         }
 
-        async function loadData() {
-            try {
-                const response = await fetch(`https://api.github.com/repos/${gitHubSettings.owner}/${gitHubSettings.repo}/contents/data.json`, {
-                    headers: {
-                        'Authorization': `token ${gitHubSettings.token}`,
-                        'Accept': 'application/vnd.github.v3+json',
-                    }
-                });
+async function loadData() {
+    try {
+        const response = await fetch(`https://api.github.com/repos/${gitHubSettings.owner}/${gitHubSettings.repo}/contents/data.json`, {
+            headers: {
+                'Authorization': `token ${gitHubSettings.token}`,
+                'Accept': 'application/vnd.github.v3+json',
+            }
+        });
 
-                if (response.ok) {
-                    const data = await response.json();
-                    const content = JSON.parse(atob(data.content));
-                    teamData = { ...teamData, ...content };
-                    
-                    // Ensure all players have proper stats structure
-                    teamData.players.forEach(player => {
-                        if (!player.stats) {
-                            player.stats = {
-                                matches: 0,
-                                goals: 0,
-                                assists: 0,
-                                yellowCards: 0,
-                                redCards: 0,
-                                sitOuts: 0,
-                                attendance: 0
-                            };
-                        }
-                        // Add attendance field if missing
-                        if (player.stats.attendance === undefined) {
-                            player.stats.attendance = 0;
-                        }
-                        // Add sitOuts field if missing
-                        if (player.stats.sitOuts === undefined) {
-                            player.stats.sitOuts = 0;
-                        }
-                    });
-                    
-                    console.log('Data loaded from GitHub:', teamData);
-                    // Recalculate stats to ensure consistency
-                    recalculateAllStats(false);
-                } else if (playerCard.classList.contains('status-sitout')) {
-                    attendance = 'sitout';
+        if (response.ok) {
+            const data = await response.json();
+            const content = JSON.parse(atob(data.content));
+            teamData = { ...teamData, ...content };
+            
+            // Ensure all players have proper stats structure
+            teamData.players.forEach(player => {
+                if (!player.stats) {
+                    player.stats = {
+                        matches: 0,
+                        goals: 0,
+                        assists: 0,
+                        yellowCards: 0,
+                        redCards: 0,
+                        sitOuts: 0,
+                        attendance: 0
+                    };
                 }
-
-                currentEditingMatch.players.push({
-                    id: player.id,
-                    name: player.name,
-                    attendance: attendance,
-                    stats: stats
-                });
+                // Add attendance field if missing
+                if (player.stats.attendance === undefined) {
+                    player.stats.attendance = 0;
+                }
+                // Add sitOuts field if missing
+                if (player.stats.sitOuts === undefined) {
+                    player.stats.sitOuts = 0;
+                }
             });
+            
+            console.log('Data loaded from GitHub:', teamData);
+            // Recalculate stats to ensure consistency
+            recalculateAllStats(false);
+        } else if (response.status === 404) {
+            console.log('No existing data file found, starting fresh');
+        } else {
+            throw new Error(`Failed to load data: ${response.status}`);
+        }
+    } catch (error) {
+        console.error('Error loading data:', error);
+        showMessage('Fout bij laden van data. Controleer GitHub instellingen.', 'error');
+    }
+}
 
             // Recalculate ALL stats from scratch to ensure consistency
             recalculateAllStats(false);
