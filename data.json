@@ -1,40 +1,5 @@
 {
-  "players": [
-    {
-      "id": 1234567890,
-      "name": "Player Name",
-      "stats": {
-        "matches": 2,       // Total matches (present + sitout)
-        "attendance": 1,    // Games actually played
-        "sitOuts": 1,      // Times present but sat out
-        "goals": 3,
-        "assists": 1,
-        "yellowCards": 0,
-        "redCards": 0
-      }
-    }
-  ],
-  "matches": [
-    {
-      "id": 1234567890,
-      "date": "2025-01-15",
-      "teamGoals": 4,
-      "opponentGoals": 2,
-      "goalDifference": 2,
-      "notes": "Great game",
-      "players": [
-        {
-          "id": 1234567890,
-          "name": "Player Name",
-          "attendance": "present", // "present", "absent", "sitout"
-          "stats": {
-            "goals": 2,
-            "assists": 1,
-            "yellowCards": 0,
-            "redCards": 0
-          }
-        }
-      ]
-    }
-  ]
+  "players": [],
+  "matches": [],
+  "lastUpdated": "2025-09-11T22:16:38.590Z"
 }
