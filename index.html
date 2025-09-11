@@ -10,369 +10,49 @@
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
     
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --primary: #00ff88;
-            --secondary: #7c3aed;
-            --dark: #0a0a0f;
-            --darker: #050507;
-            --light: #ffffff;
-            --warning: #fbbf24;
-            --danger: #ef4444;
-            --glass: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: var(--darker);
-            color: var(--light);
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        .bg-animation {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            z-index: -1;
-            background: linear-gradient(135deg, #0a0a0f 0%, #1a0a2f 100%);
-            overflow: hidden;
-        }
-
-        .bg-animation::before {
-            content: '';
-            position: absolute;
-            width: 200%;
-            height: 200%;
-            top: -50%;
-            left: -50%;
-            background: radial-gradient(circle at 20% 50%, rgba(0, 255, 136, 0.15) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 80%, rgba(124, 58, 237, 0.1) 0%, transparent 50%),
-                        radial-gradient(circle at 40% 20%, rgba(0, 255, 136, 0.05) 0%, transparent 50%);
-            animation: float 20s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: rotate(0deg) scale(1); }
-            50% { transform: rotate(180deg) scale(1.1); }
-        }
-
-        .header {
-            padding: 2rem;
-            text-align: center;
-            position: relative;
-            background: var(--glass);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--glass-border);
-        }
-
-        .header h1 {
-            font-size: 3rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 0.5rem;
-            animation: glow 2s ease-in-out infinite alternate;
-        }
-
-        @keyframes glow {
-            from { filter: drop-shadow(0 0 20px rgba(0, 255, 136, 0.5)); }
-            to { filter: drop-shadow(0 0 30px rgba(124, 58, 237, 0.5)); }
-        }
-
-        .subtitle {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 1.2rem;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        .stats-overview {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .stat-card {
-            background: var(--glass);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-            border-radius: 15px;
-            padding: 1.5rem;
-            text-align: center;
-        }
-
-        .stat-value {
-            font-size: 2.5rem;
-            font-weight: 900;
-            color: var(--primary);
-            display: block;
-        }
-
-        .stat-label {
-            font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.7);
-            margin-top: 0.5rem;
-        }
-
-        .table-container {
-            background: var(--glass);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            overflow: hidden;
-            margin-bottom: 2rem;
-        }
-
-        .table-header {
-            padding: 1.5rem;
-            border-bottom: 1px solid var(--glass-border);
-        }
-
-        .table-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary);
-        }
-
-        .table-wrapper {
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        thead {
-            background: rgba(0, 255, 136, 0.1);
-        }
-
-        th {
-            padding: 1rem;
-            text-align: left;
-            font-weight: 600;
-            color: var(--light);
-            border-bottom: 1px solid var(--glass-border);
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            user-select: none;
-        }
-
-        th:hover {
-            background: rgba(0, 255, 136, 0.2);
-        }
-
-        td {
-            padding: 1rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            color: rgba(255, 255, 255, 0.9);
-        }
-
-        tr:nth-child(even) {
-            background: rgba(255, 255, 255, 0.02);
-        }
-
-        tr:hover {
-            background: rgba(0, 255, 136, 0.05);
-        }
-
-        .player-name {
-            font-weight: 600;
-            color: var(--light);
-        }
-
-        .no-data {
-            text-align: center;
-            padding: 3rem;
-            color: rgba(255, 255, 255, 0.5);
-        }
-
-        .loading {
-            text-align: center;
-            padding: 3rem;
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        .spinner {
-            border: 3px solid rgba(255, 255, 255, 0.1);
-            border-top: 3px solid var(--primary);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 1rem;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .percentage {
-            color: var(--warning);
-            font-size: 0.9rem;
-        }
-
-        /* Attendance bar styles */
-        .attendance-cell {
-            padding: 1rem 0.5rem;
-        }
-
-        .attendance-bar {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .bar-container {
-            flex: 1;
-            height: 16px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            overflow: hidden;
-            position: relative;
-            min-width: 80px;
-        }
-
-        .bar-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary) 0%, #00cc6f 100%);
-            border-radius: 8px;
-            transition: width 0.8s ease;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .bar-percentage {
-            color: var(--dark);
-            font-size: 0.75rem;
-            font-weight: bold;
-            position: absolute;
-            z-index: 1;
-            white-space: nowrap;
-            text-shadow: 0 0 2px rgba(255, 255, 255, 0.5);
-        }
-
-        .bar-text {
-            font-size: 0.85rem;
-            color: var(--light);
-            font-weight: 500;
-            min-width: 60px;
-            text-align: right;
-        }
-
-        /* Card styling */
-        .card-display {
-            display: inline-block;
-            background: var(--warning);
-            color: var(--dark);
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-weight: bold;
-            font-size: 0.85rem;
-            min-width: 25px;
-            text-align: center;
-        }
-
-        .card-red {
-            background: var(--danger);
-            color: var(--light);
-        }
-
-        /* Admin link styles */
-        .admin-link {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: var(--glass);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-            border-radius: 10px;
-            padding: 8px 16px;
-            color: rgba(255, 255, 255, 0.7);
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            z-index: 100;
-        }
-
-        .admin-link:hover {
-            background: rgba(0, 255, 136, 0.1);
-            color: var(--primary);
-            border-color: var(--primary);
-            transform: translateY(-2px);
-        }
-
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2rem;
-            }
-            
-            .stats-overview {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            table {
-                font-size: 0.9rem;
-            }
-            
-            th, td {
-                padding: 0.8rem 0.5rem;
-            }
-            
-            .attendance-cell {
-                padding: 0.8rem 0.3rem;
-            }
-            
-            .bar-container {
-                min-width: 60px;
-            }
-            
-            .bar-text {
-                min-width: 45px;
-                font-size: 0.8rem;
-            }
-            
-            .stat-value {
-                font-size: 2rem;
-            }
-
-            .admin-link {
-                bottom: 15px;
-                right: 15px;
-                padding: 6px 12px;
-                font-size: 0.8rem;
-            }
-        }
-
-        /* Fix potential scrollbar issues on desktop */
-        html {
-            overflow-y: auto;
-            height: 100%;
-        }
-
-        body {
-            height: 100%;
-        }
+        /* ---- your CSS unchanged ---- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --primary: #00ff88; --secondary: #7c3aed; --dark: #0a0a0f; --darker: #050507; --light: #ffffff; --warning: #fbbf24; --danger: #ef4444; --glass: rgba(255, 255, 255, 0.05); --glass-border: rgba(255, 255, 255, 0.1); }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--darker); color: var(--light); min-height: 100vh; overflow-x: hidden; }
+        .bg-animation { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: -1; background: linear-gradient(135deg, #0a0a0f 0%, #1a0a2f 100%); overflow: hidden; }
+        .bg-animation::before { content: ''; position: absolute; width: 200%; height: 200%; top: -50%; left: -50%; background: radial-gradient(circle at 20% 50%, rgba(0, 255, 136, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(124, 58, 237, 0.1) 0%, transparent 50%), radial-gradient(circle at 40% 20%, rgba(0, 255, 136, 0.05) 0%, transparent 50%); animation: float 20s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: rotate(0deg) scale(1); } 50% { transform: rotate(180deg) scale(1.1); } }
+        .header { padding: 2rem; text-align: center; position: relative; background: var(--glass); backdrop-filter: blur(10px); border-bottom: 1px solid var(--glass-border); }
+        .header h1 { font-size: 3rem; font-weight: 900; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 0.5rem; animation: glow 2s ease-in-out infinite alternate; }
+        @keyframes glow { from { filter: drop-shadow(0 0 20px rgba(0, 255, 136, 0.5)); } to { filter: drop-shadow(0 0 30px rgba(124, 58, 237, 0.5)); } }
+        .subtitle { color: rgba(255, 255, 255, 0.7); font-size: 1.2rem; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+        .stats-overview { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+        .stat-card { background: var(--glass); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); border-radius: 15px; padding: 1.5rem; text-align: center; }
+        .stat-value { font-size: 2.5rem; font-weight: 900; color: var(--primary); display: block; }
+        .stat-label { font-size: 0.9rem; color: rgba(255, 255, 255, 0.7); margin-top: 0.5rem; }
+        .table-container { background: var(--glass); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); border-radius: 20px; overflow: hidden; margin-bottom: 2rem; }
+        .table-header { padding: 1.5rem; border-bottom: 1px solid var(--glass-border); }
+        .table-title { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
+        .table-wrapper { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; }
+        thead { background: rgba(0, 255, 136, 0.1); }
+        th { padding: 1rem; text-align: left; font-weight: 600; color: var(--light); border-bottom: 1px solid var(--glass-border); cursor: pointer; transition: background-color 0.3s ease; user-select: none; }
+        th:hover { background: rgba(0, 255, 136, 0.2); }
+        td { padding: 1rem; border-bottom: 1px solid rgba(255, 255, 255, 0.05); color: rgba(255, 255, 255, 0.9); }
+        tr:nth-child(even) { background: rgba(255, 255, 255, 0.02); }
+        tr:hover { background: rgba(0, 255, 136, 0.05); }
+        .player-name { font-weight: 600; color: var(--light); }
+        .no-data { text-align: center; padding: 3rem; color: rgba(255, 255, 255, 0.5); }
+        .loading { text-align: center; padding: 3rem; color: rgba(255, 255, 255, 0.7); }
+        .spinner { border: 3px solid rgba(255, 255, 255, 0.1); border-top: 3px solid var(--primary); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 1rem; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .percentage { color: var(--warning); font-size: 0.9rem; }
+        .attendance-cell { padding: 1rem 0.5rem; }
+        .attendance-bar { display: flex; align-items: center; gap: 10px; }
+        .bar-container { flex: 1; height: 16px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; overflow: hidden; position: relative; min-width: 80px; }
+        .bar-fill { height: 100%; background: linear-gradient(90deg, var(--primary) 0%, #00cc6f 100%); border-radius: 8px; transition: width 0.8s ease; position: relative; display: flex; align-items: center; justify-content: center; }
+        .bar-percentage { color: var(--dark); font-size: 0.75rem; font-weight: bold; position: absolute; z-index: 1; white-space: nowrap; text-shadow: 0 0 2px rgba(255, 255, 255, 0.5); }
+        .bar-text { font-size: 0.85rem; color: var(--light); font-weight: 500; min-width: 60px; text-align: right; }
+        .card-display { display: inline-block; background: var(--warning); color: var(--dark); padding: 3px 8px; border-radius: 4px; font-weight: bold; font-size: 0.85rem; min-width: 25px; text-align: center; }
+        .card-red { background: var(--danger); color: var(--light); }
+        .admin-link { position: fixed; bottom: 20px; right: 20px; background: var(--glass); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); border-radius: 10px; padding: 8px 16px; color: rgba(255, 255, 255, 0.7); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: all 0.3s ease; z-index: 100; }
+        .admin-link:hover { background: rgba(0, 255, 136, 0.1); color: var(--primary); border-color: var(--primary); transform: translateY(-2px); }
     </style>
 </head>
 <body>
@@ -386,38 +66,18 @@
     <div class="container">
         <!-- Stats Overview -->
         <div class="stats-overview" id="statsOverview">
-            <div class="stat-card">
-                <div class="stat-value" id="gamesPlayed">0</div>
-                <div class="stat-label">Gespeelde wedstrijden</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value" id="gamesWon">0</div>
-                <div class="stat-label">Gewonnen</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value" id="gamesDraw">0</div>
-                <div class="stat-label">Gelijkspel</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value" id="gamesLost">0</div>
-                <div class="stat-label">Verloren</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value" id="goalDifference">+0</div>
-                <div class="stat-label">Doelpuntensaldo</div>
-            </div>
+            <div class="stat-card"><div class="stat-value" id="gamesPlayed">0</div><div class="stat-label">Gespeelde wedstrijden</div></div>
+            <div class="stat-card"><div class="stat-value" id="gamesWon">0</div><div class="stat-label">Gewonnen</div></div>
+            <div class="stat-card"><div class="stat-value" id="gamesDraw">0</div><div class="stat-label">Gelijkspel</div></div>
+            <div class="stat-card"><div class="stat-value" id="gamesLost">0</div><div class="stat-label">Verloren</div></div>
+            <div class="stat-card"><div class="stat-value" id="goalDifference">+0</div><div class="stat-label">Doelpuntensaldo</div></div>
         </div>
 
         <!-- Player Statistics Table -->
         <div class="table-container">
-            <div class="table-header">
-                <h2 class="table-title">Spelerstatistieken</h2>
-            </div>
+            <div class="table-header"><h2 class="table-title">Spelerstatistieken</h2></div>
             <div class="table-wrapper">
-                <div id="loading" class="loading">
-                    <div class="spinner"></div>
-                    <p>Gegevens laden...</p>
-                </div>
+                <div id="loading" class="loading"><div class="spinner"></div><p>Gegevens laden...</p></div>
                 <table id="playerTable" style="display: none;">
                     <thead>
                         <tr>
@@ -430,9 +90,7 @@
                             <th onclick="sortTable('red')">Rode kaarten</th>
                         </tr>
                     </thead>
-                    <tbody id="playerTableBody">
-                        <!-- Players will be populated here -->
-                    </tbody>
+                    <tbody id="playerTableBody"></tbody>
                 </table>
                 <div id="noData" class="no-data" style="display: none;">
                     <p>Nog geen spelersgegevens beschikbaar.</p>
@@ -449,144 +107,72 @@
         let teamData = { players: [], matches: [] };
         let currentSort = { column: 'default', direction: 'desc' };
 
-        // Load data from GitHub Pages or localStorage
         async function loadData() {
             try {
-                // Try to load from GitHub Pages first
                 const response = await fetch('/data.json?' + new Date().getTime());
                 if (response.ok) {
-                    const data = await response.json();
-                    teamData = {
-                        players: data.players || [],
-                        matches: data.matches || []
-                    };
+                    teamData = await response.json();
                     return;
                 }
-            } catch (error) {
-                console.log('No data found.');
-            }
-            
-            // If no data found, start with empty data
+            } catch (error) { console.log('No data found.'); }
             teamData = { players: [], matches: [] };
         }
 
         function calculateTeamStats() {
             const matches = teamData.matches || [];
-            let gamesPlayed = 0;
-            let gamesWon = 0;
-            let gamesDraw = 0;
-            let gamesLost = 0;
-            let goalsFor = 0;
-            let goalsAgainst = 0;
-
-            // If no matches, return zeros
-            if (matches.length === 0) {
-                return {
-                    gamesPlayed: 0,
-                    gamesWon: 0,
-                    gamesDraw: 0,
-                    gamesLost: 0,
-                    goalDifference: 0
-                };
-            }
-
+            let gamesPlayed = 0, gamesWon = 0, gamesDraw = 0, gamesLost = 0, goalsFor = 0, goalsAgainst = 0;
             matches.forEach(match => {
-                // Handle the current data structure with teamGoals and opponentGoals
-                let ourScore = match.teamGoals || match.homeScore || match.ourScore || match.score?.home;
-                let theirScore = match.opponentGoals || match.awayScore || match.theirScore || match.score?.away;
-                
-                // Only count matches where both scores are defined and not null
-                if (ourScore !== undefined && ourScore !== null && theirScore !== undefined && theirScore !== null) {
-                    gamesPlayed++;
-                    goalsFor += ourScore;
-                    goalsAgainst += theirScore;
-                    
-                    if (ourScore > theirScore) {
-                        gamesWon++;
-                    } else if (ourScore === theirScore) {
-                        gamesDraw++;
-                    } else {
-                        gamesLost++;
-                    }
+                let ourScore = match.teamGoals, theirScore = match.opponentGoals;
+                if (ourScore !== undefined && theirScore !== undefined) {
+                    gamesPlayed++; goalsFor += ourScore; goalsAgainst += theirScore;
+                    if (ourScore > theirScore) gamesWon++;
+                    else if (ourScore === theirScore) gamesDraw++;
+                    else gamesLost++;
                 }
             });
-
-            return {
-                gamesPlayed,
-                gamesWon,
-                gamesDraw,
-                gamesLost,
-                goalDifference: goalsFor - goalsAgainst
-            };
+            return { gamesPlayed, gamesWon, gamesDraw, gamesLost, goalDifference: goalsFor - goalsAgainst };
         }
 
         function updateOverviewStats() {
             const stats = calculateTeamStats();
-            
             document.getElementById('gamesPlayed').textContent = stats.gamesPlayed;
             document.getElementById('gamesWon').textContent = stats.gamesWon;
             document.getElementById('gamesDraw').textContent = stats.gamesDraw;
             document.getElementById('gamesLost').textContent = stats.gamesLost;
-            
-            const goalDiff = stats.goalDifference;
             const goalDiffEl = document.getElementById('goalDifference');
-            goalDiffEl.textContent = goalDiff >= 0 ? `+${goalDiff}` : `${goalDiff}`;
-            
-            // Color code the goal difference
-            if (goalDiff > 0) {
-                goalDiffEl.style.color = 'var(--primary)';
-            } else if (goalDiff < 0) {
-                goalDiffEl.style.color = 'var(--danger)';
-            } else {
-                goalDiffEl.style.color = 'var(--warning)';
-            }
+            goalDiffEl.textContent = stats.goalDifference >= 0 ? `+${stats.goalDifference}` : `${stats.goalDifference}`;
+            goalDiffEl.style.color = stats.goalDifference > 0 ? 'var(--primary)' : stats.goalDifference < 0 ? 'var(--danger)' : 'var(--warning)';
         }
 
-        function calculateAttendancePercentage(player) {
-            // Get total matches from the matches array
-            const totalMatches = teamData.matches ? teamData.matches.length : 0;
-            const attended = player.attended || 0;
-            
+        function getPlayerStats(playerId) {
+            let goals = 0, assists = 0, yellow = 0, red = 0, attended = 0, sitout = 0;
+            teamData.matches.forEach(match => {
+                const mp = match.players.find(p => p.id === playerId);
+                if (mp) {
+                    if (mp.attendance === "present") attended++;
+                    if (mp.attendance === "sitout") sitout++;
+                    goals += mp.stats?.goals || 0;
+                    assists += mp.stats?.assists || 0;
+                    yellow += mp.stats?.yellowCards || 0;
+                    red += mp.stats?.redCards || 0;
+                }
+            });
+            return { goals, assists, yellow, red, attended, sitout };
+        }
+
+        function calculateAttendancePercentage(playerId) {
+            const totalMatches = teamData.matches.length;
+            const attended = getPlayerStats(playerId).attended;
             if (totalMatches === 0) return 0;
             return Math.round((attended / totalMatches) * 100);
-        }
-
-        function getTotalMatches() {
-            return teamData.matches ? teamData.matches.length : 0;
-        }
-
-        function defaultSort(players) {
-            return players.sort((a, b) => {
-                // Primary: Goals (descending)
-                const aGoals = a.goals || a.stats?.goals || 0;
-                const bGoals = b.goals || b.stats?.goals || 0;
-                if (bGoals !== aGoals) return bGoals - aGoals;
-                
-                // Secondary: Assists (descending)
-                const aAssists = a.assists || a.stats?.assists || 0;
-                const bAssists = b.assists || b.stats?.assists || 0;
-                if (bAssists !== aAssists) return bAssists - aAssists;
-                
-                // Tertiary: Attendance percentage (descending)
-                const aAttendance = calculateAttendancePercentage(a);
-                const bAttendance = calculateAttendancePercentage(b);
-                if (bAttendance !== aAttendance) return bAttendance - aAttendance;
-                
-                // Quaternary: Fewer sit-outs is better (ascending)
-                const aSitOut = a.sitout || a.stats?.sitout || 0;
-                const bSitOut = b.sitout || b.stats?.sitout || 0;
-                return aSitOut - bSitOut;
-            });
         }
 
         function sortTable(column) {
             if (currentSort.column === column) {
                 currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
             } else {
-                currentSort.column = column;
-                currentSort.direction = 'desc';
+                currentSort.column = column; currentSort.direction = 'desc';
             }
-            
             renderPlayerTable();
         }
 
@@ -595,86 +181,22 @@
             const table = document.getElementById('playerTable');
             const noDataDiv = document.getElementById('noData');
             const loading = document.getElementById('loading');
-            
             loading.style.display = 'none';
-            
-            if (teamData.players.length === 0) {
-                table.style.display = 'none';
-                noDataDiv.style.display = 'block';
-                return;
-            }
-            
-            table.style.display = 'table';
-            noDataDiv.style.display = 'none';
-            
-            let sortedPlayers = [...teamData.players];
-            
-            // Apply sorting
-            if (currentSort.column === 'default' || !currentSort.column) {
-                sortedPlayers = defaultSort(sortedPlayers);
-            } else {
-                sortedPlayers.sort((a, b) => {
-                    let aVal, bVal;
-                    
-                    switch (currentSort.column) {
-                        case 'name':
-                            aVal = a.name.toLowerCase();
-                            bVal = b.name.toLowerCase();
-                            break;
-                        case 'goals':
-                            aVal = a.goals || a.stats?.goals || 0;
-                            bVal = b.goals || b.stats?.goals || 0;
-                            break;
-                        case 'assists':
-                            aVal = a.assists || a.stats?.assists || 0;
-                            bVal = b.assists || b.stats?.assists || 0;
-                            break;
-                        case 'attendance':
-                            aVal = calculateAttendancePercentage(a);
-                            bVal = calculateAttendancePercentage(b);
-                            break;
-                        case 'sitout':
-                            aVal = a.sitout || a.stats?.sitout || 0;
-                            bVal = b.sitout || b.stats?.sitout || 0;
-                            break;
-                        case 'yellow':
-                            aVal = a.yellow || a.stats?.yellowCards || 0;
-                            bVal = b.yellow || b.stats?.yellowCards || 0;
-                            break;
-                        case 'red':
-                            aVal = a.red || a.stats?.redCards || 0;
-                            bVal = b.red || b.stats?.redCards || 0;
-                            break;
-                        default:
-                            return 0;
-                    }
-                    
-                    if (currentSort.direction === 'asc') {
-                        return aVal > bVal ? 1 : aVal < bVal ? -1 : 0;
-                    } else {
-                        return aVal < bVal ? 1 : aVal > bVal ? -1 : 0;
-                    }
-                });
-            }
-            
+
+            if (!teamData.players.length) { table.style.display = 'none'; noDataDiv.style.display = 'block'; return; }
+            table.style.display = 'table'; noDataDiv.style.display = 'none';
             tableBody.innerHTML = '';
-            
-            sortedPlayers.forEach((player, index) => {
-                const totalMatches = getTotalMatches();
-                const goals = player.goals || player.stats?.goals || 0;
-                const assists = player.assists || player.stats?.assists || 0;
-                const attended = player.attended || 0;
-                const sitout = player.sitout || player.stats?.sitout || 0;
-                const yellow = player.yellow || player.stats?.yellowCards || 0;
-                const red = player.red || player.stats?.redCards || 0;
-                
-                const attendancePercentage = calculateAttendancePercentage(player);
-                
+
+            let players = [...teamData.players];
+            players.forEach(player => {
+                const stats = getPlayerStats(player.id);
+                const totalMatches = teamData.matches.length;
+                const attendancePercentage = calculateAttendancePercentage(player.id);
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td class="player-name">${player.name}</td>
-                    <td>${goals}</td>
-                    <td>${assists}</td>
+                    <td>${stats.goals}</td>
+                    <td>${stats.assists}</td>
                     <td class="attendance-cell">
                         <div class="attendance-bar">
                             <div class="bar-container">
@@ -682,33 +204,22 @@
                                     ${attendancePercentage >= 25 ? `<span class="bar-percentage">${attendancePercentage}%</span>` : ''}
                                 </div>
                             </div>
-                            <div class="bar-text">${attended}/${totalMatches}</div>
+                            <div class="bar-text">${stats.attended}/${totalMatches}</div>
                         </div>
                     </td>
-                    <td>${sitout}</td>
-                    <td><span class="card-display">${yellow}</span></td>
-                    <td><span class="card-display card-red">${red}</span></td>
+                    <td>${stats.sitout}</td>
+                    <td><span class="card-display">${stats.yellow}</span></td>
+                    <td><span class="card-display card-red">${stats.red}</span></td>
                 `;
-                
                 tableBody.appendChild(row);
             });
         }
 
-        // Initialize the page
         document.addEventListener('DOMContentLoaded', async function() {
-            // Reset sorting to default on page load
-            currentSort = { column: 'default', direction: 'desc' };
-            
             await loadData();
             updateOverviewStats();
             renderPlayerTable();
-            
-            // Auto-refresh data every 30 seconds
-            setInterval(async () => {
-                await loadData();
-                updateOverviewStats();
-                renderPlayerTable();
-            }, 30000);
+            setInterval(async () => { await loadData(); updateOverviewStats(); renderPlayerTable(); }, 30000);
         });
     </script>
 </body>
