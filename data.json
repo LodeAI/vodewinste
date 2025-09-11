@@ -51,8 +51,21 @@
         "sitOuts": 0,
         "attendance": 0
       }
+    },
+    {
+      "id": 1757629084188,
+      "name": "Bert Ameye",
+      "stats": {
+        "matches": 0,
+        "goals": 0,
+        "assists": 0,
+        "yellowCards": 0,
+        "redCards": 0,
+        "sitOuts": 0,
+        "attendance": 0
+      }
     }
   ],
   "matches": [],
-  "lastUpdated": "2025-09-11T22:17:57.019Z"
+  "lastUpdated": "2025-09-11T22:18:04.188Z"
 }
