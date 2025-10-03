@@ -4,39 +4,39 @@
       "id": 1757629015970,
       "name": "Lode Verschelde",
       "stats": {
-        "matches": 4,
-        "goals": 3,
-        "assists": 5,
+        "matches": 5,
+        "goals": 4,
+        "assists": 7,
         "yellowCards": 0,
         "redCards": 0,
         "sitOuts": 0,
-        "attendance": 4
+        "attendance": 5
       }
     },
     {
       "id": 1757629056919,
       "name": "Pieterjan Vermeiren",
       "stats": {
-        "matches": 2,
-        "goals": 0,
-        "assists": 4,
+        "matches": 3,
+        "goals": 4,
+        "assists": 6,
         "yellowCards": 0,
         "redCards": 0,
         "sitOuts": 0,
-        "attendance": 2
+        "attendance": 3
       }
     },
     {
       "id": 1757629068536,
       "name": "Alexander Ackermans",
       "stats": {
-        "matches": 4,
-        "goals": 1,
+        "matches": 5,
+        "goals": 2,
         "assists": 1,
         "yellowCards": 0,
         "redCards": 0,
         "sitOuts": 1,
-        "attendance": 3
+        "attendance": 4
       }
     },
     {
@@ -95,22 +95,9 @@
       "id": 1757629112291,
       "name": "Frederick Meulebrouck",
       "stats": {
-        "matches": 3,
-        "goals": 1,
-        "assists": 0,
-        "yellowCards": 0,
-        "redCards": 0,
-        "sitOuts": 0,
-        "attendance": 3
-      }
-    },
-    {
-      "id": 1757629120972,
-      "name": "Matthias Savels",
-      "stats": {
         "matches": 4,
-        "goals": 3,
-        "assists": 2,
+        "goals": 2,
+        "assists": 1,
         "yellowCards": 0,
         "redCards": 0,
         "sitOuts": 0,
@@ -118,29 +105,42 @@
       }
     },
     {
-      "id": 1757629131440,
-      "name": "Jochen Van Vyve",
+      "id": 1757629120972,
+      "name": "Matthias Savels",
       "stats": {
-        "matches": 2,
-        "goals": 10,
-        "assists": 2,
+        "matches": 5,
+        "goals": 4,
+        "assists": 3,
         "yellowCards": 0,
         "redCards": 0,
         "sitOuts": 0,
-        "attendance": 2
+        "attendance": 5
+      }
+    },
+    {
+      "id": 1757629131440,
+      "name": "Jochen Van Vyve",
+      "stats": {
+        "matches": 3,
+        "goals": 11,
+        "assists": 4,
+        "yellowCards": 0,
+        "redCards": 0,
+        "sitOuts": 0,
+        "attendance": 3
       }
     },
     {
       "id": 1757629144641,
       "name": "Frederik Vansteenkiste",
       "stats": {
-        "matches": 2,
-        "goals": 0,
-        "assists": 2,
+        "matches": 3,
+        "goals": 4,
+        "assists": 5,
         "yellowCards": 0,
         "redCards": 0,
         "sitOuts": 0,
-        "attendance": 2
+        "attendance": 3
       }
     },
     {
@@ -725,7 +725,149 @@
           }
         }
       ]
+    },
+    {
+      "id": 1759531897949,
+      "date": "2025-10-03",
+      "teamGoals": 13,
+      "opponentGoals": 10,
+      "goalDifference": 3,
+      "notes": "MVC Cafe den ouden tore ",
+      "players": [
+        {
+          "id": 1757629015970,
+          "name": "Lode Verschelde",
+          "attendance": "present",
+          "stats": {
+            "goals": 1,
+            "assists": 2,
+            "yellowCards": 0,
+            "redCards": 0
+          }
+        },
+        {
+          "id": 1757629056919,
+          "name": "Pieterjan Vermeiren",
+          "attendance": "present",
+          "stats": {
+            "goals": 4,
+            "assists": 2,
+            "yellowCards": 0,
+            "redCards": 0
+          }
+        },
+        {
+          "id": 1757629068536,
+          "name": "Alexander Ackermans",
+          "attendance": "present",
+          "stats": {
+            "goals": 1,
+            "assists": 0,
+            "yellowCards": 0,
+            "redCards": 0
+          }
+        },
+        {
+          "id": 1757629077019,
+          "name": "Niek Couvreur",
+          "attendance": "absent",
+          "stats": {
+            "goals": 0,
+            "assists": 0,
+            "yellowCards": 0,
+            "redCards": 0
+          }
+        },
+        {
+          "id": 1757629084188,
+          "name": "Bert Ameye",
+          "attendance": "absent",
+          "stats": {
+            "goals": 0,
+            "assists": 0,
+            "yellowCards": 0,
+            "redCards": 0
+          }
+        },
+        {
+          "id": 1757629090968,
+          "name": "Tommy Baes",
+          "attendance": "absent",
+          "stats": {
+            "goals": 0,
+            "assists": 0,
+            "yellowCards": 0,
+            "redCards": 0
+          }
+        },
+        {
+          "id": 1757629098751,
+          "name": "Hendriek Laloo",
+          "attendance": "absent",
+          "stats": {
+            "goals": 0,
+            "assists": 0,
+            "yellowCards": 0,
+            "redCards": 0
+          }
+        },
+        {
+          "id": 1757629112291,
+          "name": "Frederick Meulebrouck",
+          "attendance": "present",
+          "stats": {
+            "goals": 1,
+            "assists": 1,
+            "yellowCards": 0,
+            "redCards": 0
+          }
+        },
+        {
+          "id": 1757629120972,
+          "name": "Matthias Savels",
+          "attendance": "present",
+          "stats": {
+            "goals": 1,
+            "assists": 1,
+            "yellowCards": 0,
+            "redCards": 0
+          }
+        },
+        {
+          "id": 1757629131440,
+          "name": "Jochen Van Vyve",
+          "attendance": "present",
+          "stats": {
+            "goals": 1,
+            "assists": 2,
+            "yellowCards": 0,
+            "redCards": 0
+          }
+        },
+        {
+          "id": 1757629144641,
+          "name": "Frederik Vansteenkiste",
+          "attendance": "present",
+          "stats": {
+            "goals": 4,
+            "assists": 3,
+            "yellowCards": 0,
+            "redCards": 0
+          }
+        },
+        {
+          "id": 1757629153436,
+          "name": "Mathijs Verschave",
+          "attendance": "absent",
+          "stats": {
+            "goals": 0,
+            "assists": 0,
+            "yellowCards": 0,
+            "redCards": 0
+          }
+        }
+      ]
     }
   ],
-  "lastUpdated": "2025-09-27T08:45:00.859Z"
+  "lastUpdated": "2025-10-03T22:51:37.950Z"
 }
