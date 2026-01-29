@@ -46,7 +46,7 @@
         "matches": 12,
         "goals": 12,
         "assists": 10,
-        "yellowCards": 1,
+        "yellowCards": 2,
         "redCards": 0,
         "sitOuts": 1,
         "attendance": 11
@@ -2620,7 +2620,7 @@
           "stats": {
             "goals": 1,
             "assists": 0,
-            "yellowCards": 0,
+            "yellowCards": 1,
             "redCards": 0
           }
         },
@@ -2715,5 +2715,5 @@
       ]
     }
   ],
-  "lastUpdated": "2026-01-29T22:05:21.052Z"
+  "lastUpdated": "2026-01-29T22:16:54.766Z"
 }
