@@ -2433,9 +2433,9 @@
     {
       "id": 1769724142065,
       "date": "2026-01-19",
-      "teamGoals": 0,
-      "opponentGoals": 0,
-      "goalDifference": 0,
+      "teamGoals": 6,
+      "opponentGoals": 11,
+      "goalDifference": -5,
       "notes": "FC Akkoord",
       "players": [
         {
@@ -2715,5 +2715,5 @@
       ]
     }
   ],
-  "lastUpdated": "2026-01-29T22:04:02.502Z"
+  "lastUpdated": "2026-01-29T22:05:21.052Z"
 }
