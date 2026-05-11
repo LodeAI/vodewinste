@@ -7,268 +7,951 @@
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
   gtag('config', 'G-1KKF3KQNMS');
 </script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vo De Winste</title>
-    
-    <link rel="icon" href="/favicon.ico" type="image/x-icon">
-    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
-    
-    <style>
-        /* ---- CSS unchanged ---- */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        :root { --primary: #00ff88; --secondary: #7c3aed; --dark: #0a0a0f; --darker: #050507; --light: #ffffff; --warning: #fbbf24; --danger: #ef4444; --glass: rgba(255, 255, 255, 0.05); --glass-border: rgba(255, 255, 255, 0.1); }
-        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--darker); color: var(--light); min-height: 100vh; overflow-x: hidden; }
-        .bg-animation { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: -1; background: linear-gradient(135deg, #0a0a0f 0%, #1a0a2f 100%); overflow: hidden; }
-        .bg-animation::before { content: ''; position: absolute; width: 200%; height: 200%; top: -50%; left: -50%; background: radial-gradient(circle at 20% 50%, rgba(0, 255, 136, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(124, 58, 237, 0.1) 0%, transparent 50%), radial-gradient(circle at 40% 20%, rgba(0, 255, 136, 0.05) 0%, transparent 50%); animation: float 20s ease-in-out infinite; }
-        @keyframes float { 0%, 100% { transform: rotate(0deg) scale(1); } 50% { transform: rotate(180deg) scale(1.1); } }
-        .header { padding: 2rem; text-align: center; position: relative; background: var(--glass); backdrop-filter: blur(10px); border-bottom: 1px solid var(--glass-border); }
-        .header h1 { font-size: 3rem; font-weight: 900; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 0.5rem; animation: glow 2s ease-in-out infinite alternate; }
-        @keyframes glow { from { filter: drop-shadow(0 0 20px rgba(0, 255, 136, 0.5)); } to { filter: drop-shadow(0 0 30px rgba(124, 58, 237, 0.5)); } }
-        .subtitle { color: rgba(255, 255, 255, 0.7); font-size: 1.2rem; }
-        .container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
-        .stats-overview { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
-        .stat-card { background: var(--glass); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); border-radius: 15px; padding: 1.5rem; text-align: center; }
-        .stat-value { font-size: 2.5rem; font-weight: 900; color: var(--primary); display: block; }
-        .stat-label { font-size: 0.9rem; color: rgba(255, 255, 255, 0.7); margin-top: 0.5rem; }
-        .table-container { background: var(--glass); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); border-radius: 20px; overflow: hidden; margin-bottom: 2rem; }
-        .table-header { padding: 1.5rem; border-bottom: 1px solid var(--glass-border); }
-        .table-title { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
-        .table-wrapper { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; }
-        thead { background: rgba(0, 255, 136, 0.1); }
-        th { padding: 1rem; text-align: left; font-weight: 600; color: var(--light); border-bottom: 1px solid var(--glass-border); cursor: pointer; transition: background-color 0.3s ease; user-select: none; }
-        th:hover { background: rgba(0, 255, 136, 0.2); }
-        td { padding: 1rem; border-bottom: 1px solid rgba(255, 255, 255, 0.05); color: rgba(255, 255, 255, 0.9); }
-        tr:nth-child(even) { background: rgba(255, 255, 255, 0.02); }
-        tr:hover { background: rgba(0, 255, 136, 0.05); }
-        .player-name { font-weight: 600; color: var(--light); }
-        .no-data { text-align: center; padding: 3rem; color: rgba(255, 255, 255, 0.5); }
-        .loading { text-align: center; padding: 3rem; color: rgba(255, 255, 255, 0.7); }
-        .spinner { border: 3px solid rgba(255, 255, 255, 0.1); border-top: 3px solid var(--primary); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 1rem; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .attendance-cell { padding: 1rem 0.5rem; }
-        .attendance-bar { display: flex; align-items: center; gap: 10px; }
-        .bar-container { flex: 1; height: 16px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; overflow: hidden; position: relative; min-width: 80px; }
-        .bar-fill { height: 100%; background: linear-gradient(90deg, var(--primary) 0%, #00cc6f 100%); border-radius: 8px; transition: width 0.8s ease; position: relative; display: flex; align-items: center; justify-content: center; }
-        .bar-percentage { color: var(--dark); font-size: 0.75rem; font-weight: bold; position: absolute; z-index: 1; white-space: nowrap; text-shadow: 0 0 2px rgba(255, 255, 255, 0.5); }
-        .bar-text { font-size: 0.85rem; color: var(--light); font-weight: 500; min-width: 60px; text-align: right; }
-        .card-display { display: inline-block; background: var(--warning); color: var(--dark); padding: 3px 8px; border-radius: 4px; font-weight: bold; font-size: 0.85rem; min-width: 25px; text-align: center; }
-        .card-red { background: var(--danger); color: var(--light); }
-        .admin-link { position: fixed; bottom: 20px; right: 20px; background: var(--glass); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); border-radius: 10px; padding: 8px 16px; color: rgba(255, 255, 255, 0.7); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: all 0.3s ease; z-index: 100; }
-        .admin-link:hover { background: rgba(0, 255, 136, 0.1); color: var(--primary); border-color: var(--primary); transform: translateY(-2px); }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vo De Winste</title>
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --primary: #00ff88;
+    --secondary: #7c3aed;
+    --pink: #ec4899;
+    --cyan: #06b6d4;
+    --amber: #fbbf24;
+    --lilac: #a78bfa;
+    --dark: #0a0a0f;
+    --darker: #050507;
+    --light: #ffffff;
+    --warning: #fbbf24;
+    --danger: #ef4444;
+    --glass: rgba(255, 255, 255, 0.06);
+    --glass-strong: rgba(255, 255, 255, 0.1);
+    --glass-border: rgba(255, 255, 255, 0.12);
+    --glass-border-strong: rgba(255, 255, 255, 0.2);
+  }
+  html, body { overflow-x: hidden; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--darker);
+    color: var(--light);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+  .bg-animation {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 15% 20%, rgba(124, 58, 237, 0.35) 0%, transparent 45%),
+      radial-gradient(circle at 85% 80%, rgba(6, 182, 212, 0.25) 0%, transparent 50%),
+      radial-gradient(circle at 50% 50%, rgba(236, 72, 153, 0.18) 0%, transparent 55%),
+      radial-gradient(circle at 70% 15%, rgba(0, 255, 136, 0.15) 0%, transparent 45%),
+      linear-gradient(135deg, #1a0a2f 0%, #050507 100%);
+  }
+  .bg-animation::before {
+    content: '';
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    top: -50%;
+    left: -50%;
+    background:
+      radial-gradient(circle at 20% 50%, rgba(0, 255, 136, 0.08) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(124, 58, 237, 0.08) 0%, transparent 50%);
+    animation: float 25s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%, 100% { transform: rotate(0deg) scale(1); }
+    50% { transform: rotate(180deg) scale(1.1); }
+  }
+
+  .header {
+    padding: 3rem 2rem 1.5rem;
+    text-align: center;
+    position: relative;
+  }
+  .header h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--lilac) 50%, var(--pink) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.5rem;
+  }
+  .subtitle {
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 1.05rem;
+    font-weight: 400;
+  }
+
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 1.5rem 4rem;
+  }
+
+  /* Season switcher */
+  .season-switcher-wrap {
+    display: flex;
+    justify-content: center;
+    margin: 1rem 0 2rem;
+  }
+  .season-switcher {
+    display: flex;
+    gap: 6px;
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding: 5px;
+    border-radius: 16px;
+    border: 1px solid var(--glass-border);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+  }
+  .season-btn {
+    padding: 8px 18px;
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.7);
+    background: transparent;
+    border: none;
+    border-radius: 11px;
+    cursor: pointer;
+    font-weight: 500;
+    font-family: inherit;
+    transition: color 0.2s ease, background 0.2s ease;
+  }
+  .season-btn:hover { color: var(--light); }
+  .season-btn.active {
+    background: rgba(255, 255, 255, 0.18);
+    color: var(--light);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.2);
+  }
+
+  /* Stats overview */
+  .stats-overview {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    margin-bottom: 2rem;
+  }
+  .stat-card {
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 18px;
+    padding: 1.25rem 1rem;
+    text-align: center;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+  }
+  .stat-value {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: var(--light);
+    display: block;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+  .stat-value.positive { background: linear-gradient(135deg, var(--primary), #34d399); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .stat-value.negative { color: var(--danger); }
+  .stat-label {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin-top: 0.5rem;
+    font-weight: 500;
+  }
+
+  /* Table container */
+  .table-container {
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 22px;
+    overflow: hidden;
+    margin-bottom: 2rem;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+  }
+  .table-header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--glass-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .table-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--light);
+    letter-spacing: -0.01em;
+  }
+  .view-toggle {
+    display: flex;
+    gap: 4px;
+    background: rgba(255, 255, 255, 0.06);
+    padding: 4px;
+    border-radius: 12px;
+    border: 1px solid var(--glass-border);
+  }
+  .view-toggle-btn {
+    width: 36px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.55);
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: color 0.2s ease, background 0.2s ease;
+  }
+  .view-toggle-btn:hover { color: var(--light); }
+  .view-toggle-btn.active {
+    background: rgba(255, 255, 255, 0.15);
+    color: var(--light);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.2);
+  }
+  .view-toggle-btn svg { width: 18px; height: 18px; display: block; }
+
+  /* Table */
+  .table-wrapper { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; min-width: 720px; }
+  thead { background: rgba(255, 255, 255, 0.04); }
+  th {
+    padding: 0.9rem 1rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.7);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--glass-border);
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s ease, color 0.2s ease;
+    white-space: nowrap;
+  }
+  th:hover { background: rgba(0, 255, 136, 0.08); color: var(--light); }
+  th.sort-active { color: var(--primary); }
+  th .sort-indicator { display: inline-block; margin-left: 4px; opacity: 0.6; }
+  td {
+    padding: 0.95rem 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.95rem;
+    white-space: nowrap;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: rgba(255, 255, 255, 0.03); }
+  .player-name { font-weight: 600; color: var(--light); }
+  .no-data { text-align: center; padding: 3rem 1.5rem; color: rgba(255, 255, 255, 0.55); }
+  .loading { text-align: center; padding: 3rem 1.5rem; color: rgba(255, 255, 255, 0.7); }
+  .spinner {
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    border-top: 3px solid var(--primary);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem;
+  }
+  @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+  /* Attendance bar */
+  .attendance-cell { padding: 0.7rem 0.5rem; }
+  .attendance-bar { display: flex; align-items: center; gap: 10px; }
+  .bar-container {
+    flex: 1;
+    height: 14px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 7px;
+    overflow: hidden;
+    position: relative;
+    min-width: 70px;
+  }
+  .bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary) 0%, #34d399 100%);
+    border-radius: 7px;
+    transition: width 0.8s ease;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .bar-percentage {
+    color: var(--dark);
+    font-size: 0.7rem;
+    font-weight: 700;
+    position: absolute;
+    z-index: 1;
+    white-space: nowrap;
+  }
+  .bar-text {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.85);
+    font-weight: 500;
+    min-width: 50px;
+    text-align: right;
+  }
+
+  /* Cards */
+  .card-display {
+    display: inline-block;
+    background: var(--warning);
+    color: var(--dark);
+    padding: 3px 9px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    min-width: 26px;
+    text-align: center;
+  }
+  .card-red { background: var(--danger); color: var(--light); }
+  .stat-zero { color: rgba(255,255,255,0.35); }
+
+  /* Graph */
+  .graph-wrapper { padding: 1.5rem; }
+  .graph-svg-wrap { width: 100%; overflow-x: auto; }
+  .graph-svg { width: 100%; min-width: 600px; height: 380px; display: block; }
+  .graph-legend {
+    margin-top: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 5px 11px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--glass-border);
+    border-radius: 999px;
+    font-size: 0.83rem;
+    color: rgba(255,255,255,0.85);
+    cursor: pointer;
+    transition: background 0.2s ease, opacity 0.2s ease, border-color 0.2s ease;
+    user-select: none;
+  }
+  .legend-item:hover { background: rgba(255,255,255,0.1); }
+  .legend-item.hidden { opacity: 0.4; }
+  .legend-item.hidden .legend-swatch { background: transparent !important; border: 1.5px dashed currentColor; }
+  .legend-swatch {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .graph-empty {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: rgba(255,255,255,0.55);
+  }
+
+  .admin-link {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 9px 16px;
+    color: rgba(255, 255, 255, 0.75);
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    z-index: 100;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+  }
+  .admin-link:hover {
+    background: rgba(0, 255, 136, 0.1);
+    color: var(--primary);
+    border-color: var(--primary);
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 640px) {
+    .header { padding: 2rem 1rem 1rem; }
+    .header h1 { font-size: 2.2rem; }
+    .subtitle { font-size: 0.95rem; }
+    .container { padding: 0 1rem 4rem; }
+    .stat-value { font-size: 1.7rem; }
+    .table-header { padding: 1rem 1.25rem; }
+    .table-title { font-size: 1.1rem; }
+  }
+</style>
 </head>
 <body>
-    <div class="bg-animation"></div>
-    
-    <header class="header">
-        <h1>Vo De Winste</h1>
-        <p class="subtitle">Seizoen 2025</p>
-    </header>
+  <div class="bg-animation"></div>
 
-    <div class="container">
-        <!-- Stats Overview -->
-        <div class="stats-overview" id="statsOverview">
-            <div class="stat-card"><div class="stat-value" id="gamesPlayed">0</div><div class="stat-label">Gespeelde wedstrijden</div></div>
-            <div class="stat-card"><div class="stat-value" id="gamesWon">0</div><div class="stat-label">Gewonnen</div></div>
-            <div class="stat-card"><div class="stat-value" id="gamesDraw">0</div><div class="stat-label">Gelijkspel</div></div>
-            <div class="stat-card"><div class="stat-value" id="gamesLost">0</div><div class="stat-label">Verloren</div></div>
-            <div class="stat-card"><div class="stat-value" id="goalDifference">+0</div><div class="stat-label">Doelpuntensaldo</div></div>
-        </div>
+  <header class="header">
+    <h1>Vo De Winste</h1>
+    <p class="subtitle">Minivoetbal Koude Keuken Brugge</p>
+  </header>
 
-        <!-- Player Statistics Table -->
-        <div class="table-container">
-            <div class="table-header"><h2 class="table-title">Spelerstatistieken</h2></div>
-            <div class="table-wrapper">
-                <div id="loading" class="loading"><div class="spinner"></div><p>Gegevens laden...</p></div>
-                <table id="playerTable" style="display: none;">
-                    <thead>
-                        <tr>
-                            <th onclick="sortTable('name')">Naam</th>
-                            <th onclick="sortTable('goals')">Doelpunten</th>
-                            <th onclick="sortTable('assists')">Assists</th>
-                            <th onclick="sortTable('attendance')">Aanwezigheid</th>
-                            <th onclick="sortTable('sitout')">Sit-Out</th>
-                            <th onclick="sortTable('yellow')">Gele kaarten</th>
-                            <th onclick="sortTable('red')">Rode kaarten</th>
-                        </tr>
-                    </thead>
-                    <tbody id="playerTableBody"></tbody>
-                </table>
-                <div id="noData" class="no-data" style="display: none;">
-                    <p>Nog geen spelersgegevens beschikbaar.</p>
-                    <p>Gebruik het beheerderspaneel om spelers toe te voegen.</p>
-                </div>
-            </div>
-        </div>
+  <div class="container">
+    <!-- Season switcher -->
+    <div class="season-switcher-wrap">
+      <div class="season-switcher" id="seasonSwitcher"></div>
     </div>
 
-    <a href="admin.html" class="admin-link">Beheerderspaneel</a>
+    <!-- Stats Overview -->
+    <div class="stats-overview" id="statsOverview">
+      <div class="stat-card"><div class="stat-value" id="gamesPlayed">0</div><div class="stat-label">Gespeeld</div></div>
+      <div class="stat-card"><div class="stat-value" id="gamesWon">0</div><div class="stat-label">Gewonnen</div></div>
+      <div class="stat-card"><div class="stat-value" id="gamesDraw">0</div><div class="stat-label">Gelijk</div></div>
+      <div class="stat-card"><div class="stat-value" id="gamesLost">0</div><div class="stat-label">Verloren</div></div>
+      <div class="stat-card"><div class="stat-value" id="goalDifference">+0</div><div class="stat-label">Saldo</div></div>
+    </div>
 
-    <script>
-        let teamData = { players: [], matches: [] };
-        let currentSort = { column: 'default', direction: 'desc' };
+    <!-- Player Statistics -->
+    <div class="table-container">
+      <div class="table-header">
+        <h2 class="table-title">Spelerstatistieken</h2>
+        <div class="view-toggle" role="tablist">
+          <button class="view-toggle-btn active" id="viewTableBtn" onclick="setView('table')" aria-label="Tabelweergave">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+              <line x1="3" y1="16" x2="21" y2="16"></line>
+              <line x1="10" y1="4" x2="10" y2="20"></line>
+            </svg>
+          </button>
+          <button class="view-toggle-btn" id="viewGraphBtn" onclick="setView('graph')" aria-label="Grafiekweergave">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="3 17 9 11 13 15 21 7"></polyline>
+              <polyline points="14 7 21 7 21 14"></polyline>
+            </svg>
+          </button>
+        </div>
+      </div>
 
-        async function loadData() {
-            try {
-                const response = await fetch('/data.json?' + new Date().getTime());
-                if (response.ok) {
-                    teamData = await response.json();
-                    return;
-                }
-            } catch (error) { console.log('No data found.'); }
-            teamData = { players: [], matches: [] };
+      <!-- Table view -->
+      <div id="tableView">
+        <div class="table-wrapper">
+          <div id="loading" class="loading"><div class="spinner"></div><p>Gegevens laden...</p></div>
+          <table id="playerTable" style="display: none;">
+            <thead id="playerTableHead"></thead>
+            <tbody id="playerTableBody"></tbody>
+          </table>
+          <div id="noData" class="no-data" style="display: none;">
+            <p>Nog geen spelersgegevens beschikbaar voor dit seizoen.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Graph view -->
+      <div id="graphView" style="display: none;">
+        <div class="graph-wrapper">
+          <div class="graph-svg-wrap">
+            <svg class="graph-svg" id="graphSvg" viewBox="0 0 800 380" preserveAspectRatio="xMidYMid meet"></svg>
+          </div>
+          <div class="graph-legend" id="graphLegend"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <a href="admin.html" class="admin-link">Beheerderspaneel</a>
+
+  <script>
+    // =========================================================================
+    // STATE
+    // =========================================================================
+    let teamData = { players: [], matches: [] };
+    let currentSort = { column: 'default', direction: 'desc' };
+    let currentSeason = null;
+    let currentView = 'table';
+    let hiddenPlayers = new Set(); // playerIds hidden on graph
+
+    // Top-5 color palette for graph
+    const TOP_COLORS = ['#00ff88', '#fbbf24', '#ec4899', '#06b6d4', '#a78bfa'];
+    const GRAY_COLOR = 'rgba(255, 255, 255, 0.25)';
+
+    // =========================================================================
+    // SEASON LOGIC
+    // =========================================================================
+    function getSeasonFromDate(dateStr) {
+      if (!dateStr) return null;
+      const d = new Date(dateStr);
+      if (isNaN(d.getTime())) return null;
+      // Month is 0-indexed: August = 7. Aug 1+ belongs to that year's season.
+      return d.getMonth() >= 7 ? d.getFullYear() : d.getFullYear() - 1;
+    }
+
+    function migrateSeasons(data) {
+      (data.matches || []).forEach(m => {
+        if (m.season === undefined || m.season === null) {
+          m.season = getSeasonFromDate(m.date);
         }
+      });
+      return data;
+    }
 
-        function calculateTeamStats() {
-            const matches = teamData.matches || [];
-            let gamesPlayed = 0, gamesWon = 0, gamesDraw = 0, gamesLost = 0, goalsFor = 0, goalsAgainst = 0;
-            matches.forEach(match => {
-                let ourScore = match.teamGoals, theirScore = match.opponentGoals;
-                if (ourScore !== undefined && theirScore !== undefined) {
-                    gamesPlayed++; goalsFor += ourScore; goalsAgainst += theirScore;
-                    if (ourScore > theirScore) gamesWon++;
-                    else if (ourScore === theirScore) gamesDraw++;
-                    else gamesLost++;
-                }
-            });
-            return { gamesPlayed, gamesWon, gamesDraw, gamesLost, goalDifference: goalsFor - goalsAgainst };
+    function getAvailableSeasons() {
+      const seasons = new Set();
+      (teamData.matches || []).forEach(m => {
+        if (m.season !== null && m.season !== undefined) seasons.add(m.season);
+      });
+      if (seasons.size === 0) {
+        // No matches yet — fall back to current calendar season
+        const now = new Date();
+        seasons.add(now.getMonth() >= 7 ? now.getFullYear() : now.getFullYear() - 1);
+      }
+      return [...seasons].sort((a, b) => b - a); // newest first
+    }
+
+    function getSeasonMatches(season) {
+      return (teamData.matches || []).filter(m => m.season === season);
+    }
+
+    function hasKopcornerStats(season) {
+      return season >= 2026;
+    }
+
+    // =========================================================================
+    // DATA LOAD
+    // =========================================================================
+    async function loadData() {
+      try {
+        const response = await fetch('/data.json?' + new Date().getTime());
+        if (response.ok) {
+          teamData = await response.json();
+          migrateSeasons(teamData);
+          return;
         }
+      } catch (error) { console.log('No data found.'); }
+      teamData = { players: [], matches: [] };
+    }
 
-        function updateOverviewStats() {
-            const stats = calculateTeamStats();
-            document.getElementById('gamesPlayed').textContent = stats.gamesPlayed;
-            document.getElementById('gamesWon').textContent = stats.gamesWon;
-            document.getElementById('gamesDraw').textContent = stats.gamesDraw;
-            document.getElementById('gamesLost').textContent = stats.gamesLost;
-            const goalDiffEl = document.getElementById('goalDifference');
-            goalDiffEl.textContent = stats.goalDifference >= 0 ? `+${stats.goalDifference}` : `${stats.goalDifference}`;
-            goalDiffEl.style.color = stats.goalDifference > 0 ? 'var(--primary)' : stats.goalDifference < 0 ? 'var(--danger)' : 'var(--warning)';
+    // =========================================================================
+    // STATS CALCULATION (per season)
+    // =========================================================================
+    function calculateTeamStats(season) {
+      const matches = getSeasonMatches(season);
+      let gamesPlayed = 0, gamesWon = 0, gamesDraw = 0, gamesLost = 0;
+      let goalsFor = 0, goalsAgainst = 0;
+      matches.forEach(match => {
+        const ourScore = match.teamGoals;
+        const theirScore = match.opponentGoals;
+        if (ourScore !== undefined && theirScore !== undefined) {
+          gamesPlayed++;
+          goalsFor += ourScore;
+          goalsAgainst += theirScore;
+          if (ourScore > theirScore) gamesWon++;
+          else if (ourScore === theirScore) gamesDraw++;
+          else gamesLost++;
         }
+      });
+      return { gamesPlayed, gamesWon, gamesDraw, gamesLost, goalDifference: goalsFor - goalsAgainst };
+    }
 
-        function getPlayerStats(playerId) {
-            let goals = 0, assists = 0, yellow = 0, red = 0, attended = 0, sitout = 0;
-            teamData.matches.forEach(match => {
-                const mp = match.players.find(p => p.id === playerId);
-                if (mp) {
-                    if (mp.attendance === "present") attended++;
-                    if (mp.attendance === "sitout") sitout++;
-                    goals += mp.stats?.goals || 0;
-                    assists += mp.stats?.assists || 0;
-                    yellow += mp.stats?.yellowCards || 0;
-                    red += mp.stats?.redCards || 0;
-                }
-            });
-            return { goals, assists, yellow, red, attended, sitout };
+    function getPlayerSeasonStats(playerId, season) {
+      const matches = getSeasonMatches(season);
+      let goals = 0, assists = 0, yellow = 0, red = 0;
+      let attended = 0, sitout = 0;
+      let kcGood = 0, kcBad = 0, kcScored = 0, kcMissed = 0;
+      matches.forEach(match => {
+        const mp = (match.players || []).find(p => p.id === playerId);
+        if (mp) {
+          if (mp.attendance === 'present') attended++;
+          if (mp.attendance === 'sitout') sitout++;
+          goals += mp.stats?.goals || 0;
+          assists += mp.stats?.assists || 0;
+          yellow += mp.stats?.yellowCards || 0;
+          red += mp.stats?.redCards || 0;
+          kcGood += mp.stats?.headCornerScoopGood || 0;
+          kcBad += mp.stats?.headCornerScoopBad || 0;
+          kcScored += mp.stats?.headCornerGoals || 0;
+          kcMissed += mp.stats?.headCornerMissed || 0;
         }
+      });
+      const totalMatches = matches.length;
+      const attendancePct = totalMatches === 0 ? 0 : Math.round((attended / totalMatches) * 100);
+      return {
+        goals, assists, yellow, red, attended, sitout,
+        kcGood, kcBad, kcScored, kcMissed,
+        totalMatches, attendancePct
+      };
+    }
 
-        function calculateAttendancePercentage(playerId) {
-            const totalMatches = teamData.matches.length;
-            const attended = getPlayerStats(playerId).attended;
-            if (totalMatches === 0) return 0;
-            return Math.round((attended / totalMatches) * 100);
-        }
-
-        function defaultSort(players) {
-            return players.sort((a, b) => {
-                const aStats = getPlayerStats(a.id);
-                const bStats = getPlayerStats(b.id);
-                if (bStats.goals !== aStats.goals) return bStats.goals - aStats.goals;
-                if (bStats.assists !== aStats.assists) return bStats.assists - aStats.assists;
-                const aAtt = calculateAttendancePercentage(a.id);
-                const bAtt = calculateAttendancePercentage(b.id);
-                if (bAtt !== aAtt) return bAtt - aAtt;
-                return aStats.sitout - bStats.sitout;
-            });
-        }
-
-        function sortTable(column) {
-            if (currentSort.column === column) {
-                currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
-            } else {
-                currentSort.column = column; currentSort.direction = 'desc';
-            }
-            renderPlayerTable();
-        }
-
-        function renderPlayerTable() {
-            const tableBody = document.getElementById('playerTableBody');
-            const table = document.getElementById('playerTable');
-            const noDataDiv = document.getElementById('noData');
-            const loading = document.getElementById('loading');
-            if (loading) loading.style.display = 'none';
-
-            if (!teamData.players.length) { table.style.display = 'none'; noDataDiv.style.display = 'block'; return; }
-            table.style.display = 'table'; noDataDiv.style.display = 'none';
-            tableBody.innerHTML = '';
-
-            let players = [...teamData.players];
-
-            if (currentSort.column === 'default' || !currentSort.column) {
-                players = defaultSort(players);
-            } else {
-                players.sort((a, b) => {
-                    let aVal, bVal;
-                    switch (currentSort.column) {
-                        case 'name':
-                            aVal = (a.name || '').toLowerCase();
-                            bVal = (b.name || '').toLowerCase();
-                            return currentSort.direction === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
-                        case 'goals':
-                            aVal = getPlayerStats(a.id).goals; bVal = getPlayerStats(b.id).goals; break;
-                        case 'assists':
-                            aVal = getPlayerStats(a.id).assists; bVal = getPlayerStats(b.id).assists; break;
-                        case 'attendance':
-                            aVal = calculateAttendancePercentage(a.id); bVal = calculateAttendancePercentage(b.id); break;
-                        case 'sitout':
-                            aVal = getPlayerStats(a.id).sitout; bVal = getPlayerStats(b.id).sitout; break;
-                        case 'yellow':
-                            aVal = getPlayerStats(a.id).yellow; bVal = getPlayerStats(b.id).yellow; break;
-                        case 'red':
-                            aVal = getPlayerStats(a.id).red; bVal = getPlayerStats(b.id).red; break;
-                        default: aVal = 0; bVal = 0;
-                    }
-                    return currentSort.direction === 'asc' ? aVal - bVal : bVal - aVal;
-                });
-            }
-
-            players.forEach(player => {
-                const stats = getPlayerStats(player.id);
-                const totalMatches = teamData.matches.length;
-                const attendancePercentage = calculateAttendancePercentage(player.id);
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td class="player-name">${player.name}</td>
-                    <td>${stats.goals}</td>
-                    <td>${stats.assists}</td>
-                    <td class="attendance-cell">
-                        <div class="attendance-bar">
-                            <div class="bar-container">
-                                <div class="bar-fill" style="width: ${attendancePercentage}%">
-                                    ${attendancePercentage >= 25 ? `<span class="bar-percentage">${attendancePercentage}%</span>` : ''}
-                                </div>
-                            </div>
-                            <div class="bar-text">${stats.attended}/${totalMatches}</div>
-                        </div>
-                    </td>
-                    <td>${stats.sitout}</td>
-                    <td><span class="card-display">${stats.yellow}</span></td>
-                    <td><span class="card-display card-red">${stats.red}</span></td>
-                `;
-                tableBody.appendChild(row);
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', async function() {
-            await loadData();
-            updateOverviewStats();
-            renderPlayerTable();
-            setInterval(async () => { await loadData(); updateOverviewStats(); renderPlayerTable(); }, 30000);
+    function getPlayersWithMatchesInSeason(season) {
+      const matches = getSeasonMatches(season);
+      const playedIds = new Set();
+      matches.forEach(match => {
+        (match.players || []).forEach(p => {
+          if (p.attendance === 'present' || p.attendance === 'sitout') {
+            playedIds.add(p.id);
+          }
         });
-    </script>
+      });
+      return (teamData.players || []).filter(p => playedIds.has(p.id));
+    }
+
+    // =========================================================================
+    // SEASON SWITCHER
+    // =========================================================================
+    function renderSeasonSwitcher() {
+      const wrap = document.getElementById('seasonSwitcher');
+      const seasons = getAvailableSeasons();
+      wrap.innerHTML = seasons.map(s =>
+        `<button class="season-btn ${s === currentSeason ? 'active' : ''}" onclick="selectSeason(${s})">Seizoen ${s}</button>`
+      ).join('');
+    }
+
+    function selectSeason(season) {
+      currentSeason = season;
+      hiddenPlayers.clear();
+      renderSeasonSwitcher();
+      updateOverviewStats();
+      renderPlayerTable();
+      if (currentView === 'graph') renderGraph();
+    }
+
+    // =========================================================================
+    // OVERVIEW
+    // =========================================================================
+    function updateOverviewStats() {
+      const stats = calculateTeamStats(currentSeason);
+      document.getElementById('gamesPlayed').textContent = stats.gamesPlayed;
+      document.getElementById('gamesWon').textContent = stats.gamesWon;
+      document.getElementById('gamesDraw').textContent = stats.gamesDraw;
+      document.getElementById('gamesLost').textContent = stats.gamesLost;
+      const goalDiffEl = document.getElementById('goalDifference');
+      goalDiffEl.textContent = stats.goalDifference >= 0 ? `+${stats.goalDifference}` : `${stats.goalDifference}`;
+      goalDiffEl.classList.remove('positive', 'negative');
+      if (stats.goalDifference > 0) goalDiffEl.classList.add('positive');
+      else if (stats.goalDifference < 0) goalDiffEl.classList.add('negative');
+    }
+
+    // =========================================================================
+    // TABLE
+    // =========================================================================
+    function sortTable(column) {
+      if (currentSort.column === column) {
+        currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+      } else {
+        currentSort.column = column;
+        currentSort.direction = 'desc';
+      }
+      renderPlayerTable();
+    }
+
+    function defaultSort(players, season) {
+      return players.sort((a, b) => {
+        const aS = getPlayerSeasonStats(a.id, season);
+        const bS = getPlayerSeasonStats(b.id, season);
+        if (bS.goals !== aS.goals) return bS.goals - aS.goals;
+        if (bS.assists !== aS.assists) return bS.assists - aS.assists;
+        if (bS.attendancePct !== aS.attendancePct) return bS.attendancePct - aS.attendancePct;
+        return aS.sitout - bS.sitout;
+      });
+    }
+
+    function renderPlayerTable() {
+      const tableHead = document.getElementById('playerTableHead');
+      const tableBody = document.getElementById('playerTableBody');
+      const table = document.getElementById('playerTable');
+      const noDataDiv = document.getElementById('noData');
+      const loading = document.getElementById('loading');
+      if (loading) loading.style.display = 'none';
+
+      const showKopcorners = hasKopcornerStats(currentSeason);
+      const seasonPlayers = getPlayersWithMatchesInSeason(currentSeason);
+
+      // Build header
+      const cols = [
+        { key: 'name', label: 'Naam' },
+        { key: 'goals', label: 'Doelpunten' },
+        { key: 'assists', label: 'Assists' },
+        { key: 'attendance', label: 'Aanwezigheid' },
+        { key: 'sitout', label: 'Sit-Out' },
+        { key: 'yellow', label: 'Geel' },
+        { key: 'red', label: 'Rood' }
+      ];
+      if (showKopcorners) {
+        cols.push(
+          { key: 'kcGood', label: 'KC goed' },
+          { key: 'kcBad', label: 'KC slecht' },
+          { key: 'kcScored', label: 'KC gescoord' },
+          { key: 'kcMissed', label: 'KC gemist' }
+        );
+      }
+      tableHead.innerHTML = '<tr>' + cols.map(c => {
+        const isActive = currentSort.column === c.key;
+        const arrow = isActive ? (currentSort.direction === 'asc' ? '▲' : '▼') : '';
+        return `<th class="${isActive ? 'sort-active' : ''}" onclick="sortTable('${c.key}')">${c.label}<span class="sort-indicator">${arrow}</span></th>`;
+      }).join('') + '</tr>';
+
+      if (!seasonPlayers.length) {
+        table.style.display = 'none';
+        noDataDiv.style.display = 'block';
+        return;
+      }
+      table.style.display = 'table';
+      noDataDiv.style.display = 'none';
+
+      // Sort
+      let players = [...seasonPlayers];
+      if (currentSort.column === 'default' || !currentSort.column) {
+        players = defaultSort(players, currentSeason);
+      } else {
+        players.sort((a, b) => {
+          const aS = getPlayerSeasonStats(a.id, currentSeason);
+          const bS = getPlayerSeasonStats(b.id, currentSeason);
+          let aVal, bVal;
+          switch (currentSort.column) {
+            case 'name':
+              aVal = (a.name || '').toLowerCase();
+              bVal = (b.name || '').toLowerCase();
+              return currentSort.direction === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
+            case 'goals':      aVal = aS.goals; bVal = bS.goals; break;
+            case 'assists':    aVal = aS.assists; bVal = bS.assists; break;
+            case 'attendance': aVal = aS.attendancePct; bVal = bS.attendancePct; break;
+            case 'sitout':     aVal = aS.sitout; bVal = bS.sitout; break;
+            case 'yellow':     aVal = aS.yellow; bVal = bS.yellow; break;
+            case 'red':        aVal = aS.red; bVal = bS.red; break;
+            case 'kcGood':     aVal = aS.kcGood; bVal = bS.kcGood; break;
+            case 'kcBad':      aVal = aS.kcBad; bVal = bS.kcBad; break;
+            case 'kcScored':   aVal = aS.kcScored; bVal = bS.kcScored; break;
+            case 'kcMissed':   aVal = aS.kcMissed; bVal = bS.kcMissed; break;
+            default: aVal = 0; bVal = 0;
+          }
+          return currentSort.direction === 'asc' ? aVal - bVal : bVal - aVal;
+        });
+      }
+
+      const zeroClass = v => v === 0 ? 'stat-zero' : '';
+
+      tableBody.innerHTML = players.map(player => {
+        const s = getPlayerSeasonStats(player.id, currentSeason);
+        const pct = s.attendancePct;
+        let row = `
+          <td class="player-name">${player.name}</td>
+          <td class="${zeroClass(s.goals)}">${s.goals}</td>
+          <td class="${zeroClass(s.assists)}">${s.assists}</td>
+          <td class="attendance-cell">
+            <div class="attendance-bar">
+              <div class="bar-container">
+                <div class="bar-fill" style="width: ${pct}%">
+                  ${pct >= 25 ? `<span class="bar-percentage">${pct}%</span>` : ''}
+                </div>
+              </div>
+              <div class="bar-text">${s.attended}/${s.totalMatches}</div>
+            </div>
+          </td>
+          <td class="${zeroClass(s.sitout)}">${s.sitout}</td>
+          <td>${s.yellow > 0 ? `<span class="card-display">${s.yellow}</span>` : `<span class="stat-zero">0</span>`}</td>
+          <td>${s.red > 0 ? `<span class="card-display card-red">${s.red}</span>` : `<span class="stat-zero">0</span>`}</td>
+        `;
+        if (showKopcorners) {
+          row += `
+            <td class="${zeroClass(s.kcGood)}">${s.kcGood}</td>
+            <td class="${zeroClass(s.kcBad)}">${s.kcBad}</td>
+            <td class="${zeroClass(s.kcScored)}">${s.kcScored}</td>
+            <td class="${zeroClass(s.kcMissed)}">${s.kcMissed}</td>
+          `;
+        }
+        return `<tr>${row}</tr>`;
+      }).join('');
+    }
+
+    // =========================================================================
+    // VIEW TOGGLE
+    // =========================================================================
+    function setView(view) {
+      currentView = view;
+      document.getElementById('tableView').style.display = view === 'table' ? '' : 'none';
+      document.getElementById('graphView').style.display = view === 'graph' ? '' : 'none';
+      document.getElementById('viewTableBtn').classList.toggle('active', view === 'table');
+      document.getElementById('viewGraphBtn').classList.toggle('active', view === 'graph');
+      if (view === 'graph') renderGraph();
+    }
+
+    // =========================================================================
+    // GRAPH (cumulative goals per player over season)
+    // =========================================================================
+    function renderGraph() {
+      const svg = document.getElementById('graphSvg');
+      const legendEl = document.getElementById('graphLegend');
+
+      const matches = getSeasonMatches(currentSeason)
+        .slice()
+        .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+      if (matches.length === 0) {
+        svg.innerHTML = '';
+        legendEl.innerHTML = '<div class="graph-empty">Nog geen wedstrijden in dit seizoen.</div>';
+        return;
+      }
+
+      // Compute cumulative goals per player after each match in this season
+      const seasonPlayers = getPlayersWithMatchesInSeason(currentSeason);
+      const playerData = seasonPlayers.map(player => {
+        let cum = 0;
+        const points = [0]; // start at 0 before match 1
+        matches.forEach(m => {
+          const mp = (m.players || []).find(p => p.id === player.id);
+          cum += mp?.stats?.goals || 0;
+          points.push(cum);
+        });
+        return { id: player.id, name: player.name, points, total: cum };
+      });
+
+      // Rank by total season goals, pick top 5
+      const ranked = [...playerData].sort((a, b) => b.total - a.total);
+      const top5Ids = new Set(ranked.slice(0, 5).filter(p => p.total > 0).map(p => p.id));
+
+      // Assign colors
+      const colorMap = {};
+      const top5Sorted = ranked.filter(p => top5Ids.has(p.id));
+      top5Sorted.forEach((p, i) => { colorMap[p.id] = TOP_COLORS[i]; });
+      playerData.forEach(p => { if (!colorMap[p.id]) colorMap[p.id] = GRAY_COLOR; });
+
+      // SVG dimensions
+      const W = 800, H = 380;
+      const padL = 44, padR = 20, padT = 20, padB = 38;
+      const plotW = W - padL - padR;
+      const plotH = H - padT - padB;
+      const nPoints = matches.length + 1; // 0..n matches
+
+      // Y-axis max — round up to nearest 5
+      const maxGoals = Math.max(1, ...playerData.map(p => p.total));
+      const yMax = Math.max(5, Math.ceil(maxGoals / 5) * 5);
+
+      const xFor = i => padL + (plotW * i) / Math.max(1, nPoints - 1);
+      const yFor = v => padT + plotH - (plotH * v) / yMax;
+
+      // Build SVG content
+      const parts = [];
+
+      // Y-axis gridlines + labels
+      const ySteps = 5;
+      for (let i = 0; i <= ySteps; i++) {
+        const val = Math.round((yMax / ySteps) * i);
+        const y = yFor(val);
+        parts.push(`<line x1="${padL}" y1="${y}" x2="${W - padR}" y2="${y}" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>`);
+        parts.push(`<text x="${padL - 8}" y="${y + 4}" fill="rgba(255,255,255,0.55)" font-size="11" text-anchor="end" font-family="Inter, sans-serif">${val}</text>`);
+      }
+
+      // X-axis labels — show start + ~5 evenly spaced match dates
+      const xLabelCount = Math.min(6, matches.length);
+      const xStep = matches.length <= 1 ? 1 : Math.max(1, Math.floor(matches.length / xLabelCount));
+      for (let i = 0; i < matches.length; i += xStep) {
+        const x = xFor(i + 1);
+        const d = new Date(matches[i].date);
+        const label = `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}`;
+        parts.push(`<text x="${x}" y="${H - padB + 18}" fill="rgba(255,255,255,0.55)" font-size="11" text-anchor="middle" font-family="Inter, sans-serif">${label}</text>`);
+      }
+      // Always label the last one
+      const lastIdx = matches.length - 1;
+      if (lastIdx >= 0 && (lastIdx % xStep) !== 0) {
+        const x = xFor(lastIdx + 1);
+        const d = new Date(matches[lastIdx].date);
+        const label = `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}`;
+        parts.push(`<text x="${x}" y="${H - padB + 18}" fill="rgba(255,255,255,0.55)" font-size="11" text-anchor="middle" font-family="Inter, sans-serif">${label}</text>`);
+      }
+
+      // Axis baseline
+      parts.push(`<line x1="${padL}" y1="${padT + plotH}" x2="${W - padR}" y2="${padT + plotH}" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>`);
+      parts.push(`<line x1="${padL}" y1="${padT}" x2="${padL}" y2="${padT + plotH}" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>`);
+
+      // Draw gray lines first (so they sit behind colored ones)
+      const drawLine = (p, color, opacity, strokeWidth) => {
+        const d = p.points.map((v, i) => `${i === 0 ? 'M' : 'L'} ${xFor(i)} ${yFor(v)}`).join(' ');
+        return `<path d="${d}" fill="none" stroke="${color}" stroke-width="${strokeWidth}" stroke-linecap="round" stroke-linejoin="round" opacity="${opacity}"/>`;
+      };
+
+      playerData.forEach(p => {
+        if (hiddenPlayers.has(p.id)) return;
+        if (!top5Ids.has(p.id)) {
+          parts.push(drawLine(p, GRAY_COLOR, 0.6, 1.5));
+        }
+      });
+      // Then colored on top
+      playerData.forEach(p => {
+        if (hiddenPlayers.has(p.id)) return;
+        if (top5Ids.has(p.id)) {
+          parts.push(drawLine(p, colorMap[p.id], 1, 2.5));
+        }
+      });
+      // End-point dots for top 5
+      playerData.forEach(p => {
+        if (hiddenPlayers.has(p.id)) return;
+        if (top5Ids.has(p.id) && p.total > 0) {
+          const lastI = p.points.length - 1;
+          parts.push(`<circle cx="${xFor(lastI)}" cy="${yFor(p.points[lastI])}" r="4" fill="${colorMap[p.id]}"/>`);
+        }
+      });
+
+      svg.innerHTML = parts.join('');
+
+      // Legend — top 5 first (colored), then rest (gray)
+      const legendOrdered = [
+        ...ranked.filter(p => top5Ids.has(p.id)),
+        ...ranked.filter(p => !top5Ids.has(p.id))
+      ];
+      legendEl.innerHTML = legendOrdered.map(p => {
+        const color = colorMap[p.id];
+        const isHidden = hiddenPlayers.has(p.id);
+        const swatch = top5Ids.has(p.id)
+          ? `<span class="legend-swatch" style="background: ${color}"></span>`
+          : `<span class="legend-swatch" style="background: ${color}"></span>`;
+        return `<span class="legend-item ${isHidden ? 'hidden' : ''}" onclick="toggleGraphPlayer(${p.id})" style="color: ${top5Ids.has(p.id) ? color : 'rgba(255,255,255,0.7)'}">
+          ${swatch}<span style="color: rgba(255,255,255,0.9)">${p.name}</span>
+          <span style="color: rgba(255,255,255,0.5); font-weight: 500;">${p.total}</span>
+        </span>`;
+      }).join('');
+    }
+
+    function toggleGraphPlayer(id) {
+      if (hiddenPlayers.has(id)) hiddenPlayers.delete(id);
+      else hiddenPlayers.add(id);
+      renderGraph();
+    }
+
+    // =========================================================================
+    // INIT
+    // =========================================================================
+    async function init() {
+      await loadData();
+      const seasons = getAvailableSeasons();
+      currentSeason = seasons[0]; // latest
+      renderSeasonSwitcher();
+      updateOverviewStats();
+      renderPlayerTable();
+    }
+
+    document.addEventListener('DOMContentLoaded', async function() {
+      await init();
+      // Auto-refresh every 30s
+      setInterval(async () => {
+        await loadData();
+        // Keep currently-selected season if still valid, else fall back to latest
+        const seasons = getAvailableSeasons();
+        if (!seasons.includes(currentSeason)) currentSeason = seasons[0];
+        renderSeasonSwitcher();
+        updateOverviewStats();
+        renderPlayerTable();
+        if (currentView === 'graph') renderGraph();
+      }, 30000);
+    });
+  </script>
 </body>
 </html>

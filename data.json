@@ -10,7 +10,11 @@
         "yellowCards": 0,
         "redCards": 0,
         "sitOuts": 0,
-        "attendance": 15
+        "attendance": 15,
+        "headCornerScoopGood": 0,
+        "headCornerScoopBad": 0,
+        "headCornerGoals": 0,
+        "headCornerMissed": 0
       }
     },
     {
@@ -23,7 +27,11 @@
         "yellowCards": 0,
         "redCards": 0,
         "sitOuts": 0,
-        "attendance": 11
+        "attendance": 11,
+        "headCornerScoopGood": 0,
+        "headCornerScoopBad": 0,
+        "headCornerGoals": 0,
+        "headCornerMissed": 0
       }
     },
     {
@@ -36,7 +44,11 @@
         "yellowCards": 0,
         "redCards": 0,
         "sitOuts": 1,
-        "attendance": 19
+        "attendance": 19,
+        "headCornerScoopGood": 0,
+        "headCornerScoopBad": 0,
+        "headCornerGoals": 0,
+        "headCornerMissed": 0
       }
     },
     {
@@ -49,7 +61,11 @@
         "yellowCards": 2,
         "redCards": 0,
         "sitOuts": 1,
-        "attendance": 14
+        "attendance": 14,
+        "headCornerScoopGood": 0,
+        "headCornerScoopBad": 0,
+        "headCornerGoals": 0,
+        "headCornerMissed": 0
       }
     },
     {
@@ -62,7 +78,11 @@
         "yellowCards": 1,
         "redCards": 0,
         "sitOuts": 0,
-        "attendance": 3
+        "attendance": 3,
+        "headCornerScoopGood": 0,
+        "headCornerScoopBad": 0,
+        "headCornerGoals": 0,
+        "headCornerMissed": 0
       }
     },
     {
@@ -75,7 +95,11 @@
         "yellowCards": 0,
         "redCards": 0,
         "sitOuts": 1,
-        "attendance": 10
+        "attendance": 10,
+        "headCornerScoopGood": 0,
+        "headCornerScoopBad": 0,
+        "headCornerGoals": 0,
+        "headCornerMissed": 0
       }
     },
     {
@@ -88,7 +112,11 @@
         "yellowCards": 0,
         "redCards": 0,
         "sitOuts": 0,
-        "attendance": 8
+        "attendance": 8,
+        "headCornerScoopGood": 0,
+        "headCornerScoopBad": 0,
+        "headCornerGoals": 0,
+        "headCornerMissed": 0
       }
     },
     {
@@ -101,7 +129,11 @@
         "yellowCards": 0,
         "redCards": 0,
         "sitOuts": 0,
-        "attendance": 17
+        "attendance": 17,
+        "headCornerScoopGood": 0,
+        "headCornerScoopBad": 0,
+        "headCornerGoals": 0,
+        "headCornerMissed": 0
       }
     },
     {
@@ -114,7 +146,11 @@
         "yellowCards": 0,
         "redCards": 0,
         "sitOuts": 0,
-        "attendance": 10
+        "attendance": 10,
+        "headCornerScoopGood": 0,
+        "headCornerScoopBad": 0,
+        "headCornerGoals": 0,
+        "headCornerMissed": 0
       }
     },
     {
@@ -127,7 +163,11 @@
         "yellowCards": 0,
         "redCards": 0,
         "sitOuts": 0,
-        "attendance": 17
+        "attendance": 17,
+        "headCornerScoopGood": 0,
+        "headCornerScoopBad": 0,
+        "headCornerGoals": 0,
+        "headCornerMissed": 0
       }
     },
     {
@@ -140,7 +180,11 @@
         "yellowCards": 1,
         "redCards": 0,
         "sitOuts": 0,
-        "attendance": 11
+        "attendance": 11,
+        "headCornerScoopGood": 0,
+        "headCornerScoopBad": 0,
+        "headCornerGoals": 0,
+        "headCornerMissed": 0
       }
     },
     {
@@ -153,7 +197,11 @@
         "yellowCards": 0,
         "redCards": 0,
         "sitOuts": 0,
-        "attendance": 4
+        "attendance": 4,
+        "headCornerScoopGood": 0,
+        "headCornerScoopBad": 0,
+        "headCornerGoals": 0,
+        "headCornerMissed": 0
       }
     }
   ],
@@ -298,7 +346,8 @@
             "redCards": 0
           }
         }
-      ]
+      ],
+      "season": 2025
     },
     {
       "id": 1757629426020,
@@ -440,7 +489,8 @@
             "redCards": 0
           }
         }
-      ]
+      ],
+      "season": 2025
     },
     {
       "id": 1758323423914,
@@ -582,7 +632,8 @@
             "redCards": 0
           }
         }
-      ]
+      ],
+      "season": 2025
     },
     {
       "id": 1758962700859,
@@ -724,7 +775,8 @@
             "redCards": 0
           }
         }
-      ]
+      ],
+      "season": 2025
     },
     {
       "id": 1759531897949,
@@ -866,7 +918,8 @@
             "redCards": 0
           }
         }
-      ]
+      ],
+      "season": 2025
     },
     {
       "id": 1759778187543,
@@ -1008,7 +1061,8 @@
             "redCards": 0
           }
         }
-      ]
+      ],
+      "season": 2025
     },
     {
       "id": 1760990150148,
@@ -1150,7 +1204,8 @@
             "redCards": 0
           }
         }
-      ]
+      ],
+      "season": 2025
     },
     {
       "id": 1761852676513,
@@ -1292,7 +1347,8 @@
             "redCards": 0
           }
         }
-      ]
+      ],
+      "season": 2025
     },
     {
       "id": 1762409226189,
@@ -1434,7 +1490,8 @@
             "redCards": 0
           }
         }
-      ]
+      ],
+      "season": 2025
     },
     {
       "id": 1763757147750,
@@ -1576,7 +1633,8 @@
             "redCards": 0
           }
         }
-      ]
+      ],
+      "season": 2025
     },
     {
       "id": 1764014627074,
@@ -1718,7 +1776,8 @@
             "redCards": 0
           }
         }
-      ]
+      ],
+      "season": 2025
     },
     {
       "id": 1764853099489,
@@ -1860,7 +1919,8 @@
             "redCards": 0
           }
         }
-      ]
+      ],
+      "season": 2025
     },
     {
       "id": 1765574179024,
@@ -2002,7 +2062,8 @@
             "redCards": 0
           }
         }
-      ]
+      ],
+      "season": 2025
     },
     {
       "id": 1766517913383,
@@ -2144,7 +2205,8 @@
             "redCards": 0
           }
         }
-      ]
+      ],
+      "season": 2025
     },
     {
       "id": 1768083680407,
@@ -2286,7 +2348,8 @@
             "redCards": 0
           }
         }
-      ]
+      ],
+      "season": 2025
     },
     {
       "id": 1768604614954,
@@ -2428,7 +2491,8 @@
             "redCards": 0
           }
         }
-      ]
+      ],
+      "season": 2025
     },
     {
       "id": 1769724142065,
@@ -2570,7 +2634,8 @@
             "redCards": 0
           }
         }
-      ]
+      ],
+      "season": 2025
     },
     {
       "id": 1769724242502,
@@ -2712,7 +2777,8 @@
             "redCards": 0
           }
         }
-      ]
+      ],
+      "season": 2025
     },
     {
       "id": 1771360650589,
@@ -2854,7 +2920,8 @@
             "redCards": 0
           }
         }
-      ]
+      ],
+      "season": 2025
     },
     {
       "id": 1771360841683,
@@ -2996,7 +3063,8 @@
             "redCards": 0
           }
         }
-      ]
+      ],
+      "season": 2025
     },
     {
       "id": 1773238452236,
@@ -3138,7 +3206,8 @@
             "redCards": 0
           }
         }
-      ]
+      ],
+      "season": 2025
     },
     {
       "id": 1774388094774,
@@ -3280,7 +3349,8 @@
             "redCards": 0
           }
         }
-      ]
+      ],
+      "season": 2025
     }
   ],
   "lastUpdated": "2026-03-24T21:34:54.774Z"
