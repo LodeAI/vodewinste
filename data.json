@@ -158,7 +158,7 @@
       "name": "Jochen Van Vyve",
       "stats": {
         "matches": 17,
-        "goals": 46,
+        "goals": 47,
         "assists": 14,
         "yellowCards": 0,
         "redCards": 0,
@@ -175,7 +175,7 @@
       "name": "Frederik Vansteenkiste",
       "stats": {
         "matches": 11,
-        "goals": 16,
+        "goals": 15,
         "assists": 11,
         "yellowCards": 1,
         "redCards": 0,
@@ -3225,7 +3225,11 @@
             "goals": 0,
             "assists": 0,
             "yellowCards": 0,
-            "redCards": 0
+            "redCards": 0,
+            "headCornerScoopGood": 0,
+            "headCornerScoopBad": 0,
+            "headCornerGoals": 0,
+            "headCornerMissed": 0
           }
         },
         {
@@ -3236,7 +3240,11 @@
             "goals": 0,
             "assists": 0,
             "yellowCards": 0,
-            "redCards": 0
+            "redCards": 0,
+            "headCornerScoopGood": 0,
+            "headCornerScoopBad": 0,
+            "headCornerGoals": 0,
+            "headCornerMissed": 0
           }
         },
         {
@@ -3247,7 +3255,11 @@
             "goals": 0,
             "assists": 1,
             "yellowCards": 0,
-            "redCards": 0
+            "redCards": 0,
+            "headCornerScoopGood": 0,
+            "headCornerScoopBad": 0,
+            "headCornerGoals": 0,
+            "headCornerMissed": 0
           }
         },
         {
@@ -3258,7 +3270,11 @@
             "goals": 0,
             "assists": 0,
             "yellowCards": 0,
-            "redCards": 0
+            "redCards": 0,
+            "headCornerScoopGood": 0,
+            "headCornerScoopBad": 0,
+            "headCornerGoals": 0,
+            "headCornerMissed": 0
           }
         },
         {
@@ -3269,7 +3285,11 @@
             "goals": 0,
             "assists": 0,
             "yellowCards": 0,
-            "redCards": 0
+            "redCards": 0,
+            "headCornerScoopGood": 0,
+            "headCornerScoopBad": 0,
+            "headCornerGoals": 0,
+            "headCornerMissed": 0
           }
         },
         {
@@ -3280,7 +3300,11 @@
             "goals": 0,
             "assists": 1,
             "yellowCards": 0,
-            "redCards": 0
+            "redCards": 0,
+            "headCornerScoopGood": 0,
+            "headCornerScoopBad": 0,
+            "headCornerGoals": 0,
+            "headCornerMissed": 0
           }
         },
         {
@@ -3291,7 +3315,11 @@
             "goals": 1,
             "assists": 0,
             "yellowCards": 0,
-            "redCards": 0
+            "redCards": 0,
+            "headCornerScoopGood": 0,
+            "headCornerScoopBad": 0,
+            "headCornerGoals": 0,
+            "headCornerMissed": 0
           }
         },
         {
@@ -3302,7 +3330,11 @@
             "goals": 0,
             "assists": 1,
             "yellowCards": 0,
-            "redCards": 0
+            "redCards": 0,
+            "headCornerScoopGood": 0,
+            "headCornerScoopBad": 0,
+            "headCornerGoals": 0,
+            "headCornerMissed": 0
           }
         },
         {
@@ -3313,7 +3345,11 @@
             "goals": 0,
             "assists": 0,
             "yellowCards": 0,
-            "redCards": 0
+            "redCards": 0,
+            "headCornerScoopGood": 0,
+            "headCornerScoopBad": 0,
+            "headCornerGoals": 0,
+            "headCornerMissed": 0
           }
         },
         {
@@ -3321,10 +3357,14 @@
           "name": "Jochen Van Vyve",
           "attendance": "present",
           "stats": {
-            "goals": 2,
+            "goals": 3,
             "assists": 1,
             "yellowCards": 0,
-            "redCards": 0
+            "redCards": 0,
+            "headCornerScoopGood": 0,
+            "headCornerScoopBad": 0,
+            "headCornerGoals": 0,
+            "headCornerMissed": 0
           }
         },
         {
@@ -3332,10 +3372,14 @@
           "name": "Frederik Vansteenkiste",
           "attendance": "present",
           "stats": {
-            "goals": 3,
+            "goals": 2,
             "assists": 1,
             "yellowCards": 0,
-            "redCards": 0
+            "redCards": 0,
+            "headCornerScoopGood": 0,
+            "headCornerScoopBad": 0,
+            "headCornerGoals": 0,
+            "headCornerMissed": 0
           }
         },
         {
@@ -3346,12 +3390,16 @@
             "goals": 0,
             "assists": 0,
             "yellowCards": 0,
-            "redCards": 0
+            "redCards": 0,
+            "headCornerScoopGood": 0,
+            "headCornerScoopBad": 0,
+            "headCornerGoals": 0,
+            "headCornerMissed": 0
           }
         }
       ],
       "season": 2025
     }
   ],
-  "lastUpdated": "2026-03-24T21:34:54.774Z"
+  "lastUpdated": "2026-07-08T18:39:55.713Z"
 }
